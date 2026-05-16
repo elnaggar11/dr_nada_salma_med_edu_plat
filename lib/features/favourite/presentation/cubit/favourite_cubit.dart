@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:bloc/bloc.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/errors/failure.dart';
@@ -12,10 +11,8 @@ import 'package:dr_nada_salma_med_edu_plat/features/favourite/domain/usecases/ad
 import 'package:dr_nada_salma_med_edu_plat/features/favourite/domain/usecases/fav_by_user_use_case.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/public_courses_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/main.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:meta/meta.dart';
 
 part 'favourite_state.dart';
 

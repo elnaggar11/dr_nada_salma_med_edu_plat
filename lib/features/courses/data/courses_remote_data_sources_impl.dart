@@ -3,7 +3,6 @@ import 'package:dr_nada_salma_med_edu_plat/core/utils/api_base_helper.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/categories_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/courses_status_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/courses_status_params.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/courses_params.dart';
 
 const categoriesApi = "/courses/categories_public";
 const coursesTypesApi = "/profile/";

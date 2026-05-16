@@ -4,7 +4,6 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/custom_app_bar.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/profiles/presentation/widgets/reviews_student_list.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/profiles/presentation/widgets/success_stories_list.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ReviewsScreen extends StatefulWidget {

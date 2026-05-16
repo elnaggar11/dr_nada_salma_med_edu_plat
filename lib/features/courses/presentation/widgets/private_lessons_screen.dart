@@ -1,21 +1,16 @@
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/constants/fonts.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/custom_app_bar.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/courses_status_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/courses_status_cubit/courses_status_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/comin_soon_item.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/completed_item.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/empty_course_widget.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/empty_private_lessons_widget.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/in_progress_item.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/shimmer/courses/in_progress_shimmer_list.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class PrivateLessonsScreen extends StatefulWidget {
   final String type;

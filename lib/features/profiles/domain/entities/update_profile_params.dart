@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 
 class UpdateProfileParams{
   String? fullName;

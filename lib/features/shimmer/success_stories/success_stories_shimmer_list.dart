@@ -1,5 +1,4 @@
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/shimmer/home/best_medical_shimmer_item.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/shimmer/success_stories/success_stories_shimmer_item.dart';
 import 'package:flutter/cupertino.dart';
 

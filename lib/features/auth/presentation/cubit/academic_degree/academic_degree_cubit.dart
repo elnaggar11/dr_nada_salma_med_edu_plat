@@ -7,7 +7,6 @@ import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/academi
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/usecases/academic_degree_use_case.dart';
 import 'package:dr_nada_salma_med_edu_plat/main.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 part 'academic_degree_state.dart';
 

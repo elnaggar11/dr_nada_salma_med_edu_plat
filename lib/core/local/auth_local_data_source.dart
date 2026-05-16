@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:dr_nada_salma_med_edu_plat/core/errors/exceptions.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/login/user_degree_specialist.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const userCacheConst = "user_cache";

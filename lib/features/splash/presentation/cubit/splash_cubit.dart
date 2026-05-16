@@ -5,7 +5,6 @@ import 'package:dr_nada_salma_med_edu_plat/injection_container/injection_contain
 import 'package:dr_nada_salma_med_edu_plat/injection_container/injection_container.dart' as di;
 import 'package:dr_nada_salma_med_edu_plat/main.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:meta/meta.dart';
 import 'package:flutter/material.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 part 'splash_state.dart';

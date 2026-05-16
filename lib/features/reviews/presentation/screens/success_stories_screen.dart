@@ -1,15 +1,11 @@
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/constants/images.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/custom_app_bar.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/success_stories_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/cubit/success_stories/success_stories_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/widgets/success_stories_item.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/shimmer/success_stories/success_stories_shimmer_vertical_list.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class SuccessStoriesScreen extends StatefulWidget {
   final String type;

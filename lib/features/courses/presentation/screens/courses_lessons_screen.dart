@@ -6,9 +6,7 @@ import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/cour
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/courses_status_cubit/courses_status_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/my_courses.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/private_lessons_screen.dart';
-import 'package:dr_nada_salma_med_edu_plat/injection_container/injection_container.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

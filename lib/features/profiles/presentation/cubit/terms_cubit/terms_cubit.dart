@@ -7,7 +7,6 @@ import 'package:dr_nada_salma_med_edu_plat/features/profiles/domain/entities/ter
 import 'package:dr_nada_salma_med_edu_plat/features/profiles/domain/usecases/terms_conditions_use_case.dart';
 import 'package:dr_nada_salma_med_edu_plat/main.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 part 'terms_state.dart';
 

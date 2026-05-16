@@ -1,13 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/errors/failure.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/courses_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/public_courses_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/usecases/public_courses_use_case.dart';
-import 'package:dr_nada_salma_med_edu_plat/main.dart';
 import 'package:flutter/material.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:meta/meta.dart';
 
 part 'public_courses_state.dart';

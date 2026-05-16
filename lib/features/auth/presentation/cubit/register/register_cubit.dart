@@ -8,9 +8,7 @@ import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/registe
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/register/register_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/usecases/register_use_case.dart';
 import 'package:dr_nada_salma_med_edu_plat/main.dart';
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 part 'register_state.dart';
 

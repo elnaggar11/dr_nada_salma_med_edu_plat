@@ -1,4 +1,3 @@
-import 'dart:async';
 
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
@@ -7,19 +6,13 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/screens.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/custom_app_bar.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/svg_handler.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/empty_course_widget.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/courses_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/cubit/public_courses/public_courses_cubit.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/widgets/best_medical_course_item.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/widgets/best_medical_vertical_item.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/shimmer/courses/courses_shimmer_list.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/public_courses_response.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class BestMedicalScreen extends StatefulWidget {
   const BestMedicalScreen({super.key});

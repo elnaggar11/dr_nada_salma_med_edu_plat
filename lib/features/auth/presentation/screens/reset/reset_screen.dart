@@ -1,20 +1,14 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/constants/fonts.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/images.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/constants/screens.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/custom_text_field.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/fade_button.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/svg_handler.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/check/check_otp_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/reset_password/reset_password_params.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/verify/verify_otp_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/presentation/cubit/reset/reset_pass_cubit.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/auth/presentation/widgets/successfull_dialog.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -6,9 +6,7 @@ import 'package:dr_nada_salma_med_edu_plat/core/usecase/usecase.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/profiles/domain/entities/faqs_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/profiles/domain/usecases/faqs_use_case.dart';
 import 'package:dr_nada_salma_med_edu_plat/main.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 part 'frequently_asked_state.dart';
 

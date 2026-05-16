@@ -1,6 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/main.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';

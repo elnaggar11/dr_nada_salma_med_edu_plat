@@ -1,19 +1,13 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/constants/images.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/constants/screens.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/errors/failure.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/widgets/svg_handler.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/reset_password/reset_password_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/reset_password/reset_password_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/usecases/reset_password_use_case.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/presentation/widgets/successfull_dialog.dart';
 import 'package:dr_nada_salma_med_edu_plat/main.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 part 'reset_pass_state.dart';
 

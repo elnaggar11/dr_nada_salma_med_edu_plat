@@ -4,13 +4,11 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/screens.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/errors/failure.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/usecase/usecase.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/academic_info/academic_info_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/academic_info/academic_info_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/usecases/academic_info_use_case.dart';
 import 'package:dr_nada_salma_med_edu_plat/main.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 part 'academic_info_state.dart';
 

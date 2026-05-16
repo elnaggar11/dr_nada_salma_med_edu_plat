@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/screens.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/blog/presentation/cubit/category_with_blog/category_with_blog_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/blog/presentation/screens/blog_screens.dart';
@@ -27,9 +26,7 @@ import 'package:dr_nada_salma_med_edu_plat/features/profiles/presentation/screen
 import 'package:dr_nada_salma_med_edu_plat/features/reviews/presentation/screens/success_stories_screen.dart';
 import 'package:dr_nada_salma_med_edu_plat/injection_container/injection_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 part 'bottom_bar_state.dart';
 

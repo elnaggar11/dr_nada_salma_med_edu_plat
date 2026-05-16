@@ -5,7 +5,6 @@ import 'package:dr_nada_salma_med_edu_plat/features/notifications/domain/usecase
 import 'package:meta/meta.dart';
 
 import '../../../../core/errors/failure.dart';
-import '../../../home/domain/entities/courses_params.dart';
 
 part 'notifications_state.dart';
 

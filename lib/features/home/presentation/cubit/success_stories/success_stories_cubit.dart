@@ -1,11 +1,8 @@
 import 'package:bloc/bloc.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/errors/failure.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/usecase/usecase.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/success_stories_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/usecases/success_stories_use_case.dart';
-import 'package:dr_nada_salma_med_edu_plat/main.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 

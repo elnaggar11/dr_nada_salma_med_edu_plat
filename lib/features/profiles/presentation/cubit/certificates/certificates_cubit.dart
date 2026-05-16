@@ -7,7 +7,6 @@ import 'package:dr_nada_salma_med_edu_plat/features/profiles/domain/entities/cer
 import 'package:dr_nada_salma_med_edu_plat/features/profiles/domain/usecases/certificate_use_case.dart';
 import 'package:dr_nada_salma_med_edu_plat/main.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 part 'certificates_state.dart';
 

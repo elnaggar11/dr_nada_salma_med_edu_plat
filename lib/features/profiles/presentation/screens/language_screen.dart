@@ -8,7 +8,6 @@ import 'package:dr_nada_salma_med_edu_plat/features/profiles/presentation/cubit/
 import 'package:dr_nada_salma_med_edu_plat/features/profiles/presentation/widgets/language_item.dart';
 import 'package:dr_nada_salma_med_edu_plat/main.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dr_nada_salma_med_edu_plat/injection_container/injection_container.dart' as di;

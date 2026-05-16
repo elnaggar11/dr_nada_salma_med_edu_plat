@@ -9,7 +9,6 @@ import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/check/c
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/usecases/check_otp_use_case.dart';
 import 'package:dr_nada_salma_med_edu_plat/main.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 part 'check_otp_state.dart';
 

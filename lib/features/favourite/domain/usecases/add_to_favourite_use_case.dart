@@ -4,7 +4,6 @@ import 'package:dr_nada_salma_med_edu_plat/core/usecase/usecase.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/favourite/domain/entities/add_to_favourite_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/favourite/domain/entities/favourite_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/favourite/domain/favourite_repositories.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/favourite/domain/usecases/add_to_favourite_use_case.dart';
 
 class AddToFavouriteUseCase implements UseCase<AddToFavouriteResponse,FavouriteParams>{
   final FavouriteRepositories repository;

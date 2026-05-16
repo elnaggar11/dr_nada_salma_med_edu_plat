@@ -7,7 +7,6 @@ import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/courses
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/usecases/courses_details_use_case.dart';
 import 'package:dr_nada_salma_med_edu_plat/main.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 part 'courses_details_state.dart';
 

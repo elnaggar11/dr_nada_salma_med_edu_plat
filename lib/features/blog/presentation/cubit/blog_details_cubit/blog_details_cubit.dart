@@ -10,7 +10,6 @@ import 'package:dr_nada_salma_med_edu_plat/features/blog/domain/usecase/blog_by_
 import 'package:dr_nada_salma_med_edu_plat/features/blog/domain/usecase/social_media_use_case.dart';
 import 'package:dr_nada_salma_med_edu_plat/main.dart';
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 part 'blog_details_state.dart';

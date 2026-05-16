@@ -3,7 +3,6 @@ import 'package:dr_nada_salma_med_edu_plat/features/blog/domain/entities/blogs/c
 import 'package:dr_nada_salma_med_edu_plat/features/blog/presentation/widgets/blog_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 class BlogList extends StatelessWidget {
   final List<Blogs>? blogList;
