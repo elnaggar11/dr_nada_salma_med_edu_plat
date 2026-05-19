@@ -15,25 +15,25 @@ import 'injection_container/injection_container.dart' as di;
 GlobalKey<NavigatorState> navKey = GlobalKey();
 GlobalKey<ScaffoldMessengerState> msgKey = GlobalKey();
 
-
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  NotificationHandler.loadFcmChannel(flutterLocalNotificationsPlugin)
-      .then((value) {
+  NotificationHandler.loadFcmChannel(flutterLocalNotificationsPlugin).then((
+    value,
+  ) {
     NotificationHandler.showFcmOnBackGround(message, value, navKey);
   });
 }
-void main() async{
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
- await EasyLocalization.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await di.init();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   await FirebaseMessaging.instance.requestPermission(
     alert: true,
@@ -45,35 +45,39 @@ void main() async{
     sound: true,
   );
 
-
-
   NotificationHandler.requestPermission();
-  NotificationHandler.loadFcmChannel(flutterLocalNotificationsPlugin)
-      .then((value) {
-    NotificationHandler.listenFCMonMessage(flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin,channel: value
-        ,nav: navKey);
+  NotificationHandler.loadFcmChannel(flutterLocalNotificationsPlugin).then((
+    value,
+  ) {
+    NotificationHandler.listenFCMonMessage(
+      flutterLocalNotificationsPlugin: flutterLocalNotificationsPlugin,
+      channel: value,
+      nav: navKey,
+    );
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
     NotificationHandler.onMessageAppListen();
   });
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true, // Required to display a heads up notification
-    badge: true, sound: true,);
-
+    badge: true,
+    sound: true,
+  );
 
   runApp(
-      DevicePreview(
-        enabled: false,
-        builder: (context) =>
-            EasyLocalization(
-                supportedLocales: const [Locale('ar'), Locale('en')],
-                path: "assets/translate",
-                startLocale: Locale("en"),
-                saveLocale: true,
-                useOnlyLangCode: true,
-                child:  MyApp(appRoutes: AppRoutes(),)),
+    DevicePreview(
+      enabled: false,
+      builder: (context) => EasyLocalization(
+        supportedLocales: const [Locale('ar'), Locale('en')],
+        path: "assets/translate",
+        startLocale: Locale("ar"),
+        saveLocale: true,
+        useOnlyLangCode: true,
+        child: MyApp(appRoutes: AppRoutes()),
+      ),
       // Wrap your app
-      ),);
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -86,11 +90,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       onGenerateRoute: appRoutes.onGenerateRoutes,
       debugShowCheckedModeBanner: false,
-        scrollBehavior: ScrollConfiguration.of(context).copyWith(
-          dragDevices: {
-            PointerDeviceKind.touch,
-            PointerDeviceKind.mouse,
-          },),
+      scrollBehavior: ScrollConfiguration.of(context).copyWith(
+        dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse},
+      ),
       navigatorKey: navKey,
       locale: context.locale,
       localizationsDelegates: context.localizationDelegates,
@@ -99,5 +101,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-

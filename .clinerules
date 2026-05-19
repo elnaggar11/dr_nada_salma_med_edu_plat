@@ -1,0 +1,131 @@
+# Dr. Nada Salma Med Edu Platform - Project Rules
+
+This file outlines the standard architectural patterns, coding standards, and best practices tailored specifically for the Dr. Nada Salma Medical Educational Platform Flutter project.
+
+---
+
+## 1. Project Architecture
+
+The project follows a **Clean Architecture with Feature-based structuring**:
+- **`lib/core/`**: Shared resources, widgets, constants, and global utilities used across multiple features.
+  - `lib/core/constants/`: App constants like colors, fonts, dimensions, styles, and screen routes.
+  - `lib/core/widgets/`: Universal reusable UI elements (e.g., custom text fields, buttons, and image handlers).
+  - `lib/core/errors/`: Exceptions and failures.
+  - `lib/core/local/`: Local data sources (e.g., auth local storage).
+  - `lib/core/utils/`: Global utility classes (e.g., API helper).
+- **`lib/features/`**: Feature-specific implementation. Each feature must have the following subdirectories:
+  - `data/`: Models, Repositories implementations, and Remote/Local data sources.
+  - `domain/`: Entities, Repository interfaces, and Use Cases.
+  - `presentation/`: Core presentation files, partitioned as follows:
+    - `cubit/`: Cubits and states for state management.
+    - `screens/`: Feature screens/pages.
+    - `widgets/`: Feature-specific UI components.
+  - `<feature_name>_inj.dart`: Dependency injection registration file specific to the feature.
+- **`lib/injection_container/`**: Global service locator container registering all dependencies.
+
+---
+
+## 2. Coding & Naming Standards
+
+- **Naming Conventions:**
+  - **Classes / Types:** `PascalCase` (e.g., `LoginScreen`, `CustomTextField`).
+  - **Variables / Functions:** `camelCase` (e.g., `mailController`, `updateLocalHeader`).
+  - **Files / Folders:** `snake_case` (e.g., `login_screen.dart`, `api_base_helper.dart`).
+  - **Screen Constants:** Use `snakeCase` matching the path (e.g., `loginSc`, `verificationSc`).
+  - **Feature Screens:** Suffix with `Screen` (e.g., `RegisterScreen`, `VerificationScreen`).
+- **Imports:** Use absolute package imports instead of relative paths where possible:
+  - *Example:* `import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';`
+
+---
+
+## 3. State Management (Bloc / Cubit)
+
+- **Library:** `flutter_bloc` using the `Cubit` pattern.
+- **Folder Location:** `lib/features/<feature_name>/presentation/cubit/`
+- **Pattern:**
+  - Define a distinct `Cubit` class and a corresponding `State` class/file (using `part 'feature_state.dart'` & `part of 'feature_cubit.dart'`).
+  - Use **Sealed Classes** for States with subclasses for each state status:
+    - *Example:* `LoginInitial`, `LoginLoadingState`, `LoginErrorState`, `LoginSuccessState`.
+  - Maintain state-specific variables inside the `Cubit` class (e.g., `bool? loading`, `bool? error`, `bool? obscure`) to simplify visual changes in the view, and emit appropriate states to notify UI listeners.
+  - Pass parameter classes (`Params`) to Use Cases from Cubits, handling folds on `Either<Failure, Success>` returned by domain repositories.
+
+---
+
+## 4. UI & Responsive Design
+
+- **Responsiveness:**
+  - **Do NOT** use `flutter_screenutil`.
+  - Access media query values using the `MediaQueryHelper` extension on `BuildContext`:
+    - `context.width` (for width values).
+    - `context.height` (for height values).
+  - *Example:* `width: context.width / 2.4`, `margin: EdgeInsets.only(left: context.width / 30)`.
+- **Text Scaling:**
+  - Force text scaling to `1` or `1.0` in custom text styles, inputs, or Text widgets to prevent layout breakages on system font size changes:
+    - *Example:* `textScaler: TextScaler.linear(1.0)` or wrap with standard custom text constraints.
+- **Styling & Typography:**
+  - Avoid hardcoding TextStyles or Colors directly in screens.
+  - **Colors:** Access pre-defined colors in `lib/core/constants/colors.dart` (e.g., `primary`, `orangeBold`, `white`, `grey2`).
+  - **Fonts & Typography:** Access `TextStyles` in `lib/core/constants/styles.dart`. Typography dynamically switches family based on the active locale:
+    - Arabic/Default: `Cairo` font family.
+    - English (`en`): `Poppins` font family.
+- **Universal Reusable Widgets:**
+  - **Input Fields:** Use `CustomTextField` (defined in `lib/core/widgets/custom_text_field.dart`).
+  - **Primary Buttons:** Use `FadeColorButton` (defined in `lib/core/widgets/fade_button.dart`) which features loading spinner states.
+  - **SVG Renders:** Use `customSvg` function (defined in `lib/core/widgets/svg_handler.dart`) which parses SVG paths safely.
+
+---
+
+## 5. Dependency Injection (Service Locator)
+
+- **Library:** `get_it`.
+- **Global Instance:** Accessed via the global instance `sl` defined in `lib/injection_container/injection_container.dart`.
+- **Registration Strategy:**
+  - Register **Cubits** as `registerFactory` (since they are page-specific and shouldn't share states globally unless scoped intentionally).
+  - Register **Use Cases, Repositories, and Data Sources** as `registerLazySingleton`.
+  - Maintain a separate dependency injection setup file per feature (`<feature_name>_inj.dart`), calling them sequentially inside `init()` in `lib/injection_container/injection_container.dart`.
+
+---
+
+## 6. Networking & API Management
+
+- **Library:** `Dio`.
+- **Core Helper:** `ApiBaseHelper` (accessed via global variable `helper` or `sl<ApiBaseHelper>()`).
+- **Authorization Token:**
+  - Token handling is automated via `AuthInterceptor` registered in `ApiBaseHelper.dioInit()`.
+  - The interceptor automatically fetches the stored token from sharedPreferences (`sharedPreferences.get(cacheTokenConst)`) and appends it as a Bearer token in the `Authorization` header.
+- **Requests:** Use `helper.post(...)`, `helper.get(...)`, `helper.delete(...)` for network communication.
+- **Exceptions & Failures:**
+  - Handle status codes in `ApiBaseHelper._returnResponseJson(...)`.
+  - Map HTTP exceptions to domain failures (`ServerFailure`, `CacheFailure`) in Repository implementations before returning to domain layers.
+
+---
+
+## 7. Localization
+
+- **Library:** `easy_localization`.
+- **File Directory:** Translation assets are stored as JSON files under `assets/translate/` (e.g., `ar.json`, `en.json`).
+- **Usage:** **NEVER** hardcode user-facing strings in the screens. Always translate them using the global `tr()` helper:
+  - *Example:* `Text(tr("login_account"))`
+
+---
+
+## 8. Routing & Navigation
+
+- **Router:** Map routes inside the `AppRoutes` class located in `lib/app_routes.dart`.
+- **Screen Constants:** Defined as String variables inside `lib/core/constants/screens.dart`.
+- **Navigation Methods:** Accessed via the `NavigationHelper` extension on `BuildContext`:
+  - `context.pushNamed(name: routeName, args: arguments)`
+  - `context.pushReplacementNamed(name: routeName, args: arguments)`
+  - `context.pushNamedAndRemoveUntil(name: routeName, args: arguments)`
+  - `context.pop()`
+- **Global Keys:**
+  - `navKey` (global `NavigatorState` key) and `msgKey` (global `ScaffoldMessengerState` key) are defined globally in `lib/main.dart`.
+  - Allows context-less navigation or prompt display (e.g., showing a SnackBar from inside Cubits via `msgKey.currentState!.showSnackBar(...)`).
+
+---
+
+## 9. Asset Management
+
+- **Library:** standard Flutter assets combined with manual constant maps.
+- **Folder Location:** `assets/images/` and `assets/fonts/`.
+- **Constants:** All asset paths are mapped to global constants in `lib/core/constants/images.dart` (e.g., `logo`, `doctor`, `mail`, `visible`). Always use these constants instead of writing raw string paths.
