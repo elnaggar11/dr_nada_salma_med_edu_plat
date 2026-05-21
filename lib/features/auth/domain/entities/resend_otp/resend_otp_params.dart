@@ -3,9 +3,7 @@ class ResendOtpParams {
 
   ResendOtpParams({this.email});
 
-  Map<String,dynamic>toMap(){
-    return {
-      "email" : email
-    };
+  Map<String, dynamic> toMap() {
+    return {"email": email};
   }
 }

@@ -10,23 +10,27 @@ class NoCourseWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  SizedBox(
+    return SizedBox(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-              alignment : Alignment.center,
-              child: customSvg(name: course,width:
-              context.width/8,height: context.width/8)),
-          SizedBox(height: context.height/80,),
-          Text("No courses found",
-            style: TextStyles.textStyleBold15
-                .copyWith(color: primary)
-            ,textScaler: TextScaler.linear(1),)
+            alignment: Alignment.center,
+            child: customSvg(
+              name: course,
+              width: context.width / 8,
+              height: context.width / 8,
+            ),
+          ),
+          SizedBox(height: context.height / 80),
+          Text(
+            "No courses found",
+            style: TextStyles.textStyleBold15.copyWith(color: primary),
+            textScaler: TextScaler.linear(1),
+          ),
         ],
       ),
     );
   }
-
 }

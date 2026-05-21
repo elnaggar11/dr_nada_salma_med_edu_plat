@@ -22,17 +22,15 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 class VerificationScreen extends StatefulWidget {
   final VerifyOtpParams params;
 
-
-
   const VerificationScreen({super.key, required this.params});
 
   @override
   State<VerificationScreen> createState() => _VerificationScreenState();
-
 }
 
 class _VerificationScreenState extends State<VerificationScreen> {
-  final TextEditingController verificationCodeController = TextEditingController();
+  final TextEditingController verificationCodeController =
+      TextEditingController();
 
   @override
   void initState() {
@@ -40,13 +38,18 @@ class _VerificationScreenState extends State<VerificationScreen> {
     context.read<VerifyCubit>().getFcmToken();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(
-          appBarInd: -1,
-          index: -1,
-          title: tr("verify_otp"),status: false,context: context, widget: SizedBox()),
+        appBarInd: -1,
+        index: -1,
+        title: tr("verify_otp"),
+        status: false,
+        context: context,
+        widget: SizedBox(),
+      ),
       backgroundColor: white,
       body: SizedBox(
         width: double.infinity,
@@ -56,180 +59,267 @@ class _VerificationScreenState extends State<VerificationScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: context.height/15,),
+              SizedBox(height: context.height / 15),
               BlocBuilder<VerifyCubit, VerifyState>(
                 builder: (context, state) {
-                  return context.read<VerifyCubit>().error == true ?
+                  return context.read<VerifyCubit>().error == true
+                      ? Container(
+                          margin: EdgeInsets.only(
+                            left: context.width / 5,
+                            right: context.width / 5,
+                          ),
 
-                    Container(
-                      margin: EdgeInsets.only(
-                        left: context.width/5,
-                       right: context.width/5),
-
-                padding: EdgeInsets.only(
-                    top: context.width/30,
-                    bottom: context.width/30,),
-                decoration: BoxDecoration(
-                  color: pink,
-                  borderRadius: BorderRadius.all(Radius.circular(13))),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(tr("an_error"),style: TextStyles
-                        .textStyleBold12.copyWith(color: white,fontWeight: FontWeight.w600)
-                      ,textScaler: TextScaler.linear(1),),
-                    SizedBox(width: context.width/30,),
-                    Container(
-                        alignment: Alignment.center,
-                        child: customSvg(name: disLike,color: white))
-                  ],
-                ),
-              ) : SizedBox();},),
-              SizedBox(height: context.height/40,),
-              BlocBuilder<VerifyCubit, VerifyState>(
-                builder: (context, state) {
-                  return context.read<VerifyCubit>().error == true ?
-                  SizedBox() :
-                  SizedBox(height: context.height/20,);
-                  },),
-              Container(
-                  alignment: Alignment.center,
-                  child: customSvg(name: verification)),
-              SizedBox(height: context.height/26,),
-              Text(tr("email_verification"),style: TextStyles.textStyleBold28
-                  .copyWith(color: orangeBold),textScaler: TextScaler.linear(1),),
-              SizedBox(height: context.height/28,),
-              Text(tr("enter_code"),
-                style: TextStyles.textStyleNormal14
-                  .copyWith(color: black,fontFamily: poppins),
-                textScaler: TextScaler.linear(1),),
-              SizedBox(height: context.height/15,),
-              BlocBuilder<VerifyCubit, VerifyState>(
-                builder: (context, state) {
-    return OtpTextField(
-                numberOfFields: 4,
-                clearText: false,
-                enabledBorderColor: context.read<VerifyCubit>().verificationCodeController.text.length
-                    >= 4 ? primary : grey3,
-                focusedBorderColor: primary,
-                alignment: Alignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                textStyle: TextStyles.textStyleBold28.copyWith(color: primary),
-                contentPadding: EdgeInsets.zero,
-                autoFocus: true,
-                borderColor: primary,
-                fieldWidth: context.width/5.7,
-                //set to true to show as box or false to show as dash
-                showFieldAsBox: false,
-
-                //runs when a code is typed in
-                onCodeChanged: (String code) {
-                  context.read<VerifyCubit>().verificationCodeController.text = code;
+                          padding: EdgeInsets.only(
+                            top: context.width / 30,
+                            bottom: context.width / 30,
+                          ),
+                          decoration: BoxDecoration(
+                            color: pink,
+                            borderRadius: BorderRadius.all(Radius.circular(13)),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                tr("an_error"),
+                                style: TextStyles.textStyleBold12.copyWith(
+                                  color: white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                textScaler: TextScaler.linear(1),
+                              ),
+                              SizedBox(width: context.width / 30),
+                              Container(
+                                alignment: Alignment.center,
+                                child: customSvg(name: disLike, color: white),
+                              ),
+                            ],
+                          ),
+                        )
+                      : SizedBox();
                 },
-                //runs when every textfield is filled
-                onSubmit: (String verificationCode){
+              ),
+              SizedBox(height: context.height / 40),
+              BlocBuilder<VerifyCubit, VerifyState>(
+                builder: (context, state) {
+                  return context.read<VerifyCubit>().error == true
+                      ? SizedBox()
+                      : SizedBox(height: context.height / 20);
+                },
+              ),
+              Container(
+                alignment: Alignment.center,
+                child: customSvg(name: verification),
+              ),
+              SizedBox(height: context.height / 26),
+              Text(
+                tr("email_verification"),
+                style: TextStyles.textStyleBold28.copyWith(color: orangeBold),
+                textScaler: TextScaler.linear(1),
+              ),
+              SizedBox(height: context.height / 28),
+              Text(
+                tr("enter_code"),
+                style: TextStyles.textStyleNormal14.copyWith(
+                  color: black,
+                  fontFamily: poppins,
+                ),
+                textScaler: TextScaler.linear(1),
+              ),
+              SizedBox(height: context.height / 15),
+              BlocBuilder<VerifyCubit, VerifyState>(
+                builder: (context, state) {
+                  return OtpTextField(
+                    numberOfFields: 4,
+                    clearText: false,
+                    enabledBorderColor:
+                        context
+                                .read<VerifyCubit>()
+                                .verificationCodeController
+                                .text
+                                .length >=
+                            4
+                        ? primary
+                        : grey3,
+                    focusedBorderColor: primary,
+                    alignment: Alignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    textStyle: TextStyles.textStyleBold28.copyWith(
+                      color: primary,
+                    ),
+                    contentPadding: EdgeInsets.zero,
+                    autoFocus: true,
+                    borderColor: primary,
+                    fieldWidth: context.width / 5.7,
+                    //set to true to show as box or false to show as dash
+                    showFieldAsBox: false,
 
-                  context.read<VerifyCubit>().verificationCodeController.text = verificationCode;
-                }, // end onSubmit
-              );},),
-              SizedBox(height: context.height/15,),
+                    //runs when a code is typed in
+                    onCodeChanged: (String code) {
+                      context
+                              .read<VerifyCubit>()
+                              .verificationCodeController
+                              .text =
+                          code;
+                    },
+                    //runs when every textfield is filled
+                    onSubmit: (String verificationCode) {
+                      context
+                              .read<VerifyCubit>()
+                              .verificationCodeController
+                              .text =
+                          verificationCode;
+                    }, // end onSubmit
+                  );
+                },
+              ),
+              SizedBox(height: context.height / 15),
               BlocBuilder<ResendOtpCubit, ResendOtpState>(
                 builder: (context, state) {
                   return RichText(
-                  textScaler: TextScaler.linear(1),
-                  text: TextSpan(
+                    textScaler: TextScaler.linear(1),
+                    text: TextSpan(
                       children: [
-                        TextSpan(text: tr("n’t_receive_code"),style: TextStyles
-                            .textStyleNormal14.copyWith(color: black)),
+                        TextSpan(
+                          text: tr("n’t_receive_code"),
+                          style: TextStyles.textStyleNormal14.copyWith(
+                            color: black,
+                          ),
+                        ),
                         WidgetSpan(
-                          child: context.read<ResendOtpCubit>().loading == true ?
-                            Container(
-                                width: context.width/20,
-                                height: context.width/20,
-                                alignment: Alignment.center,
-                                child: SpinKitFadingCircle(color: primary,size: 20,)) :
-                           RichText(
-                             textHeightBehavior: TextHeightBehavior(applyHeightToFirstAscent: true
-                                 ,applyHeightToLastDescent: true),
-                             textScaler: TextScaler.linear(1),
-                               softWrap: true,
-                               textAlign: TextAlign.center,
-                               text: TextSpan(children: [
-                              TextSpan(text: tr("resend_code"),style: TextStyles
-                                  .textStyleNormal14.copyWith(color: primary,fontWeight: FontWeight.w600),
-                                recognizer: TapGestureRecognizer()..onTap = (){
-                                context.read<ResendOtpCubit>().resendOtp
-                                  (params: ResendOtpParams(email: widget.params.email));
-                                },)
-                            ])),)
-
-                      ]
-                  ));},),
-              SizedBox(height: context.height/20,),
-              BlocBuilder<VerifyCubit,VerifyState>(
+                          child: context.read<ResendOtpCubit>().loading == true
+                              ? Container(
+                                  width: context.width / 20,
+                                  height: context.width / 20,
+                                  alignment: Alignment.center,
+                                  child: SpinKitFadingCircle(
+                                    color: primary,
+                                    size: 20,
+                                  ),
+                                )
+                              : RichText(
+                                  textHeightBehavior: TextHeightBehavior(
+                                    applyHeightToFirstAscent: true,
+                                    applyHeightToLastDescent: true,
+                                  ),
+                                  textScaler: TextScaler.linear(1),
+                                  softWrap: true,
+                                  textAlign: TextAlign.center,
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: tr("resend_code"),
+                                        style: TextStyles.textStyleNormal14
+                                            .copyWith(
+                                              color: primary,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {
+                                            context
+                                                .read<ResendOtpCubit>()
+                                                .resendOtp(
+                                                  params: ResendOtpParams(
+                                                    email: widget.params.email,
+                                                  ),
+                                                );
+                                          },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+              SizedBox(height: context.height / 20),
+              BlocBuilder<VerifyCubit, VerifyState>(
                 builder: (context, state) {
-                  return Text("${tr("code_expired")} ${context.read<VerifyCubit>().timerText}",style: TextStyles
-                  .textStyleNormal13.copyWith(color: primary),textScaler: TextScaler.linear(1),);
-  },
-),
-              SizedBox(height: context.height/15,),
+                  return Text(
+                    "${tr("code_expired")} ${context.read<VerifyCubit>().timerText}",
+                    style: TextStyles.textStyleNormal13.copyWith(
+                      color: primary,
+                    ),
+                    textScaler: TextScaler.linear(1),
+                  );
+                },
+              ),
+              SizedBox(height: context.height / 15),
 
-            widget.params.type == "reset" ?
-            BlocBuilder<CheckOtpCubit, CheckOtpState>(
-              builder: (context, state) {
-                return FadeColorButton(
-                  isLoading: context.read<CheckOtpCubit>().loading,
-                  onButtonPressed: (){
-
-                    context.read<CheckOtpCubit>()
-                        .checkOtp(params:
-                    CheckOtpParams(
-                       email: widget.params.email,
-                        otp: context.read<VerifyCubit>().verificationCodeController.text.toString()));
-
-
-                  },
-                  buttonColor: context.read<VerifyCubit>()
-                      .verificationCodeController.text.length == 4 ?
-                  primary :
-                  context.read<VerifyCubit>().buttonColor
-                  ,isPressed: context.read<VerifyCubit>().isPressed,
-                  btnTitle: tr("verify"),);},) :
-            BlocBuilder<VerifyCubit, VerifyState>(
-                builder: (context, state) {
-                  return FadeColorButton(
-                    isLoading: context.read<VerifyCubit>().loading,
-                    onButtonPressed: (){
-
-                        context.read<VerifyCubit>()
-                            .verifyOtp(params: VerifyOtpParams(
-                            fcmToken: context.read<VerifyCubit>().fcmToken,
-                            type: widget.params.type,
-                            email: widget.params.email
-                            ,otp: context.read<VerifyCubit>().verificationCodeController.text.toString()));
-
-
+              widget.params.type == "reset"
+                  ? BlocBuilder<CheckOtpCubit, CheckOtpState>(
+                      builder: (context, state) {
+                        return FadeColorButton(
+                          isLoading: context.read<CheckOtpCubit>().loading,
+                          onButtonPressed: () {
+                            context.read<CheckOtpCubit>().checkOtp(
+                              params: CheckOtpParams(
+                                email: widget.params.email,
+                                otp: context
+                                    .read<VerifyCubit>()
+                                    .verificationCodeController
+                                    .text
+                                    .toString(),
+                              ),
+                            );
+                          },
+                          buttonColor:
+                              context
+                                      .read<VerifyCubit>()
+                                      .verificationCodeController
+                                      .text
+                                      .length ==
+                                  4
+                              ? primary
+                              : context.read<VerifyCubit>().buttonColor,
+                          isPressed: context.read<VerifyCubit>().isPressed,
+                          btnTitle: tr("verify"),
+                        );
                       },
-                    buttonColor: context.read<VerifyCubit>()
-                        .verificationCodeController.text.length == 4 ?
-                      primary :
-                  context.read<VerifyCubit>().buttonColor
-                    ,isPressed: context.read<VerifyCubit>().isPressed,
-                    btnTitle: tr("verify"),);},)
-
-
-
-              ,
-              SizedBox(height: context.height/20,)
-
+                    )
+                  : BlocBuilder<VerifyCubit, VerifyState>(
+                      builder: (context, state) {
+                        return FadeColorButton(
+                          isLoading: context.read<VerifyCubit>().loading,
+                          onButtonPressed: () {
+                            context.read<VerifyCubit>().verifyOtp(
+                              params: VerifyOtpParams(
+                                fcmToken: context.read<VerifyCubit>().fcmToken,
+                                type: widget.params.type,
+                                email: widget.params.email,
+                                otp: context
+                                    .read<VerifyCubit>()
+                                    .verificationCodeController
+                                    .text
+                                    .toString(),
+                              ),
+                            );
+                          },
+                          buttonColor:
+                              context
+                                      .read<VerifyCubit>()
+                                      .verificationCodeController
+                                      .text
+                                      .length ==
+                                  4
+                              ? primary
+                              : context.read<VerifyCubit>().buttonColor,
+                          isPressed: context.read<VerifyCubit>().isPressed,
+                          btnTitle: tr("verify"),
+                        );
+                      },
+                    ),
+              SizedBox(height: context.height / 20),
             ],
           ),
         ),
-
       ),
     );
   }
+
   @override
   void dispose() {
     context.read<VerifyCubit>().timer?.cancel();

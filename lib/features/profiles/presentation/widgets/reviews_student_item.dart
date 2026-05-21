@@ -14,14 +14,19 @@ class ReviewsStudentItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: context.width/.9,
+      width: context.width / .9,
       padding: EdgeInsets.all(20),
-      margin: EdgeInsets.only(left: context.width/30
-          ,right: context.width/30,top: context.width/30,bottom: context.width/30),
+      margin: EdgeInsets.only(
+        left: context.width / 30,
+        right: context.width / 30,
+        top: context.width / 30,
+        bottom: context.width / 30,
+      ),
       decoration: BoxDecoration(
-          color: greyLight,
-          borderRadius: BorderRadius.all(Radius.circular(16)),
-          shape: BoxShape.rectangle),
+        color: greyLight,
+        borderRadius: BorderRadius.all(Radius.circular(16)),
+        shape: BoxShape.rectangle,
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,47 +36,76 @@ class ReviewsStudentItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               ClipOval(
-                child: ImageHandler(image: img, width: context.width/8, height: context.width/8),),
+                child: ImageHandler(
+                  image: img,
+                  width: context.width / 8,
+                  height: context.width / 8,
+                ),
+              ),
               Spacer(),
-              customSvg(name: xsocial,width: context.width/18,height: context.width/18)
-
-            ],),
-
-          SizedBox(height: context.height/60,),
-          Container(
-            margin: EdgeInsets.only(left: context.width/30,right: context.width/30),
-            child: Text("“ The course was amazing and greatly boosted my confidence in my medical skills .”"
-              ,style: TextStyles.textStyleNormal20
-                .copyWith(color: orangeBold
-                  ,fontWeight: FontWeight.w400)
-              ,textScaler: TextScaler.linear(1),),
+              customSvg(
+                name: xsocial,
+                width: context.width / 18,
+                height: context.width / 18,
+              ),
+            ],
           ),
 
-          SizedBox(height: context.height/60,),
+          SizedBox(height: context.height / 60),
+          Container(
+            margin: EdgeInsets.only(
+              left: context.width / 30,
+              right: context.width / 30,
+            ),
+            child: Text(
+              "“ The course was amazing and greatly boosted my confidence in my medical skills .”",
+              style: TextStyles.textStyleNormal20.copyWith(
+                color: orangeBold,
+                fontWeight: FontWeight.w400,
+              ),
+              textScaler: TextScaler.linear(1),
+            ),
+          ),
+
+          SizedBox(height: context.height / 60),
           IntrinsicHeight(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                VerticalDivider(color: primary,thickness: 3,indent: 2,endIndent: 2,),
-                SizedBox(width: context.width/20,),
+                VerticalDivider(
+                  color: primary,
+                  thickness: 3,
+                  indent: 2,
+                  endIndent: 2,
+                ),
+                SizedBox(width: context.width / 20),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  Text("Abdullah Al-Walidi",
-                    style: TextStyles.textStyleBold14
-                        .copyWith(color: primary,fontWeight: FontWeight.w700)
-                    ,textScaler: TextScaler.linear(1),),
-                    SizedBox(height: context.height/60,),
-                    Text("medical student",
-                      style: TextStyles.textStyleNormal14
-                          .copyWith(color: orange,fontWeight: FontWeight.w500)
-                      ,textScaler: TextScaler.linear(1),),
-                ],),
-              ],),
+                    Text(
+                      "Abdullah Al-Walidi",
+                      style: TextStyles.textStyleBold14.copyWith(
+                        color: primary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      textScaler: TextScaler.linear(1),
+                    ),
+                    SizedBox(height: context.height / 60),
+                    Text(
+                      "medical student",
+                      style: TextStyles.textStyleNormal14.copyWith(
+                        color: orange,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textScaler: TextScaler.linear(1),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-
         ],
       ),
     );

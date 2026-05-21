@@ -5,14 +5,16 @@ import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/academi
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/academic_info/academic_info_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/repositories/auth_repositories.dart';
 
-class AcademicInfoUseCase extends UseCase<AcademicInfoResponse,AcademicInfoParams>{
+class AcademicInfoUseCase
+    extends UseCase<AcademicInfoResponse, AcademicInfoParams> {
   final AuthRepositories authRepositories;
 
   AcademicInfoUseCase(this.authRepositories);
 
   @override
-  Future<Either<Failure, AcademicInfoResponse>> call(AcademicInfoParams params) async{
+  Future<Either<Failure, AcademicInfoResponse>> call(
+    AcademicInfoParams params,
+  ) async {
     return await authRepositories.setAcademicInfo(params: params);
   }
-
 }

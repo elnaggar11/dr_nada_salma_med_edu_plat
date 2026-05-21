@@ -18,21 +18,33 @@ class EmptyCourseWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(height: context.height/10,),
+          SizedBox(height: context.height / 10),
           Container(
-              alignment: Alignment.center,
-              child: customSvg(name: emptyCourse,width: context.width/7,height: context.width/7)),
-          SizedBox(height: context.height/70,),
+            alignment: Alignment.center,
+            child: customSvg(
+              name: emptyCourse,
+              width: context.width / 7,
+              height: context.width / 7,
+            ),
+          ),
+          SizedBox(height: context.height / 70),
           Container(
-            margin: EdgeInsets.only(left: context.width/20,right: context.width/20),
-            child: Text(tr("haven’t_registered_any_course")
-              ,style: TextStyles.textStyleBold19.copyWith(color: primary
-                  ,fontWeight: FontWeight.w800)
-              ,textScaler: TextScaler.linear(1),textAlign: TextAlign.center,),
-          )
+            margin: EdgeInsets.only(
+              left: context.width / 20,
+              right: context.width / 20,
+            ),
+            child: Text(
+              tr("haven’t_registered_any_course"),
+              style: TextStyles.textStyleBold19.copyWith(
+                color: primary,
+                fontWeight: FontWeight.w800,
+              ),
+              textScaler: TextScaler.linear(1),
+              textAlign: TextAlign.center,
+            ),
+          ),
         ],
       ),
     );
   }
-
 }

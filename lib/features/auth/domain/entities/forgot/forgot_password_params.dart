@@ -3,9 +3,7 @@ class ForgotPasswordParams {
 
   ForgotPasswordParams({this.email});
 
-  Map<String,dynamic>toMap(){
-    return {
-      "email" : email
-    };
+  Map<String, dynamic> toMap() {
+    return {"email": email};
   }
 }

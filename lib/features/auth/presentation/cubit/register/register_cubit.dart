@@ -18,8 +18,6 @@ class RegisterCubit extends Cubit<RegisterState> {
   Color? buttonColor = primary;
   final RegisterUseCase registerUseCase;
 
-
-
   bool? loading = false;
   bool? error = false;
   bool? success = false;
@@ -30,8 +28,7 @@ class RegisterCubit extends Cubit<RegisterState> {
 
   bool? isChecked = false;
 
-  Future<void>setButtonAnimation()async{
-
+  Future<void> setButtonAnimation() async {
     isPressed = !isPressed!;
     buttonColor = isPressed! ? orangeBold : primary;
     // Change color based on state
@@ -39,9 +36,7 @@ class RegisterCubit extends Cubit<RegisterState> {
     emit(UpdateRegisterState());
   }
 
-
-
-  Future<void>register({RegisterParams? params})async{
+  Future<void> register({RegisterParams? params}) async {
     loading = true;
     error = false;
     success = false;
@@ -49,38 +44,52 @@ class RegisterCubit extends Cubit<RegisterState> {
     buttonColor = loading! ? orangeBold : primary;
 
     emit(RegisterLoadingState());
-    try{
+    try {
       final failOrUser = await registerUseCase(params!);
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            error = true;
+            success = false;
+            buttonColor = loading! ? orangeBold : primary;
+
+            msgKey.currentState!.showSnackBar(
+              SnackBar(
+                behavior: SnackBarBehavior.floating,
+                content: Text(
+                  fail.message,
+                  style: TextStyles.textStyleNormal12.copyWith(color: white),
+                ),
+              ),
+            );
+            emit(RegisterErrorState(msg: fail.message));
+          }
+        },
+        (response) {
           loading = false;
-          error = true;
-          success = false;
+          error = false;
+          success = true;
           buttonColor = loading! ? orangeBold : primary;
 
-          msgKey.currentState!.showSnackBar
-            (SnackBar(
+          msgKey.currentState!.showSnackBar(
+            SnackBar(
               behavior: SnackBarBehavior.floating,
-              content: Text(fail.message!,style: TextStyles
-              .textStyleNormal12.copyWith(color: white),)));
-          emit(RegisterErrorState(msg: fail.message));
-        }
-      }, (response){
-        loading = false;
-        error = false;
-        success = true;
-        buttonColor = loading! ? orangeBold : primary;
+              content: Text(
+                response.message!,
+                style: TextStyles.textStyleNormal12.copyWith(color: white),
+              ),
+            ),
+          );
 
-        msgKey.currentState!.showSnackBar
-          (SnackBar(
-            behavior: SnackBarBehavior.floating,
-            content: Text(response.message!,style: TextStyles
-            .textStyleNormal12.copyWith(color: white),)));
-
-        navKey.currentContext!.pushReplacementNamed(name: secondRegisterSc,args: params.email);
-        emit(RegisterSuccessState(response: response));
-      });
-    }catch(e){
+          navKey.currentContext!.pushReplacementNamed(
+            name: secondRegisterSc,
+            args: params.email,
+          );
+          emit(RegisterSuccessState(response: response));
+        },
+      );
+    } catch (e) {
       loading = false;
       error = true;
       success = false;
@@ -89,18 +98,18 @@ class RegisterCubit extends Cubit<RegisterState> {
     }
   }
 
-  Future<void>setVisibility({bool? visibility,String? type})async{
-    if(type == "password"){
+  Future<void> setVisibility({bool? visibility, String? type}) async {
+    if (type == "password") {
       obscure = !visibility!;
       emit(UpdateVisibilityState());
-    }else if(type == "confirmPassword"){
+    } else if (type == "confirmPassword") {
       obscure2 = !visibility!;
       emit(UpdateConfirmationPasswordVisibilityState());
     }
   }
-  Future<void>isTermsChecked({bool? newValue})async {
 
-      isChecked = newValue!;
+  Future<void> isTermsChecked({bool? newValue}) async {
+    isChecked = newValue!;
 
     emit(TermsCheckedState());
   }

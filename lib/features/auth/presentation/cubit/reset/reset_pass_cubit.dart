@@ -23,60 +23,76 @@ class ResetPassCubit extends Cubit<ResetPassState> {
 
   Color buttonColor = orange;
 
-  Future<void>resetPassword({ResetPasswordParams? params})async{
+  Future<void> resetPassword({ResetPasswordParams? params}) async {
     loading = true;
     error = false;
     success = false;
     buttonColor = loading! ? primary : orange;
     emit(ResetPasswordLoadingState());
-    try{
+    try {
       final failOrUser = await resetPasswordUseCase(params!);
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            error = true;
+            success = false;
+            buttonColor = loading! ? primary : orange;
 
+            msgKey.currentState!.showSnackBar(
+              SnackBar(
+                behavior: SnackBarBehavior.floating,
+                content: Text(
+                  fail.message,
+                  style: TextStyles.textStyleNormal13.copyWith(color: white),
+                  textScaler: TextScaler.linear(1),
+                ),
+              ),
+            );
+            emit(ResetPasswordErrorState(message: fail.message));
+          }
+        },
+        (response) {
           loading = false;
-          error = true;
-          success = false;
+          error = false;
+          success = true;
           buttonColor = loading! ? primary : orange;
 
-          msgKey.currentState!.showSnackBar(SnackBar(
-              behavior: SnackBarBehavior.floating,
-              content: Text(fail.message!,style:
-          TextStyles.textStyleNormal13.copyWith(color: white),textScaler: TextScaler.linear(1),)));
-          emit(ResetPasswordErrorState(message: fail.message));
-        }
-      }, (response){
-        loading = false;
-        error = false;
-        success = true;
-        buttonColor = loading! ? primary : orange;
+          showDialog(
+            context: navKey.currentContext!,
+            builder: (BuildContext context) {
+              return SuccessfullDialogWidget(msg: response.message!);
+            },
+          );
 
-        showDialog(
-          context: navKey.currentContext!,
-          builder: (BuildContext context) {
-            return SuccessfullDialogWidget(msg: response.message!,);
-          },);
+          //  navKey.currentContext!.pushNamed(name:bottomBarSc);
 
-      //  navKey.currentContext!.pushNamed(name:bottomBarSc);
-
-        emit(ResetPasswordSuccessState(resetPasswordResponse: response));
-      });
-
-    }catch(e){
+          emit(ResetPasswordSuccessState(resetPasswordResponse: response));
+        },
+      );
+    } catch (e) {
       loading = false;
       error = true;
       success = false;
       buttonColor = loading! ? primary : orange;
-      msgKey.currentState!.showSnackBar(SnackBar(content: Text(e.toString(),style:
-      TextStyles.textStyleNormal13.copyWith(color: white),textScaler: TextScaler.linear(1),)));
+      msgKey.currentState!.showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString(),
+            style: TextStyles.textStyleNormal13.copyWith(color: white),
+            textScaler: TextScaler.linear(1),
+          ),
+        ),
+      );
       emit(ResetPasswordErrorState(message: e.toString()));
     }
   }
-  Future<void>setVisibility({bool? visibility,String? type})async{
-    if(type == "password"){
+
+  Future<void> setVisibility({bool? visibility, String? type}) async {
+    if (type == "password") {
       obscure = !visibility!;
       emit(ResetUpdateVisibilityState());
-    }else if(type == "confirmPassword"){
+    } else if (type == "confirmPassword") {
       obscure2 = !visibility!;
       emit(UpdateConfirmationPasswordVisibilityState());
     }

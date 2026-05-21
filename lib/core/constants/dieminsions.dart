@@ -6,19 +6,21 @@ extension MediaQueryHelper on BuildContext {
 }
 
 extension NavigationHelper on BuildContext {
-  void pushNamed({String? name,Object? args}){
-    Navigator.of(this).pushNamed(name!,arguments: args);
+  void pushNamed({String? name, Object? args}) {
+    Navigator.of(this).pushNamed(name!, arguments: args);
   }
 
-  void pushReplacementNamed({String? name,Object? args}){
-    Navigator.of(this).pushReplacementNamed(name!,arguments: args);
+  void pushReplacementNamed({String? name, Object? args}) {
+    Navigator.of(this).pushReplacementNamed(name!, arguments: args);
   }
 
-  void pushNamedAndRemoveUntil({String? name,Object? args}){
-    Navigator.of(this).pushNamedAndRemoveUntil(name!,(route) => false,arguments: args);
+  void pushNamedAndRemoveUntil({String? name, Object? args}) {
+    Navigator.of(
+      this,
+    ).pushNamedAndRemoveUntil(name!, (route) => false, arguments: args);
   }
 
-  void pop(){
+  void pop() {
     Navigator.of(this).pop();
   }
 }

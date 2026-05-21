@@ -5,11 +5,20 @@ class ImageHandler extends StatelessWidget {
   final double width;
   final double height;
 
-  const ImageHandler({super.key, required this.image, required this.width, required this.height});
+  const ImageHandler({
+    super.key,
+    required this.image,
+    required this.width,
+    required this.height,
+  });
   @override
   Widget build(BuildContext context) {
-    return Image.asset(image,width: width,height: height
-      ,alignment: Alignment.center,fit: BoxFit.cover,);
+    return Image.asset(
+      image,
+      width: width,
+      height: height,
+      alignment: Alignment.center,
+      fit: BoxFit.cover,
+    );
   }
-
 }

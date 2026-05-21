@@ -7,11 +7,11 @@ class CoursesShimmerList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        shrinkWrap: true,
-        itemCount: 5,
-        physics: ClampingScrollPhysics(),
-        scrollDirection: Axis.vertical,
-        itemBuilder: (context,index)=>CoursesShimmerItem());
+      shrinkWrap: true,
+      itemCount: 5,
+      physics: ClampingScrollPhysics(),
+      scrollDirection: Axis.vertical,
+      itemBuilder: (context, index) => CoursesShimmerItem(),
+    );
   }
-
 }

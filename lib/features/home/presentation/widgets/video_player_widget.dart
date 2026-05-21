@@ -10,7 +10,12 @@ class VideoPlayerWidget extends StatefulWidget {
   final String courseId;
   final String lectureId;
 
-  const VideoPlayerWidget({super.key, required this.lectureVideo, required this.courseId, required this.lectureId});
+  const VideoPlayerWidget({
+    super.key,
+    required this.lectureVideo,
+    required this.courseId,
+    required this.lectureId,
+  });
 
   @override
   State<VideoPlayerWidget> createState() => _VideoPlayerWidgetState();
@@ -56,14 +61,10 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         leading: InkWell(
           onTap: () => context.pop(),
           child: Container(
-            padding: EdgeInsets.all(MediaQuery
-                .of(context)
-                .size
-                .width / 70),
-            margin: EdgeInsets.symmetric(horizontal: MediaQuery
-                .of(context)
-                .size
-                .width / 40),
+            padding: EdgeInsets.all(MediaQuery.of(context).size.width / 70),
+            margin: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width / 40,
+            ),
             decoration: const BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.white,
@@ -87,7 +88,9 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                 aspectRatio: 16 / 9,
                 child: InAppWebView(
                   initialUrlRequest: URLRequest(
-                    url: WebUri('https://drive.google.com/file/d/${widget.lectureVideo}/preview'),
+                    url: WebUri(
+                      'https://drive.google.com/file/d/${widget.lectureVideo}/preview',
+                    ),
                   ),
                   onWebViewCreated: (controller) => webView = controller,
                   onLoadStart: (controller, url) {
@@ -118,10 +121,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
           ),
 
           // Loading indicator
-          if (loading)
-            const CircularProgressIndicator(
-              color: Colors.red,
-            ),
+          if (loading) const CircularProgressIndicator(color: Colors.red),
         ],
       ),
     );

@@ -8,7 +8,7 @@ class AboutUsResponse {
   AboutUsResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -31,14 +31,15 @@ class Data {
   dynamic descriptionTwo;
   dynamic imageTwo;
 
-  Data(
-      {this.id,
-        this.titleOne,
-        this.descriptionOne,
-        this.imageOne,
-        this.titleTwo,
-        this.descriptionTwo,
-        this.imageTwo});
+  Data({
+    this.id,
+    this.titleOne,
+    this.descriptionOne,
+    this.imageOne,
+    this.titleTwo,
+    this.descriptionTwo,
+    this.imageTwo,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];

@@ -17,12 +17,11 @@ import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/public_
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 class TopPrivateLessonsScreen extends StatefulWidget {
-
+  const TopPrivateLessonsScreen({super.key});
 
   @override
-  State<TopPrivateLessonsScreen> createState() => _TopPrivateLessonsScreenState();
-
-
+  State<TopPrivateLessonsScreen> createState() =>
+      _TopPrivateLessonsScreenState();
 }
 
 class _TopPrivateLessonsScreenState extends State<TopPrivateLessonsScreen> {
@@ -33,11 +32,12 @@ class _TopPrivateLessonsScreenState extends State<TopPrivateLessonsScreen> {
   @override
   void initState() {
     super.initState();
-    pagingController = PagingController<int,Data>(firstPageKey: 1);
+    pagingController = PagingController<int, Data>(firstPageKey: 1);
     pagingController.addPageRequestListener((pageKey) {
       fetchPage(pageKey);
     });
   }
+
   Future<void> fetchPage(int pageKey) async {
     final cubit = context.read<PrivateLessonsCubit>();
     final params = CoursesParams(
@@ -67,105 +67,141 @@ class _TopPrivateLessonsScreenState extends State<TopPrivateLessonsScreen> {
       pagingController.error = error;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: white,
       appBar: customAppBar(
-          appBarInd: 0,
-          title: tr("top_private_lessons"),status: true
-          ,context: context, widget: InkWell(onTap: (){},child: Container(
-              alignment: Alignment.center,
-              child: customSvg(name: share)),)),
+        appBarInd: 0,
+        title: tr("top_private_lessons"),
+        status: true,
+        context: context,
+        widget: InkWell(
+          onTap: () {},
+          child: Container(
+            alignment: Alignment.center,
+            child: customSvg(name: share),
+          ),
+        ),
+      ),
       body: SizedBox(
-        child:
-        Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(children: [
-              SizedBox(width: context.width/30,),
-              Expanded(child:  MediaQuery(
-                data: MediaQueryData(textScaler: TextScaler.linear(1)),
-                child: TextField(
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: greyLight,
-                      hintText: tr("search_course"),
-                      contentPadding: EdgeInsets.only(top: 13,bottom: 13),
-                      hintStyle: TextStyles.textStyleNormal12.copyWith(color: black),
-                      prefixIcon: IntrinsicHeight(
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                                width: context.width/8.5,
+            Row(
+              children: [
+                SizedBox(width: context.width / 30),
+                Expanded(
+                  child: MediaQuery(
+                    data: MediaQueryData(textScaler: TextScaler.linear(1)),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: greyLight,
+                        hintText: tr("search_course"),
+                        contentPadding: EdgeInsets.only(top: 13, bottom: 13),
+                        hintStyle: TextStyles.textStyleNormal12.copyWith(
+                          color: black,
+                        ),
+                        prefixIcon: IntrinsicHeight(
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: context.width / 8.5,
                                 alignment: Alignment.center,
-                                child: customSvg(name: search)),
-                            SizedBox(width: context.width/90,),
-                            VerticalDivider(thickness: 1,color: black.withOpacity(.1),indent: 15,endIndent: 15,)
-
-                          ],
+                                child: customSvg(name: search),
+                              ),
+                              SizedBox(width: context.width / 90),
+                              VerticalDivider(
+                                thickness: 1,
+                                color: black.withOpacity(.1),
+                                indent: 15,
+                                endIndent: 15,
+                              ),
+                            ],
+                          ),
+                        ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: searchBg),
+                          borderRadius: BorderRadius.all(Radius.circular(40)),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: searchBg),
+                          borderRadius: BorderRadius.all(Radius.circular(40)),
+                        ),
+                        disabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: searchBg),
+                          borderRadius: BorderRadius.all(Radius.circular(40)),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: searchBg),
+                          borderRadius: BorderRadius.all(Radius.circular(40)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: searchBg),
+                          borderRadius: BorderRadius.all(Radius.circular(40)),
                         ),
                       ),
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(color: searchBg),
-                          borderRadius: BorderRadius.all(Radius.circular(40))),
-                      enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: searchBg),
-                          borderRadius: BorderRadius.all(Radius.circular(40))),
-                      disabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: searchBg),
-                          borderRadius: BorderRadius.all(Radius.circular(40))),
-                      focusedErrorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: searchBg),
-                          borderRadius: BorderRadius.all(Radius.circular(40))),
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: searchBg),
-                          borderRadius: BorderRadius.all(Radius.circular(40))),
-
-                    )),
-              )),
-              SizedBox(width: context.width/50,),
-              InkWell(
-                onTap: (){
-                  context.pushNamed(name: filterSc,args: "Filter Private lessons");
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(17),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: orangeBold,),
-                  child: customSvg(name: filter),),
-              ),
-              SizedBox(width: context.width/30,),],),
-
-            SizedBox(height: context.height/200,),
-            Expanded(
-                child: RefreshIndicator(
-                  onRefresh: ()async{
-                    pagingController.refresh();
+                    ),
+                  ),
+                ),
+                SizedBox(width: context.width / 50),
+                InkWell(
+                  onTap: () {
+                    context.pushNamed(
+                      name: filterSc,
+                      args: "Filter Private lessons",
+                    );
                   },
-                  child: PagedListView<int, Data>(
-                    pagingController: pagingController,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(17),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: orangeBold,
+                    ),
+                    child: customSvg(name: filter),
+                  ),
+                ),
+                SizedBox(width: context.width / 30),
+              ],
+            ),
 
-                    builderDelegate: PagedChildBuilderDelegate<Data>(
-                      animateTransitions: true,
-                      firstPageProgressIndicatorBuilder:  (val){
-                        return CoursesShimmerList();
-                      },
-                      newPageProgressIndicatorBuilder: (val){
-                        return CoursesShimmerList();
-                      },
-                      firstPageErrorIndicatorBuilder: (val){
-                        return EmptyCourseWidget();
-                      },
-                      itemBuilder: (_, item, index) =>  TopPrivateLessonsItemVertical(typeInd: 2
-                        , data: context.read<PrivateLessonsCubit>().publicCoursesResponse!.data![index],),
-                    ),),
-                )
+            SizedBox(height: context.height / 200),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  pagingController.refresh();
+                },
+                child: PagedListView<int, Data>(
+                  pagingController: pagingController,
+                  shrinkWrap: true,
+                  scrollDirection: Axis.vertical,
+
+                  builderDelegate: PagedChildBuilderDelegate<Data>(
+                    animateTransitions: true,
+                    firstPageProgressIndicatorBuilder: (val) {
+                      return CoursesShimmerList();
+                    },
+                    newPageProgressIndicatorBuilder: (val) {
+                      return CoursesShimmerList();
+                    },
+                    firstPageErrorIndicatorBuilder: (val) {
+                      return EmptyCourseWidget();
+                    },
+                    itemBuilder: (_, item, index) =>
+                        TopPrivateLessonsItemVertical(
+                          typeInd: 2,
+                          data: context
+                              .read<PrivateLessonsCubit>()
+                              .publicCoursesResponse!
+                              .data![index],
+                        ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),

@@ -1,4 +1,4 @@
-class UserSpecialist{
+class UserSpecialist {
   int? specialistDegree;
   int? academicDegree;
 

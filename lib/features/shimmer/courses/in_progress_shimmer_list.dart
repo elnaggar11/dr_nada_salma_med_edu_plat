@@ -7,10 +7,10 @@ class InProgressShimmerList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        physics: ClampingScrollPhysics(),
-        itemBuilder: (context,index)=>InProgressShimmerItem());
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      physics: ClampingScrollPhysics(),
+      itemBuilder: (context, index) => InProgressShimmerItem(),
+    );
   }
-
 }

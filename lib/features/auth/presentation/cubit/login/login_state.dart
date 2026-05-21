@@ -5,9 +5,7 @@ sealed class LoginState {}
 
 final class LoginInitial extends LoginState {}
 
-
 class UpdateLoginState extends LoginState {}
-
 
 class LoginLoadingState extends LoginState {}
 
@@ -22,6 +20,7 @@ class LoginSuccessState extends LoginState {
 
   LoginSuccessState({required this.loginResponse});
 }
+
 class UpdateLoginVisibility extends LoginState {}
 
 class UpdateCheckedState extends LoginState {}

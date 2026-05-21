@@ -5,14 +5,16 @@ import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/cour
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/courses_status_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/repositories/courses_repositories.dart';
 
-class CoursesStatusUseCase extends UseCase<CoursesStatusResponse,CoursesStatusParams>{
+class CoursesStatusUseCase
+    extends UseCase<CoursesStatusResponse, CoursesStatusParams> {
   final CoursesRepositories coursesRepositories;
 
   CoursesStatusUseCase(this.coursesRepositories);
 
   @override
-  Future<Either<Failure, CoursesStatusResponse>> call(CoursesStatusParams params)async {
+  Future<Either<Failure, CoursesStatusResponse>> call(
+    CoursesStatusParams params,
+  ) async {
     return await coursesRepositories.getCoursesStatus(params: params);
   }
-
 }

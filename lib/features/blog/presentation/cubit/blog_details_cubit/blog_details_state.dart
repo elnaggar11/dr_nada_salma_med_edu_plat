@@ -7,12 +7,12 @@ final class BlogDetailsInitial extends BlogDetailsState {}
 
 class BlogDetailsLoadingState extends BlogDetailsState {}
 
-
 class BlogDetailsErrorState extends BlogDetailsState {
   final String message;
 
   BlogDetailsErrorState({required this.message});
 }
+
 class BlogDetailsSuccessState extends BlogDetailsState {
   final BlogBySlugResponse blogByCategoryIdResponse;
 
@@ -26,6 +26,7 @@ class BlogSocialError extends BlogDetailsState {
 
   BlogSocialError({required this.message});
 }
+
 class BlogSocialSuccess extends BlogDetailsState {
   final SocialMediaResponse socialMediaResponse;
 

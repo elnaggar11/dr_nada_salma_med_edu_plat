@@ -25,186 +25,194 @@ const logOutApi = "/logout";
 const deleteAccountApi = "/delete-account";
 
 abstract class ProfileRemoteDataSource {
-  Future<ProfileResponse>getProfile();
-  Future<PointsResponse>getPoints();
-  Future<FaqsResponse>getFaqs();
-  Future<CertificateResponse>getCertificates();
-  Future<AboutUsResponse>getAboutUs();
-  Future<TermsConditionsResponse>getTermsConditions();
-  Future<UpdateProfileResponse>updateProfile({UpdateProfileParams? params});
-  Future<SettingsResponse>getSiteSettings();
-  Future<LogOutResponse>logOut();
-  Future<DeleteAccountResponse>deleteAccount();
+  Future<ProfileResponse> getProfile();
+  Future<PointsResponse> getPoints();
+  Future<FaqsResponse> getFaqs();
+  Future<CertificateResponse> getCertificates();
+  Future<AboutUsResponse> getAboutUs();
+  Future<TermsConditionsResponse> getTermsConditions();
+  Future<UpdateProfileResponse> updateProfile({UpdateProfileParams? params});
+  Future<SettingsResponse> getSiteSettings();
+  Future<LogOutResponse> logOut();
+  Future<DeleteAccountResponse> deleteAccount();
 }
+
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   final ApiBaseHelper helper;
 
   ProfileRemoteDataSourceImpl(this.helper);
 
   @override
-  Future<ProfileResponse> getProfile() async{
-    try{
+  Future<ProfileResponse> getProfile() async {
+    try {
       final response = await helper.get(url: getProfileApi);
       print(response.toString());
       return ProfileResponse.fromJson(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
     }
   }
 
   @override
-  Future<PointsResponse> getPoints() async{
-    try{
+  Future<PointsResponse> getPoints() async {
+    try {
       final response = await helper.get(url: pointsApi);
       print(response.toString());
       return PointsResponse.fromJson(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
     }
   }
 
   @override
-  Future<FaqsResponse> getFaqs() async{
-    try{
+  Future<FaqsResponse> getFaqs() async {
+    try {
       final response = await helper.get(url: faqsApi);
       print(response.toString());
       return FaqsResponse.fromJson(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
     }
   }
 
   @override
-  Future<CertificateResponse> getCertificates() async{
-    try{
+  Future<CertificateResponse> getCertificates() async {
+    try {
       final response = await helper.get(url: certificatesApi);
       print(response.toString());
       return CertificateResponse.fromJson(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
     }
   }
 
   @override
-  Future<AboutUsResponse> getAboutUs() async{
-    try{
+  Future<AboutUsResponse> getAboutUs() async {
+    try {
       final response = await helper.get(url: aboutUsApi);
 
       return AboutUsResponse.fromJson(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
     }
   }
 
   @override
-  Future<TermsConditionsResponse> getTermsConditions() async{
-    try{
+  Future<TermsConditionsResponse> getTermsConditions() async {
+    try {
       final response = await helper.get(url: termsConditionsApi);
 
-        return TermsConditionsResponse.fromJson(response);
-    }on ServerException catch(e){
+      return TermsConditionsResponse.fromJson(response);
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
     }
   }
 
   @override
-  Future<UpdateProfileResponse> updateProfile({UpdateProfileParams? params}) async{
-    try{
-      print("password :" +params!.password.toString());
-      Map<String,dynamic> body = params.password == null ?
-      {
-        "full_name" :params!.fullName,
-        "phone_number" : params.phoneNumber,
-        "email" : params.email,
-        "image" : params.img == null ? "": await MultipartFile.fromFile(params.img!.path)}:
-      {
-          "full_name" :params!.fullName,
-          "phone_number" : params.phoneNumber,
-          "email" : params.email,
-          "password" : params.password,
-          "image" : params.img == null ? "": await MultipartFile.fromFile(params.img!.path)};
+  Future<UpdateProfileResponse> updateProfile({
+    UpdateProfileParams? params,
+  }) async {
+    try {
+      print("password :${params!.password}");
+      Map<String, dynamic> body = params.password == null
+          ? {
+              "full_name": params.fullName,
+              "phone_number": params.phoneNumber,
+              "email": params.email,
+              "image": params.img == null
+                  ? ""
+                  : await MultipartFile.fromFile(params.img!.path),
+            }
+          : {
+              "full_name": params.fullName,
+              "phone_number": params.phoneNumber,
+              "email": params.email,
+              "password": params.password,
+              "image": params.img == null
+                  ? ""
+                  : await MultipartFile.fromFile(params.img!.path),
+            };
 
       final response = await helper.post(url: updateProfileApi, body: body);
 
       return UpdateProfileResponse.fromJson(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
-    }on ForbiddenException catch(e){
+    } on ForbiddenException catch (e) {
       throw UnprocessableContentException(message: e.message);
     }
   }
 
   @override
-  Future<SettingsResponse> getSiteSettings()async {
-    try{
+  Future<SettingsResponse> getSiteSettings() async {
+    try {
       final response = await helper.get(url: settingsApi);
 
       return SettingsResponse.fromJson(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
     }
   }
 
   @override
-  Future<LogOutResponse> logOut() async{
-    try{
+  Future<LogOutResponse> logOut() async {
+    try {
       final response = await helper.post(url: logOutApi, body: {});
 
       return LogOutResponse.fromJson(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
     }
   }
 
   @override
-  Future<DeleteAccountResponse> deleteAccount() async{
-    try{
-      final response = await helper.delete(url: deleteAccountApi,);
+  Future<DeleteAccountResponse> deleteAccount() async {
+    try {
+      final response = await helper.delete(url: deleteAccountApi);
 
       return DeleteAccountResponse.fromJson(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
     }
   }
-
 }

@@ -3,21 +3,23 @@ import 'package:dr_nada_salma_med_edu_plat/features/shimmer/home/best_medical_sh
 import 'package:flutter/cupertino.dart';
 
 class BestMedicalShimmerList extends StatelessWidget {
-List<int> intList= [0,1,2,];
-BestMedicalShimmerList({super.key,});
+  List<int> intList = [0, 1, 2];
+  BestMedicalShimmerList({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(
-          left: context.width / 30, right: context.width / 30),
+        left: context.width / 30,
+        right: context.width / 30,
+      ),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         physics: ClampingScrollPhysics(),
-        child:
-
-        Row(
-            children: intList.map((e) => BestMedicalShimmerItem()).toList()),),);
+        child: Row(
+          children: intList.map((e) => BestMedicalShimmerItem()).toList(),
+        ),
+      ),
+    );
   }
-
 }

@@ -14,11 +14,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 class CertificateScreen extends StatefulWidget {
   const CertificateScreen({super.key});
 
-
-
   @override
   State<CertificateScreen> createState() => _CertificateScreenState();
-
 }
 
 class _CertificateScreenState extends State<CertificateScreen> {
@@ -27,44 +24,80 @@ class _CertificateScreenState extends State<CertificateScreen> {
     context.read<CertificatesCubit>().getCertificates();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: white,
       appBar: customAppBar(
-          appBarInd: 0,
-          widget: SizedBox(),status: false,title: tr("certificates"),context: context,),
+        appBarInd: 0,
+        widget: SizedBox(),
+        status: false,
+        title: tr("certificates"),
+        context: context,
+      ),
       body: SizedBox(
-        child: BlocBuilder<CertificatesCubit,CertificatesState>(
-  builder: (context, state) {
-    return context.read<CertificatesCubit>().loading == true ?
-        SpinKitPulse(color: primary,size: 50,) :
-    context.read<CertificatesCubit>().certificateResponse!.data!.isEmpty ?
-        Container(
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                  alignment: Alignment.center,
-                  child: customSvg(name: certificate,color: primary
-                      ,width: context.width/5,height: context.width/5)),
-              SizedBox(height: context.height/60,),
-              Text(tr("no_certificates"),style: TextStyles
-                  .textStyleBold15.copyWith(color: primary,),textScaler: TextScaler.linear(1),)
-            ],
-          ),
-        ):
-      ListView.builder(
-            itemCount: context.read<CertificatesCubit>().certificateResponse!.data!.length,
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            itemBuilder: (context,index)=>CertificateItem(
-              title: context.read<CertificatesCubit>().certificateResponse!.data![index].title??""
-              , date: context.read<CertificatesCubit>().certificateResponse!.data![index].issuedAt.toString(),));
-  },
-),
+        child: BlocBuilder<CertificatesCubit, CertificatesState>(
+          builder: (context, state) {
+            return context.read<CertificatesCubit>().loading == true
+                ? SpinKitPulse(color: primary, size: 50)
+                : context
+                      .read<CertificatesCubit>()
+                      .certificateResponse!
+                      .data!
+                      .isEmpty
+                ? Container(
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          alignment: Alignment.center,
+                          child: customSvg(
+                            name: certificate,
+                            color: primary,
+                            width: context.width / 5,
+                            height: context.width / 5,
+                          ),
+                        ),
+                        SizedBox(height: context.height / 60),
+                        Text(
+                          tr("no_certificates"),
+                          style: TextStyles.textStyleBold15.copyWith(
+                            color: primary,
+                          ),
+                          textScaler: TextScaler.linear(1),
+                        ),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: context
+                        .read<CertificatesCubit>()
+                        .certificateResponse!
+                        .data!
+                        .length,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (context, index) => CertificateItem(
+                      title:
+                          context
+                              .read<CertificatesCubit>()
+                              .certificateResponse!
+                              .data![index]
+                              .title ??
+                          "",
+                      date: context
+                          .read<CertificatesCubit>()
+                          .certificateResponse!
+                          .data![index]
+                          .issuedAt
+                          .toString(),
+                    ),
+                  );
+          },
+        ),
       ),
     );
   }

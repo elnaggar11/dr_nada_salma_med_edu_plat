@@ -14,45 +14,49 @@ class BlogRepositoriesImpl implements BlogsRepositories {
   BlogRepositoriesImpl(this.blogRemoteDataSource);
 
   @override
-  Future<Either<Failure, CategoriesWithBlogResponse>> getCategoriesWithBlog() async{
-    try{
+  Future<Either<Failure, CategoriesWithBlogResponse>>
+  getCategoriesWithBlog() async {
+    try {
       final response = await blogRemoteDataSource.getCategoriesWithBlog();
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
     }
   }
 
   @override
-  Future<Either<Failure, BlogBySlugResponse>> getBlogDetails({BlogDetailsParams? params}) async{
-    try{
-      final response = await blogRemoteDataSource.getBlogBySlug(params: params!);
+  Future<Either<Failure, BlogBySlugResponse>> getBlogDetails({
+    BlogDetailsParams? params,
+  }) async {
+    try {
+      final response = await blogRemoteDataSource.getBlogBySlug(
+        params: params!,
+      );
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
     }
   }
 
   @override
-  Future<Either<Failure, SocialMediaResponse>> getSocial() async{
-    try{
+  Future<Either<Failure, SocialMediaResponse>> getSocial() async {
+    try {
       final response = await blogRemoteDataSource.getSocial();
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
     }
   }
-
 }

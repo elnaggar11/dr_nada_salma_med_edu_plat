@@ -10,7 +10,7 @@ class RegisterResponse {
     message = json['message'];
     if (json['data'] != null) {
       data = <dynamic>[];
-     /* json['data'].forEach((v) {
+      /* json['data'].forEach((v) {
         data!.add( dynamic.fromJson(v));
       });*/
     }

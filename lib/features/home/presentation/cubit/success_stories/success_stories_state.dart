@@ -5,9 +5,7 @@ sealed class SuccessStoriesState {}
 
 final class SuccessStoriesInitial extends SuccessStoriesState {}
 
-
 class SuccessStoriesLoadingState extends SuccessStoriesState {}
-
 
 class SuccessStoriesErrorState extends SuccessStoriesState {
   final String message;

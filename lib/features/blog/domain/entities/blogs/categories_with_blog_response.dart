@@ -73,19 +73,20 @@ class Blogs {
   dynamic categoryId;
   dynamic createdAt;
 
-  Blogs(
-      {this.id,
-        this.title,
-        this.description,
-        this.slug,
-        this.image,
-        this.status,
-        this.timePublish,
-        this.isActive,
-        this.metaTitle,
-        this.metaDescription,
-        this.categoryId,
-        this.createdAt});
+  Blogs({
+    this.id,
+    this.title,
+    this.description,
+    this.slug,
+    this.image,
+    this.status,
+    this.timePublish,
+    this.isActive,
+    this.metaTitle,
+    this.metaDescription,
+    this.categoryId,
+    this.createdAt,
+  });
 
   Blogs.fromJson(Map<String, dynamic> json) {
     id = json['id'];

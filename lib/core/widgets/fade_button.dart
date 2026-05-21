@@ -7,8 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class FadeColorButton extends StatefulWidget {
-   FadeColorButton({super.key, this.onButtonPressed,this.buttonColor
-     ,this.isPressed, required this.btnTitle,this.isLoading = false});
+  FadeColorButton({
+    super.key,
+    this.onButtonPressed,
+    this.buttonColor,
+    this.isPressed,
+    required this.btnTitle,
+    this.isLoading = false,
+  });
 
   final Function()? onButtonPressed;
   Color? buttonColor; // Initial color
@@ -41,7 +47,10 @@ class _FadeColorButtonState extends State<FadeColorButton> {
           duration: const Duration(milliseconds: 300), // Animation duration
           curve: Curves.easeInOut, // Animation curve
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-          margin: EdgeInsets.only(left: context.width/40,right: context.width/40),
+          margin: EdgeInsets.only(
+            left: context.width / 40,
+            right: context.width / 40,
+          ),
           decoration: BoxDecoration(
             color: widget.buttonColor,
             borderRadius: BorderRadius.circular(40),
@@ -50,23 +59,33 @@ class _FadeColorButtonState extends State<FadeColorButton> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(widget.btnTitle,style:
-              TextStyles.textStyleNormal16.copyWith(color: white
-                  ,fontWeight: FontWeight.w500),
-                textScaler: TextScaler.linear(1.0),),
+              Text(
+                widget.btnTitle,
+                style: TextStyles.textStyleNormal16.copyWith(
+                  color: white,
+                  fontWeight: FontWeight.w500,
+                ),
+                textScaler: TextScaler.linear(1.0),
+              ),
               Spacer(),
-            widget.isLoading == false ?  Container(
-                padding: EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: white,
-                    shape: BoxShape.circle
-                  ),
-                  child: customSvg(name: direction,color : widget.buttonColor,))
-                : Container(
-              padding: EdgeInsets.all(10),
-                child: SpinKitFadingFour(color: white,size: 25,))
+              widget.isLoading == false
+                  ? Container(
+                      padding: EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: customSvg(
+                        name: direction,
+                        color: widget.buttonColor,
+                      ),
+                    )
+                  : Container(
+                      padding: EdgeInsets.all(10),
+                      child: SpinKitFadingFour(color: white, size: 25),
+                    ),
             ],
-          )
+          ),
         ),
       ),
     );

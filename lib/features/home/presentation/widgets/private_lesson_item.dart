@@ -19,93 +19,149 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 class PrivateLessonsItem extends StatelessWidget {
   final Data data;
 
-
-
-  PrivateLessonsItem({required this.data});
+  const PrivateLessonsItem({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BottomBarCubit,BottomBarState>(
-  builder: (context, state) {
-    return InkWell(
-      onTap: (){
-        CoursesDetailsParams params = CoursesDetailsParams(slug: data.slug,status: "");
-        context.pushNamed(name: emptyPrivateLessons);
-      },
-      child: Container(
-        margin: EdgeInsets.only(left: 5,right: 5),
-        width: context.width/1.6,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              alignment: Alignment.topLeft,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  child: NetWorkImageHandler(image: data.image!
-                      , width: context.width/1.6, height: context.height/4.3),),
-                BlocProvider(
-                  create: (context) => sl<FavouriteCubit>(),
-                  child: FavouriteButton(isFavourite: data.favorited, courseId: data.id.toString()),
-                )],),
-            SizedBox(height: context.height/50,),
-            Row(children: [
-              Text("${data.categoryName}",style: TextStyles.textStyleBold10
-                  .copyWith(fontWeight: FontWeight.w600
-                  ,color: primary)
-                ,textScaler: TextScaler.linear(1),),
-              SizedBox(width: context.width/20,),
-              Text("+${data.points} points",style: TextStyles.textStyleBold10
-                  .copyWith(fontWeight: FontWeight.w600,color: primary)
-                ,textScaler: TextScaler.linear(1),),],),
-            SizedBox(height: context.height/80,),
-            Text("${data.title} !",style: TextStyles.textStyleBold16.copyWith
-              (fontWeight: FontWeight.w800,color: orangeBold)
-              ,textScaler: TextScaler.linear(1),),
-            SizedBox(height: context.height/100,),
-            Text("– ${data.totalHours}",style: TextStyles.textStyleBold16.copyWith
-              (fontWeight: FontWeight.w800,color: orangeBold)
-              ,textScaler: TextScaler.linear(1),),
-            SizedBox(height: context.height/80,),
-            Row(
+    return BlocBuilder<BottomBarCubit, BottomBarState>(
+      builder: (context, state) {
+        return InkWell(
+          onTap: () {
+            CoursesDetailsParams params = CoursesDetailsParams(
+              slug: data.slug,
+              status: "",
+            );
+            context.pushNamed(name: emptyPrivateLessons);
+          },
+          child: Container(
+            margin: EdgeInsets.only(left: 5, right: 5),
+            width: context.width / 1.6,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("${data.averageRating}",style: TextStyles.textStyleBold12.copyWith(
-                    fontWeight: FontWeight.w600,color: primary),textScaler: TextScaler.linear(1),),
-                SizedBox(width: context.width/60,),
-                RatingBarIndicator(
-                    rating: double.parse(data.averageRating.toString()),
-                    itemSize: 15,
-                    itemCount: 5,
-                    itemBuilder: (context,index)=>customSvg(name: star
-                        ,color: gold)),
-                SizedBox(width: context.width/50,),
-                Text("(${data.reviewsCount})",style: TextStyles.textStyleNormal12.copyWith
-                  (color: grey1,fontWeight: FontWeight.w300)
-                  ,overflow: TextOverflow.ellipsis,textScaler: TextScaler.linear(1),)],),
-            SizedBox(height: context.height/80,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text("\$${data.price}",style: TextStyles.textStyleBold16.copyWith
-                  (color: orangeBold,),
-                  textScaler: TextScaler.linear(1),),
-                SizedBox(width: context.width/20,),
-                Text("\$${data.priceAfterDiscount??0}",style: TextStyles.textStyleNormal12.copyWith
-                  (color: grey1,fontWeight: FontWeight.w500)
-                  ,textScaler: TextScaler.linear(1),),
-              ],)
-          ],
-        ),
-      ),
+                Stack(
+                  alignment: Alignment.topLeft,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      child: NetWorkImageHandler(
+                        image: data.image!,
+                        width: context.width / 1.6,
+                        height: context.height / 4.3,
+                      ),
+                    ),
+                    BlocProvider(
+                      create: (context) => sl<FavouriteCubit>(),
+                      child: FavouriteButton(
+                        isFavourite: data.favorited,
+                        courseId: data.id.toString(),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: context.height / 50),
+                Row(
+                  children: [
+                    Text(
+                      "${data.categoryName}",
+                      style: TextStyles.textStyleBold10.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: primary,
+                      ),
+                      textScaler: TextScaler.linear(1),
+                    ),
+                    SizedBox(width: context.width / 20),
+                    Text(
+                      "+${data.points} points",
+                      style: TextStyles.textStyleBold10.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: primary,
+                      ),
+                      textScaler: TextScaler.linear(1),
+                    ),
+                  ],
+                ),
+                SizedBox(height: context.height / 80),
+                Text(
+                  "${data.title} !",
+                  style: TextStyles.textStyleBold16.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: orangeBold,
+                  ),
+                  textScaler: TextScaler.linear(1),
+                ),
+                SizedBox(height: context.height / 100),
+                Text(
+                  "– ${data.totalHours}",
+                  style: TextStyles.textStyleBold16.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: orangeBold,
+                  ),
+                  textScaler: TextScaler.linear(1),
+                ),
+                SizedBox(height: context.height / 80),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${data.averageRating}",
+                      style: TextStyles.textStyleBold12.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: primary,
+                      ),
+                      textScaler: TextScaler.linear(1),
+                    ),
+                    SizedBox(width: context.width / 60),
+                    RatingBarIndicator(
+                      rating: double.parse(data.averageRating.toString()),
+                      itemSize: 15,
+                      itemCount: 5,
+                      itemBuilder: (context, index) =>
+                          customSvg(name: star, color: gold),
+                    ),
+                    SizedBox(width: context.width / 50),
+                    Text(
+                      "(${data.reviewsCount})",
+                      style: TextStyles.textStyleNormal12.copyWith(
+                        color: grey1,
+                        fontWeight: FontWeight.w300,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      textScaler: TextScaler.linear(1),
+                    ),
+                  ],
+                ),
+                SizedBox(height: context.height / 80),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "\$${data.price}",
+                      style: TextStyles.textStyleBold16.copyWith(
+                        color: orangeBold,
+                      ),
+                      textScaler: TextScaler.linear(1),
+                    ),
+                    SizedBox(width: context.width / 20),
+                    Text(
+                      "\$${data.priceAfterDiscount ?? 0}",
+                      style: TextStyles.textStyleNormal12.copyWith(
+                        color: grey1,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textScaler: TextScaler.linear(1),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
-  },
-);
   }
-
 }

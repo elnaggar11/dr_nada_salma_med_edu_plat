@@ -8,7 +8,7 @@ class LoginResponse {
   LoginResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -30,13 +30,14 @@ class Data {
   dynamic image;
   dynamic accessToken;
 
-  Data(
-      {this.id,
-        this.fullName,
-        this.phoneNumber,
-        this.email,
-        this.image,
-        this.accessToken});
+  Data({
+    this.id,
+    this.fullName,
+    this.phoneNumber,
+    this.email,
+    this.image,
+    this.accessToken,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];

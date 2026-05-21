@@ -6,10 +6,14 @@ import 'package:dr_nada_salma_med_edu_plat/features/favourite/domain/usecases/fa
 import 'package:dr_nada_salma_med_edu_plat/features/favourite/presentation/cubit/favourite_cubit.dart';
 import 'package:get_it/get_it.dart';
 
-Future<void>initFavouriteInj(GetIt s)async{
-  s.registerFactory(()=>FavouriteCubit(s(), s()));
-  s.registerLazySingleton<FavouriteRemoteDataSource>(()=>FavouriteRemoteDataSourceImpl(s()));
-  s.registerLazySingleton<FavouriteRepositories>(()=> FavouritesRepositoryImpl(s()));
-  s.registerLazySingleton(()=> AddToFavouriteUseCase(s()));
-  s.registerLazySingleton(()=> FavByUserUseCase(s()));
+Future<void> initFavouriteInj(GetIt s) async {
+  s.registerFactory(() => FavouriteCubit(s(), s()));
+  s.registerLazySingleton<FavouriteRemoteDataSource>(
+    () => FavouriteRemoteDataSourceImpl(s()),
+  );
+  s.registerLazySingleton<FavouriteRepositories>(
+    () => FavouritesRepositoryImpl(s()),
+  );
+  s.registerLazySingleton(() => AddToFavouriteUseCase(s()));
+  s.registerLazySingleton(() => FavByUserUseCase(s()));
 }

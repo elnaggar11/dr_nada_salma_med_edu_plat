@@ -13,10 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BlogScreens extends StatefulWidget {
-
   final int appBarInd;
-
-
 
   const BlogScreens({super.key, required this.appBarInd});
 
@@ -25,142 +22,185 @@ class BlogScreens extends StatefulWidget {
 }
 
 class _BlogScreensState extends State<BlogScreens> {
-
   @override
   void initState() {
-   context.read<CategoryWithBlogCubit>().getCategoriesWithBlog();
+    context.read<CategoryWithBlogCubit>().getCategoriesWithBlog();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: white,
       appBar: customAppBar(
-          widget: SizedBox(), title: tr("blog"), status: false,
-          context: context,appBarInd: widget.appBarInd),
+        widget: SizedBox(),
+        title: tr("blog"),
+        status: false,
+        context: context,
+        appBarInd: widget.appBarInd,
+      ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: context.height / 20,),
+            SizedBox(height: context.height / 20),
             Center(
               child: Container(
                 alignment: Alignment.center,
                 width: context.width / 3.5,
-                padding: EdgeInsets.only(
-                    top: 8, bottom: 8, left: 5, right: 10),
+                padding: EdgeInsets.only(top: 8, bottom: 8, left: 5, right: 10),
                 decoration: BoxDecoration(
-                    color: primary,
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(38))),
-                child: Row(children: [
-                  Container(
+                  color: primary,
+                  borderRadius: BorderRadius.all(Radius.circular(38)),
+                ),
+                child: Row(
+                  children: [
+                    Container(
                       alignment: Alignment.center,
-                      child: customSvg(name: edit)),
-                  SizedBox(width: context.width / 50,),
-                  Text(tr("blogs"),
-                    style: TextStyles.textStyleBold10.copyWith(
-                        fontWeight: FontWeight.w600
-                        , color: white),
-                    textScaler: TextScaler.linear(1.0),)
-                ],),),
+                      child: customSvg(name: edit),
+                    ),
+                    SizedBox(width: context.width / 50),
+                    Text(
+                      tr("blogs"),
+                      style: TextStyles.textStyleBold10.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: white,
+                      ),
+                      textScaler: TextScaler.linear(1.0),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            SizedBox(height: context.height / 20,),
+            SizedBox(height: context.height / 20),
             Container(
               margin: EdgeInsets.only(
-                  left: context.width / 20, right: context.width / 20),
+                left: context.width / 20,
+                right: context.width / 20,
+              ),
               child: Text(
                 tr("blog_des"),
-                style: TextStyles.textStyleBold18
-                    .copyWith(color: orangeBold),
-                textScaler: TextScaler.linear(1),),
+                style: TextStyles.textStyleBold18.copyWith(color: orangeBold),
+                textScaler: TextScaler.linear(1),
+              ),
             ),
-            SizedBox(height: context.height / 40,),
+            SizedBox(height: context.height / 40),
             Container(
               margin: EdgeInsets.only(
-                  left: context.width / 20, right: context.width / 20),
+                left: context.width / 20,
+                right: context.width / 20,
+              ),
               child: Text(
-                tr("discover_blog")
-                , style: TextStyles.textStyleNormal12
-                  .copyWith(color: black
-                  , fontWeight: FontWeight.w500),
-                textScaler: TextScaler.linear(1),),
+                tr("discover_blog"),
+                style: TextStyles.textStyleNormal12.copyWith(
+                  color: black,
+                  fontWeight: FontWeight.w500,
+                ),
+                textScaler: TextScaler.linear(1),
+              ),
             ),
-            SizedBox(height: context.height / 35,),
+            SizedBox(height: context.height / 35),
             Container(
               margin: EdgeInsets.only(
-                  left: context.width / 20, right: context.width / 20),
+                left: context.width / 20,
+                right: context.width / 20,
+              ),
               decoration: BoxDecoration(
-                border: Border.all(color: orangeBold.withOpacity(.1),
-                    width: 1,
-                    style: BorderStyle.solid),
-                borderRadius: BorderRadius.all(
-                    Radius.circular(5.0)),),
+                border: Border.all(
+                  color: orangeBold.withOpacity(.1),
+                  width: 1,
+                  style: BorderStyle.solid,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(5.0)),
+              ),
               child: IntrinsicHeight(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(width: context.width / 20,),
+                    SizedBox(width: context.width / 20),
                     Container(
-                        alignment: Alignment.center,
-                        child: customSvg(name: mail)),
-                    SizedBox(width: context.width / 20,),
-                    VerticalDivider(color: black.withOpacity(.1),
+                      alignment: Alignment.center,
+                      child: customSvg(name: mail),
+                    ),
+                    SizedBox(width: context.width / 20),
+                    VerticalDivider(
+                      color: black.withOpacity(.1),
                       width: 2.0,
                       indent: 8,
-                      endIndent: 8,),
-                    SizedBox(width: context.width / 20,),
-                    Text(tr("email"), style: TextStyles.textStyleNormal12
-                        .copyWith
-                      (fontWeight: FontWeight.w600,),
-                      textScaler: TextScaler.linear(1.0),),
+                      endIndent: 8,
+                    ),
+                    SizedBox(width: context.width / 20),
+                    Text(
+                      tr("email"),
+                      style: TextStyles.textStyleNormal12.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textScaler: TextScaler.linear(1.0),
+                    ),
                     Spacer(),
                     MaterialButton(
                       color: orangeBold,
                       elevation: 1,
                       padding: EdgeInsets.only(
-                          top: 8.5, bottom: 8.5, left: 10, right: 10),
+                        top: 8.5,
+                        bottom: 8.5,
+                        left: 10,
+                        right: 10,
+                      ),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(
-                              Radius.circular(5.0))),
+                        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                      ),
                       onPressed: () {},
-                      child: Text(tr("subscribe"),
+                      child: Text(
+                        tr("subscribe"),
                         style: TextStyles.textStyleBold12.copyWith(
-                            color: white)
-                        , textScaler: TextScaler.linear(1),),
-                    )
-                  ],),),),
-            SizedBox(height: context.height/20,),
-            BlocBuilder<CategoryWithBlogCubit,CategoryWithBlogState>(
+                          color: white,
+                        ),
+                        textScaler: TextScaler.linear(1),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(height: context.height / 20),
+            BlocBuilder<CategoryWithBlogCubit, CategoryWithBlogState>(
               builder: (context, state) {
-                return context.read<CategoryWithBlogCubit>().loading == true ?
-
-                    BlogShimmerList():
-
-                context.read<CategoryWithBlogCubit>().categoriesWithBlogResponse == null ?
-                    SizedBox():
-
-                Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: context.read<CategoryWithBlogCubit>().categoriesWithBlogResponse
-                    !.data!.map((e)=>Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-              DescriptionHeadTitle(title: e.description),
-              SizedBox(height: context.height/70,),
-              BlogList(blogList: e.blogs),
-              SizedBox(height: context.height/30,),
-            ],)).toList(),);
-  },
-)
+                return context.read<CategoryWithBlogCubit>().loading == true
+                    ? BlogShimmerList()
+                    : context
+                              .read<CategoryWithBlogCubit>()
+                              .categoriesWithBlogResponse ==
+                          null
+                    ? SizedBox()
+                    : Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: context
+                            .read<CategoryWithBlogCubit>()
+                            .categoriesWithBlogResponse!
+                            .data!
+                            .map(
+                              (e) => Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  DescriptionHeadTitle(title: e.description),
+                                  SizedBox(height: context.height / 70),
+                                  BlogList(blogList: e.blogs),
+                                  SizedBox(height: context.height / 30),
+                                ],
+                              ),
+                            )
+                            .toList(),
+                      );
+              },
+            ),
           ],
         ),
       ),
-
     );
   }
 }

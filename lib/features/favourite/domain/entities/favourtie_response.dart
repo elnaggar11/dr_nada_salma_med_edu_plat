@@ -11,7 +11,7 @@ class FavouriteResponse {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
   }
@@ -35,8 +35,7 @@ class Data {
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    course =
-    json['course'] != null ? new Course.fromJson(json['course']) : null;
+    course = json['course'] != null ? Course.fromJson(json['course']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -68,24 +67,25 @@ class Course {
   List<Reviews>? reviews;
   ButtonActions? buttonActions;
 
-  Course(
-      {this.id,
-        this.title,
-        this.slug,
-        this.totalHours,
-        this.semiDescription,
-        this.longDescription,
-        this.price,
-        this.priceAfterDiscount,
-        this.image,
-        this.points,
-        this.reviewsCount,
-        this.categoryName,
-        this.averageRating,
-        this.favorited,
-        this.canWatchCourse,
-        this.reviews,
-        this.buttonActions});
+  Course({
+    this.id,
+    this.title,
+    this.slug,
+    this.totalHours,
+    this.semiDescription,
+    this.longDescription,
+    this.price,
+    this.priceAfterDiscount,
+    this.image,
+    this.points,
+    this.reviewsCount,
+    this.categoryName,
+    this.averageRating,
+    this.favorited,
+    this.canWatchCourse,
+    this.reviews,
+    this.buttonActions,
+  });
 
   Course.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -106,11 +106,11 @@ class Course {
     if (json['reviews'] != null) {
       reviews = <Reviews>[];
       json['reviews'].forEach((v) {
-        reviews!.add(new Reviews.fromJson(v));
+        reviews!.add(Reviews.fromJson(v));
       });
     }
     buttonActions = json['button_actions'] != null
-        ? new ButtonActions.fromJson(json['button_actions'])
+        ? ButtonActions.fromJson(json['button_actions'])
         : null;
   }
 
@@ -150,18 +150,19 @@ class Reviews {
   String? rating;
   String? createdAt;
 
-  Reviews(
-      {this.id,
-        this.user,
-        this.courseName,
-        this.courseId,
-        this.content,
-        this.rating,
-        this.createdAt});
+  Reviews({
+    this.id,
+    this.user,
+    this.courseName,
+    this.courseId,
+    this.content,
+    this.rating,
+    this.createdAt,
+  });
 
   Reviews.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    user = json['user'] != null ? User.fromJson(json['user']) : null;
     courseName = json['course_name'];
     courseId = json['course_id'];
     content = json['content'];
@@ -212,8 +213,12 @@ class ButtonActions {
   bool? viewCourse;
   bool? reviewCourse;
 
-  ButtonActions(
-      {this.enrollNow, this.addToCart, this.viewCourse, this.reviewCourse});
+  ButtonActions({
+    this.enrollNow,
+    this.addToCart,
+    this.viewCourse,
+    this.reviewCourse,
+  });
 
   ButtonActions.fromJson(Map<String, dynamic> json) {
     enrollNow = json['enroll_now'];

@@ -11,7 +11,7 @@ class CategoriesResponse {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
   }
@@ -33,7 +33,7 @@ class Data {
   dynamic countCourses;
   bool? checked;
 
-  Data({this.id, this.name, this.countCourses,this.checked = false});
+  Data({this.id, this.name, this.countCourses, this.checked = false});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];

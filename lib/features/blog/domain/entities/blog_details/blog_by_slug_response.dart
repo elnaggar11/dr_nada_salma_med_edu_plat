@@ -8,7 +8,7 @@ class BlogBySlugResponse {
   BlogBySlugResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -38,25 +38,26 @@ class Data {
   dynamic createdAt;
   dynamic categoryName;
   dynamic authorName;
- dynamic authorImage;
+  dynamic authorImage;
 
-  Data(
-      {this.id,
-        this.title,
-        this.description,
-        this.slug,
-        this.author,
-        this.image,
-        this.status,
-        this.timePublish,
-        this.isActive,
-        this.metaTitle,
-        this.metaDescription,
-        this.categoryId,
-        this.createdAt,
-        this.categoryName,
-        this.authorName,
-        this.authorImage});
+  Data({
+    this.id,
+    this.title,
+    this.description,
+    this.slug,
+    this.author,
+    this.image,
+    this.status,
+    this.timePublish,
+    this.isActive,
+    this.metaTitle,
+    this.metaDescription,
+    this.categoryId,
+    this.createdAt,
+    this.categoryName,
+    this.authorName,
+    this.authorImage,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];

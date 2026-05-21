@@ -31,173 +31,197 @@ const forgotPasswordApi = "/auth/forget-password";
 const checkOtpApi = "/auth/check-code";
 
 abstract class AuthRemoteDataSource {
-  Future<RegisterResponse>register({RegisterParams? params});
-  Future<SpecialistResponse>getSpecialists();
-  Future<AcademicDegreeResponse>getAcademicDegrees();
-  Future<AcademicInfoResponse>setAcademicInfo({AcademicInfoParams? academicInfoParams});
-  Future<VerifyOtpResponse>verifyOtp({VerifyOtpParams params});
-  Future<LoginResponse>login({LoginParams params});
-  Future<ResetPasswordResponse>resetPass({ResetPasswordParams params});
-  Future<ResendOtpResponse>resendOtp({ResendOtpParams params});
-  Future<ForgotPasswordResponse>forgotPass({ForgotPasswordParams params});
-  Future<CheckOtpResponse>checkOtp({CheckOtpParams params});
-
+  Future<RegisterResponse> register({RegisterParams? params});
+  Future<SpecialistResponse> getSpecialists();
+  Future<AcademicDegreeResponse> getAcademicDegrees();
+  Future<AcademicInfoResponse> setAcademicInfo({
+    AcademicInfoParams? academicInfoParams,
+  });
+  Future<VerifyOtpResponse> verifyOtp({VerifyOtpParams params});
+  Future<LoginResponse> login({LoginParams params});
+  Future<ResetPasswordResponse> resetPass({ResetPasswordParams params});
+  Future<ResendOtpResponse> resendOtp({ResendOtpParams params});
+  Future<ForgotPasswordResponse> forgotPass({ForgotPasswordParams params});
+  Future<CheckOtpResponse> checkOtp({CheckOtpParams params});
 }
+
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final ApiBaseHelper helper;
 
   AuthRemoteDataSourceImpl(this.helper);
 
   @override
-  Future<RegisterResponse> register({RegisterParams? params}) async{
-    try{
-      final response = await helper.post(url: registerApi, body: params!.toMap());
+  Future<RegisterResponse> register({RegisterParams? params}) async {
+    try {
+      final response = await helper.post(
+        url: registerApi,
+        body: params!.toMap(),
+      );
       return RegisterResponse.fromJson(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
-    }on ForbiddenException catch(e){
+    } on ForbiddenException catch (e) {
       throw ForbiddenException(message: e.message);
     }
   }
 
   @override
-  Future<AcademicDegreeResponse> getAcademicDegrees() async{
-    try{
-      final response = await helper.get(url: academicDegreeApi,);
+  Future<AcademicDegreeResponse> getAcademicDegrees() async {
+    try {
+      final response = await helper.get(url: academicDegreeApi);
       return AcademicDegreeResponse.fromJson(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
-    }on ForbiddenException catch(e){
+    } on ForbiddenException catch (e) {
       throw ForbiddenException(message: e.message);
     }
   }
 
   @override
-  Future<SpecialistResponse> getSpecialists() async{
-    try{
-      final response = await helper.get(url: specialistsApi,);
+  Future<SpecialistResponse> getSpecialists() async {
+    try {
+      final response = await helper.get(url: specialistsApi);
       return SpecialistResponse.fromJson(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
-    }on ForbiddenException catch(e){
+    } on ForbiddenException catch (e) {
       throw ForbiddenException(message: e.message);
     }
   }
 
   @override
-  Future<AcademicInfoResponse> setAcademicInfo({AcademicInfoParams? academicInfoParams}) async{
-    try{
-      final response = await helper.post(url: academicInfoApi,body: academicInfoParams!.toMap());
+  Future<AcademicInfoResponse> setAcademicInfo({
+    AcademicInfoParams? academicInfoParams,
+  }) async {
+    try {
+      final response = await helper.post(
+        url: academicInfoApi,
+        body: academicInfoParams!.toMap(),
+      );
       return AcademicInfoResponse.fromJson(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
     }
   }
 
   @override
-  Future<VerifyOtpResponse> verifyOtp({VerifyOtpParams? params}) async{
-    try{
-      final response = await helper.post(url: verifyApi,body: params!.toMap());
+  Future<VerifyOtpResponse> verifyOtp({VerifyOtpParams? params}) async {
+    try {
+      final response = await helper.post(url: verifyApi, body: params!.toMap());
       return VerifyOtpResponse.fromJson(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
     }
   }
 
   @override
-  Future<LoginResponse> login({LoginParams? params}) async{
-    try{
-      final response = await helper.post(url: loginApi,body: params!.toMap());
+  Future<LoginResponse> login({LoginParams? params}) async {
+    try {
+      final response = await helper.post(url: loginApi, body: params!.toMap());
       return LoginResponse.fromJson(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
-    }on ForbiddenException catch(e){
+    } on ForbiddenException catch (e) {
       throw ForbiddenException(message: e.message);
     }
   }
 
   @override
-  Future<ResetPasswordResponse> resetPass({ResetPasswordParams? params}) async{
-    try{
-      final response = await helper.post(url: resetPasswordApi,body: params!.toMap());
+  Future<ResetPasswordResponse> resetPass({ResetPasswordParams? params}) async {
+    try {
+      final response = await helper.post(
+        url: resetPasswordApi,
+        body: params!.toMap(),
+      );
       return ResetPasswordResponse.fromJson(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
     }
   }
 
   @override
-  Future<ResendOtpResponse> resendOtp({ResendOtpParams? params}) async{
-    try{
-      final response = await helper.post(url: resendOtpApi,body: params!.toMap());
+  Future<ResendOtpResponse> resendOtp({ResendOtpParams? params}) async {
+    try {
+      final response = await helper.post(
+        url: resendOtpApi,
+        body: params!.toMap(),
+      );
       return ResendOtpResponse.fromJson(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
-    }on ForbiddenException catch(e){
+    } on ForbiddenException catch (e) {
       throw ForbiddenException(message: e.message);
     }
   }
 
   @override
-  Future<ForgotPasswordResponse> forgotPass({ForgotPasswordParams? params}) async{
-    try{
-      final response = await helper.post(url: forgotPasswordApi,body: params!.toMap());
+  Future<ForgotPasswordResponse> forgotPass({
+    ForgotPasswordParams? params,
+  }) async {
+    try {
+      final response = await helper.post(
+        url: forgotPasswordApi,
+        body: params!.toMap(),
+      );
       return ForgotPasswordResponse.fromJson(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
-    }on ForbiddenException catch(e){
+    } on ForbiddenException catch (e) {
       throw ForbiddenException(message: e.message);
     }
   }
 
   @override
-  Future<CheckOtpResponse> checkOtp({CheckOtpParams? params}) async{
-    try{
-      final response = await helper.post(url: checkOtpApi,body: params!.toMap());
+  Future<CheckOtpResponse> checkOtp({CheckOtpParams? params}) async {
+    try {
+      final response = await helper.post(
+        url: checkOtpApi,
+        body: params!.toMap(),
+      );
       return CheckOtpResponse.fromJson(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       throw ServerException(message: e.message);
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       throw UnAuthorizedException(message: e.message);
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
-    }on ForbiddenException catch(e){
+    } on ForbiddenException catch (e) {
       throw ForbiddenException(message: e.message);
     }
   }

@@ -30,145 +30,164 @@ class AuthRepositoryImpl implements AuthRepositories {
   AuthRepositoryImpl(this.authRemoteDataSource, this.authLocalDataSource);
 
   @override
-  Future<Either<Failure, RegisterResponse>> register({RegisterParams? params}) async{
-    try{
+  Future<Either<Failure, RegisterResponse>> register({
+    RegisterParams? params,
+  }) async {
+    try {
       final response = await authRemoteDataSource.register(params: params);
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, AcademicDegreeResponse>> getAcademicDegrees() async{
-    try{
+  Future<Either<Failure, AcademicDegreeResponse>> getAcademicDegrees() async {
+    try {
       final response = await authRemoteDataSource.getAcademicDegrees();
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, SpecialistResponse>> getSpecialists()async {
-    try{
+  Future<Either<Failure, SpecialistResponse>> getSpecialists() async {
+    try {
       final response = await authRemoteDataSource.getSpecialists();
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, AcademicInfoResponse>> setAcademicInfo({AcademicInfoParams? params})async {
-    try{
-      final response = await authRemoteDataSource.setAcademicInfo(academicInfoParams: params);
+  Future<Either<Failure, AcademicInfoResponse>> setAcademicInfo({
+    AcademicInfoParams? params,
+  }) async {
+    try {
+      final response = await authRemoteDataSource.setAcademicInfo(
+        academicInfoParams: params,
+      );
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, VerifyOtpResponse>> verifyOtp({VerifyOtpParams? params})async {
-    try{
+  Future<Either<Failure, VerifyOtpResponse>> verifyOtp({
+    VerifyOtpParams? params,
+  }) async {
+    try {
       final response = await authRemoteDataSource.verifyOtp(params: params!);
-      await authLocalDataSource.cacheUserAccessToken(token: response.data!.accessToken);
+      await authLocalDataSource.cacheUserAccessToken(
+        token: response.data!.accessToken,
+      );
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, LoginResponse>> login({LoginParams? params}) async{
-    try{
+  Future<Either<Failure, LoginResponse>> login({LoginParams? params}) async {
+    try {
       final response = await authRemoteDataSource.login(params: params!);
-      await authLocalDataSource.cacheUserAccessToken(token: response.data!.accessToken);
+      await authLocalDataSource.cacheUserAccessToken(
+        token: response.data!.accessToken,
+      );
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, ResetPasswordResponse>> reset({ResetPasswordParams? params}) async{
-    try{
+  Future<Either<Failure, ResetPasswordResponse>> reset({
+    ResetPasswordParams? params,
+  }) async {
+    try {
       final response = await authRemoteDataSource.resetPass(params: params!);
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, ResendOtpResponse>> resendOtp({ResendOtpParams? params}) async{
-    try{
+  Future<Either<Failure, ResendOtpResponse>> resendOtp({
+    ResendOtpParams? params,
+  }) async {
+    try {
       final response = await authRemoteDataSource.resendOtp(params: params!);
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, ForgotPasswordResponse>> forgotPassword({ForgotPasswordParams? params})async {
-    try{
+  Future<Either<Failure, ForgotPasswordResponse>> forgotPassword({
+    ForgotPasswordParams? params,
+  }) async {
+    try {
       final response = await authRemoteDataSource.forgotPass(params: params!);
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, CheckOtpResponse>> checkOtp({CheckOtpParams? params}) async{
-    try{
+  Future<Either<Failure, CheckOtpResponse>> checkOtp({
+    CheckOtpParams? params,
+  }) async {
+    try {
       final response = await authRemoteDataSource.checkOtp(params: params!);
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
-
 }

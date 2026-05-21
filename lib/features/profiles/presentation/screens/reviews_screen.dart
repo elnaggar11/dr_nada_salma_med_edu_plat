@@ -7,14 +7,14 @@ import 'package:dr_nada_salma_med_edu_plat/features/profiles/presentation/widget
 import 'package:flutter/material.dart';
 
 class ReviewsScreen extends StatefulWidget {
-
+  const ReviewsScreen({super.key});
 
   @override
   State<ReviewsScreen> createState() => _ReviewsScreenState();
-  
 }
 
-class _ReviewsScreenState extends State<ReviewsScreen> with SingleTickerProviderStateMixin{
+class _ReviewsScreenState extends State<ReviewsScreen>
+    with SingleTickerProviderStateMixin {
   TabController? tabController;
   @override
   void initState() {
@@ -25,31 +25,46 @@ class _ReviewsScreenState extends State<ReviewsScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(widget: SizedBox(),title: "Our reviews",status: false,context: context),
+      appBar: customAppBar(
+        widget: SizedBox(),
+        title: "Our reviews",
+        status: false,
+        context: context,
+      ),
       backgroundColor: white,
       body: Column(
         children: [
           TabBar(
             controller: tabController,
-              labelPadding: EdgeInsets.zero,
-              textScaler: TextScaler.linear(1),
-              padding: EdgeInsets.only(left: context.width/50,right: context.width/50),
-              labelStyle: TextStyles.textStyleBold12.copyWith(color: primary,fontWeight: FontWeight.w600),
-              indicatorColor: primary,
-              unselectedLabelStyle: TextStyles.textStyleBold12.copyWith(color: gre4,fontWeight: FontWeight.w600),
-              indicatorSize: TabBarIndicatorSize.tab,
-              indicatorAnimation: TabIndicatorAnimation.linear,
-              physics: ClampingScrollPhysics(),
-              tabs: [
-                Tab(text: "Reviews Students",),
-                Tab(text: "Success Stories",)]),
-          Expanded(child: TabBarView(
+            labelPadding: EdgeInsets.zero,
+            textScaler: TextScaler.linear(1),
+            padding: EdgeInsets.only(
+              left: context.width / 50,
+              right: context.width / 50,
+            ),
+            labelStyle: TextStyles.textStyleBold12.copyWith(
+              color: primary,
+              fontWeight: FontWeight.w600,
+            ),
+            indicatorColor: primary,
+            unselectedLabelStyle: TextStyles.textStyleBold12.copyWith(
+              color: gre4,
+              fontWeight: FontWeight.w600,
+            ),
+            indicatorSize: TabBarIndicatorSize.tab,
+            indicatorAnimation: TabIndicatorAnimation.linear,
+            physics: ClampingScrollPhysics(),
+            tabs: [
+              Tab(text: "Reviews Students"),
+              Tab(text: "Success Stories"),
+            ],
+          ),
+          Expanded(
+            child: TabBarView(
               controller: tabController,
-              children: [
-                ReviewsStudentList(),
-                SuccessStoriesList(),
-
-              ]))
+              children: [ReviewsStudentList(), SuccessStoriesList()],
+            ),
+          ),
         ],
       ),
     );

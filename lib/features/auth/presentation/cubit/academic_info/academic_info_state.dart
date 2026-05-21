@@ -5,7 +5,6 @@ sealed class AcademicInfoState {}
 
 final class AcademicInfoInitial extends AcademicInfoState {}
 
-
 class AcademicInfoLoadingState extends AcademicInfoState {}
 
 class AcademicInfoErrorState extends AcademicInfoState {
@@ -13,6 +12,7 @@ class AcademicInfoErrorState extends AcademicInfoState {
 
   AcademicInfoErrorState({required this.message});
 }
+
 class AcademicInfoSuccessState extends AcademicInfoState {
   final AcademicInfoResponse academicInfoResponse;
 

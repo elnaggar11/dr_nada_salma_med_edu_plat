@@ -21,143 +21,146 @@ class ProfileRepositoryImpl implements ProfileRepositories {
   ProfileRepositoryImpl(this.profileRemoteDataSource);
 
   @override
-  Future<Either<Failure, ProfileResponse>> getProfile() async{
-    try{
+  Future<Either<Failure, ProfileResponse>> getProfile() async {
+    try {
       final response = await profileRemoteDataSource.getProfile();
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, PointsResponse>> getPoints() async{
-    try{
+  Future<Either<Failure, PointsResponse>> getPoints() async {
+    try {
       final response = await profileRemoteDataSource.getPoints();
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, FaqsResponse>> getFaqs()async {
-    try{
+  Future<Either<Failure, FaqsResponse>> getFaqs() async {
+    try {
       final response = await profileRemoteDataSource.getFaqs();
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, CertificateResponse>> getCertificates() async{
-    try{
+  Future<Either<Failure, CertificateResponse>> getCertificates() async {
+    try {
       final response = await profileRemoteDataSource.getCertificates();
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, AboutUsResponse>> getAboutUs() async{
-    try{
+  Future<Either<Failure, AboutUsResponse>> getAboutUs() async {
+    try {
       final response = await profileRemoteDataSource.getAboutUs();
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, TermsConditionsResponse>> getTermsConditions()async {
-    try{
+  Future<Either<Failure, TermsConditionsResponse>> getTermsConditions() async {
+    try {
       final response = await profileRemoteDataSource.getTermsConditions();
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, UpdateProfileResponse>> updateProfile({UpdateProfileParams? params}) async{
-    try{
-      final response = await profileRemoteDataSource.updateProfile(params: params);
+  Future<Either<Failure, UpdateProfileResponse>> updateProfile({
+    UpdateProfileParams? params,
+  }) async {
+    try {
+      final response = await profileRemoteDataSource.updateProfile(
+        params: params,
+      );
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, SettingsResponse>> getSettings() async{
-    try{
+  Future<Either<Failure, SettingsResponse>> getSettings() async {
+    try {
       final response = await profileRemoteDataSource.getSiteSettings();
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, LogOutResponse>> logOut() async{
-    try{
+  Future<Either<Failure, LogOutResponse>> logOut() async {
+    try {
       final response = await profileRemoteDataSource.logOut();
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, DeleteAccountResponse>> deleteAccount() async{
-    try{
+  Future<Either<Failure, DeleteAccountResponse>> deleteAccount() async {
+    try {
       final response = await profileRemoteDataSource.deleteAccount();
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
-
 }

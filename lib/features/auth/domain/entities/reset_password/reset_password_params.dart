@@ -4,16 +4,19 @@ class ResetPasswordParams {
   String? newPassword;
   String? newPasswordConfirmation;
 
-  ResetPasswordParams({this.email, this.otp, this.newPassword,
-    this.newPasswordConfirmation});
+  ResetPasswordParams({
+    this.email,
+    this.otp,
+    this.newPassword,
+    this.newPasswordConfirmation,
+  });
 
-  Map<String,dynamic>toMap(){
-    return{
-      "email" : email,
-      "otp" : otp,
-      "new_password" : newPassword,
-      "new_password_confirmation" : newPasswordConfirmation
+  Map<String, dynamic> toMap() {
+    return {
+      "email": email,
+      "otp": otp,
+      "new_password": newPassword,
+      "new_password_confirmation": newPasswordConfirmation,
     };
   }
-
 }

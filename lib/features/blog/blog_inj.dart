@@ -8,12 +8,14 @@ import 'package:dr_nada_salma_med_edu_plat/features/blog/presentation/cubit/blog
 import 'package:dr_nada_salma_med_edu_plat/features/blog/presentation/cubit/category_with_blog/category_with_blog_cubit.dart';
 import 'package:get_it/get_it.dart';
 
-Future<void>initBlogInj(GetIt s)async{
- s.registerFactory(()=> CategoryWithBlogCubit(s()));
- s.registerFactory(()=> BlogDetailsCubit(s(),s()));
- s.registerLazySingleton(()=>SocialMediaUseCase(s()));
- s.registerLazySingleton<BlogRemoteDataSource>(()=> BlogRemoteDataSourceImpl(s()));
- s.registerLazySingleton<BlogsRepositories>(()=> BlogRepositoriesImpl(s()));
- s.registerLazySingleton(()=> CategoriesWithBlogUseCase(s()));
- s.registerLazySingleton(()=> BlogByCategoryUseCase(s()));
+Future<void> initBlogInj(GetIt s) async {
+  s.registerFactory(() => CategoryWithBlogCubit(s()));
+  s.registerFactory(() => BlogDetailsCubit(s(), s()));
+  s.registerLazySingleton(() => SocialMediaUseCase(s()));
+  s.registerLazySingleton<BlogRemoteDataSource>(
+    () => BlogRemoteDataSourceImpl(s()),
+  );
+  s.registerLazySingleton<BlogsRepositories>(() => BlogRepositoriesImpl(s()));
+  s.registerLazySingleton(() => CategoriesWithBlogUseCase(s()));
+  s.registerLazySingleton(() => BlogByCategoryUseCase(s()));
 }

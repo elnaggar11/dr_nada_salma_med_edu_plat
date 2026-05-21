@@ -1,4 +1,3 @@
-
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/images.dart';
@@ -17,11 +16,8 @@ import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/public_
 class BestMedicalScreen extends StatefulWidget {
   const BestMedicalScreen({super.key});
 
-
-
   @override
   State<BestMedicalScreen> createState() => _BestMedicalScreenState();
-
 }
 
 class _BestMedicalScreenState extends State<BestMedicalScreen> {
@@ -29,25 +25,33 @@ class _BestMedicalScreenState extends State<BestMedicalScreen> {
 
   final scrollController = ScrollController();
 
-
   @override
   void initState() {
     super.initState();
-    context.read<PublicCoursesCubit>().getPublicCourses(type: '', name: '', categoryId: '1', topRated: '1');
+    context.read<PublicCoursesCubit>().getPublicCourses(
+      type: '',
+      name: '',
+      categoryId: '1',
+      topRated: '1',
+    );
 
     scrollController.addListener(() {
       final cubit = context.read<PublicCoursesCubit>();
       final state = cubit.state;
 
       if (scrollController.position.pixels >=
-          scrollController.position.maxScrollExtent - 200 &&
+              scrollController.position.maxScrollExtent - 200 &&
           state is PublicCoursesLoaded &&
           !state.hasReachedMax) {
-        cubit.getPublicCourses(type: '', name: '', categoryId: '', topRated: '');
+        cubit.getPublicCourses(
+          type: '',
+          name: '',
+          categoryId: '',
+          topRated: '',
+        );
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +87,8 @@ class _BestMedicalScreenState extends State<BestMedicalScreen> {
                       hintText: tr("search_course_here"),
                       contentPadding: EdgeInsets.symmetric(vertical: 13),
                       hintStyle: TextStyles.textStyleNormal12.copyWith(
-                          color: black),
+                        color: black,
+                      ),
                       prefixIcon: IntrinsicHeight(
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -119,7 +124,9 @@ class _BestMedicalScreenState extends State<BestMedicalScreen> {
               InkWell(
                 onTap: () {
                   context.pushNamed(
-                      name: filterSc, args: "Filter Medical Courses");
+                    name: filterSc,
+                    args: "Filter Medical Courses",
+                  );
                 },
                 child: Container(
                   alignment: Alignment.center,
@@ -138,9 +145,7 @@ class _BestMedicalScreenState extends State<BestMedicalScreen> {
           SizedBox(height: context.height / 200),
 
           // Paged ListView
-          Expanded(
-              child: _coursesList())
-
+          Expanded(child: _coursesList()),
         ],
       ),
     );
@@ -149,10 +154,11 @@ class _BestMedicalScreenState extends State<BestMedicalScreen> {
   Widget _coursesList() {
     return BlocBuilder<PublicCoursesCubit, PublicCoursesState>(
       builder: (context, state) {
-        if (state is PublicCoursesInitialState || (state is PublicCoursesLoading && state.isFirstFetch)) {
+        if (state is PublicCoursesInitialState ||
+            (state is PublicCoursesLoading && state.isFirstFetch)) {
           return Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Center(child: SpinKitPulse(color: primary,size: 80,)),
+            child: Center(child: SpinKitPulse(color: primary, size: 80)),
           );
         }
 
@@ -175,11 +181,14 @@ class _BestMedicalScreenState extends State<BestMedicalScreen> {
           itemCount: courses.length + (isLoading ? 1 : 0),
           itemBuilder: (context, index) {
             if (index < courses.length) {
-              return BestMedicalVerticalItem(typeIndex: 0, data: courses[index]);
+              return BestMedicalVerticalItem(
+                typeIndex: 0,
+                data: courses[index],
+              );
             } else {
               return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Center(child: SpinKitPulse(color: primary,size: 40,)),
+                child: Center(child: SpinKitPulse(color: primary, size: 40)),
               );
             }
           },
@@ -191,8 +200,7 @@ class _BestMedicalScreenState extends State<BestMedicalScreen> {
   Widget _loadingIndicator() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child:  Center(
-          child: CircularProgressIndicator(color: primary,)),
+      child: Center(child: CircularProgressIndicator(color: primary)),
     );
   }
 }

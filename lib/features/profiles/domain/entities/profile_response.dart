@@ -35,18 +35,19 @@ class Data {
   List<Specialties>? specialties;
   List<AcademicDegrees>? academicDegrees;
 
-  Data(
-      {this.id,
-        this.fullName,
-        this.phoneNumber,
-        this.email,
-        this.totalPoints,
-        this.totalStars,
-        this.countryCode,
-        this.countrySymbol,
-        this.image,
-        this.specialties,
-        this.academicDegrees});
+  Data({
+    this.id,
+    this.fullName,
+    this.phoneNumber,
+    this.email,
+    this.totalPoints,
+    this.totalStars,
+    this.countryCode,
+    this.countrySymbol,
+    this.image,
+    this.specialties,
+    this.academicDegrees,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -85,8 +86,9 @@ class Data {
       data['specialties'] = specialties!.map((v) => v.toJson()).toList();
     }
     if (academicDegrees != null) {
-      data['academic_degrees'] =
-          academicDegrees!.map((v) => v.toJson()).toList();
+      data['academic_degrees'] = academicDegrees!
+          .map((v) => v.toJson())
+          .toList();
     }
     return data;
   }
@@ -110,6 +112,7 @@ class Specialties {
     return data;
   }
 }
+
 class AcademicDegrees {
   int? id;
   String? name;

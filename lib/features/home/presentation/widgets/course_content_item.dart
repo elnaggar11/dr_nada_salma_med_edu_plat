@@ -11,10 +11,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CourseContentItem extends StatelessWidget {
-  const CourseContentItem({super.key, required this.title,
-    required this.lecture, required this.time, required this.courseId
-    ,required this.canWatch,});
-  
+  const CourseContentItem({
+    super.key,
+    required this.title,
+    required this.lecture,
+    required this.time,
+    required this.courseId,
+    required this.canWatch,
+  });
+
   final String title;
   final List<Lectures> lecture;
   final String time;
@@ -23,54 +28,76 @@ class CourseContentItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-        margin: EdgeInsets.only(left: context.width/30,right: context.width/30),
-        child: ExpansionTile(
-            showTrailingIcon: false,
-            childrenPadding: EdgeInsets.only(bottom: context.height/40),
-            leading: customSvg(name: dropdown),
-            initiallyExpanded: true,
+    return Container(
+      margin: EdgeInsets.only(
+        left: context.width / 30,
+        right: context.width / 30,
+      ),
+      child: ExpansionTile(
+        showTrailingIcon: false,
+        childrenPadding: EdgeInsets.only(bottom: context.height / 40),
+        leading: customSvg(name: dropdown),
+        initiallyExpanded: true,
 
-            onExpansionChanged: (bool? val){
-
-            },
-            shape: RoundedRectangleBorder(side: BorderSide(
-                width: 0,
-                color: primary.withOpacity(.1)),),
-            expandedCrossAxisAlignment: CrossAxisAlignment.start,
-            collapsedBackgroundColor: primary.withOpacity(.1),
-            backgroundColor: primary.withOpacity(.1),
-            title: Container(
-              margin: EdgeInsets.only(bottom: context.width/40),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+        onExpansionChanged: (bool? val) {},
+        shape: RoundedRectangleBorder(
+          side: BorderSide(width: 0, color: primary.withOpacity(.1)),
+        ),
+        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+        collapsedBackgroundColor: primary.withOpacity(.1),
+        backgroundColor: primary.withOpacity(.1),
+        title: Container(
+          margin: EdgeInsets.only(bottom: context.width / 40),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                textScaler: TextScaler.linear(1),
+                style: TextStyles.textStyleNormal14.copyWith(color: primary),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(height: context.height / 120),
+              Row(
                 children: [
-                  Text(title,
-                    textScaler: TextScaler.linear(1),style: TextStyles
-                        .textStyleNormal14.copyWith(color: primary),maxLines: 1
-                    ,overflow: TextOverflow.ellipsis,),
-                  SizedBox(height: context.height/120,),
-                  Row(
-                    children: [
-                      Text("${lecture.length} Lectures",textScaler: TextScaler.linear(1),style: TextStyles.textStyleNormal14
-                          .copyWith(color: primary)),
-                      SizedBox(width: context.width/11,),
-                      Text("${time} Min",textScaler: TextScaler.linear(1),style: TextStyles.textStyleNormal14
-                          .copyWith(color: primary)),
-                    ],
-                  )
+                  Text(
+                    "${lecture.length} Lectures",
+                    textScaler: TextScaler.linear(1),
+                    style: TextStyles.textStyleNormal14.copyWith(
+                      color: primary,
+                    ),
+                  ),
+                  SizedBox(width: context.width / 11),
+                  Text(
+                    "$time Min",
+                    textScaler: TextScaler.linear(1),
+                    style: TextStyles.textStyleNormal14.copyWith(
+                      color: primary,
+                    ),
+                  ),
                 ],
               ),
-            ),
-            children: lecture.map((e)=>
-                InkWell(
-                  onTap: (){
-                 //   if(canWatch == true){
-             showDialog(context: context, builder: (context)=>
-              BlocProvider(create: (context) => sl<WatchCourseCubit>(),
-                child: VideoPlayerWidget(lectureVideo: e.video!, courseId: courseId
-                  , lectureId: e.id.toString()!,),));
+            ],
+          ),
+        ),
+        children: lecture
+            .map(
+              (e) => InkWell(
+                onTap: () {
+                  //   if(canWatch == true){
+                  showDialog(
+                    context: context,
+                    builder: (context) => BlocProvider(
+                      create: (context) => sl<WatchCourseCubit>(),
+                      child: VideoPlayerWidget(
+                        lectureVideo: e.video!,
+                        courseId: courseId,
+                        lectureId: e.id.toString(),
+                      ),
+                    ),
+                  );
                   /*  }else {
                       msgKey.currentState!.showSnackBar(SnackBar(
                           behavior: SnackBarBehavior.floating,
@@ -79,31 +106,42 @@ class CourseContentItem extends StatelessWidget {
                             ,textScaler: TextScaler.linear(1),style: TextStyles
                                 .textStyleNormal13.copyWith(color: white),)));
                     }*/
-                  },
-                  child: Container(
-                    width: double.infinity,
-                    color: primary.withOpacity(.05),
-                    margin: EdgeInsets.all(context.width/50),
-                    padding: EdgeInsets.only(left: context.width/50,right: context.width/50),
-                    child:  Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text("${e.title}",textScaler: TextScaler.linear(1),style: TextStyles.textStyleNormal14
-                            .copyWith(color: primary),),
-                        SizedBox(width: context.width/40,),
-                        Text("$time Min",textScaler: TextScaler.linear(1),style: TextStyles.textStyleNormal14
-                            .copyWith(color: primary))
-                      ],
-                    ),
-
+                },
+                child: Container(
+                  width: double.infinity,
+                  color: primary.withOpacity(.05),
+                  margin: EdgeInsets.all(context.width / 50),
+                  padding: EdgeInsets.only(
+                    left: context.width / 50,
+                    right: context.width / 50,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "${e.title}",
+                        textScaler: TextScaler.linear(1),
+                        style: TextStyles.textStyleNormal14.copyWith(
+                          color: primary,
+                        ),
+                      ),
+                      SizedBox(width: context.width / 40),
+                      Text(
+                        "$time Min",
+                        textScaler: TextScaler.linear(1),
+                        style: TextStyles.textStyleNormal14.copyWith(
+                          color: primary,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-            ).toList()
-
-      )
+              ),
+            )
+            .toList(),
+      ),
     );
   }
-
 }

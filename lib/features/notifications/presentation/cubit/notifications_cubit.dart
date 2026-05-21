@@ -22,32 +22,32 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     error = false;
     success = false;
     emit(NotificationsLoadingState());
-    try{
+    try {
       final failOrResponse = await notificationsUseCase(NoParams());
 
-      failOrResponse.fold((fail) {
-
-        if(fail is ServerFailure){
+      failOrResponse.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            error = true;
+            success = false;
+            emit(NotificationsErrorState(message: fail.message));
+          }
+        },
+        (response) {
           loading = false;
-          error = true;
-          success = false;
-          emit(NotificationsErrorState(message: fail.message));
-        }
-
-      }, (response) {
-        loading = false;
-        error = false;
-        success = true;
-       notificationsResponse = response;
-        emit(NotificationsSuccessState(notificationsResponse: response));
-      });
-    }catch(e){
+          error = false;
+          success = true;
+          notificationsResponse = response;
+          emit(NotificationsSuccessState(notificationsResponse: response));
+        },
+      );
+    } catch (e) {
       loading = false;
       error = true;
       success = false;
       emit(NotificationsErrorState(message: e.toString()));
     }
-
   }
 
   /// --- Paginated version for infinite_scroll_pagination ---
@@ -60,17 +60,20 @@ class NotificationsCubit extends Cubit<NotificationsState> {
 
       final result = await notificationsUseCase(NoParams());
 
-      return result.fold((fail) {
-        if(fail is ServerFailure){
-          emit(NotificationsErrorState(message: fail.message));
-        }
+      return result.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            emit(NotificationsErrorState(message: fail.message));
+          }
 
-        return [];
-      }, (response) {
-        notificationsResponse = response;
-        emit(NotificationsSuccessState(notificationsResponse: response));
-        return response.data!.data! ?? [];
-      });
+          return [];
+        },
+        (response) {
+          notificationsResponse = response;
+          emit(NotificationsSuccessState(notificationsResponse: response));
+          return response.data!.data! ?? [];
+        },
+      );
     } catch (e) {
       emit(NotificationsErrorState(message: e.toString()));
       return [];

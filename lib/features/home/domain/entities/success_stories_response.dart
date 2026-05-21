@@ -11,7 +11,7 @@ class SuccessStoriesResponse {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
   }
@@ -35,17 +35,18 @@ class Data {
   dynamic rating;
   dynamic createdAt;
 
-  Data(
-      {this.id,
-        this.user,
-        this.courseName,
-        this.content,
-        this.rating,
-        this.createdAt});
+  Data({
+    this.id,
+    this.user,
+    this.courseName,
+    this.content,
+    this.rating,
+    this.createdAt,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    user = json['user'] != null ? User.fromJson(json['user']) : null;
     courseName = json['course_name'];
     content = json['content'];
     rating = json['rating'];

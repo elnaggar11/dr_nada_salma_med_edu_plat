@@ -18,7 +18,7 @@ class HomeRepositoryImpl implements HomeRepositories {
   HomeRepositoryImpl(this.homeRemoteDataSource);
 
   @override
-  Future<Either<Failure, SuccessStoriesResponse>> getSuccessStories() async{
+  Future<Either<Failure, SuccessStoriesResponse>> getSuccessStories() async {
     try {
       final response = await homeRemoteDataSource.getSuccessStories();
       return Right(response);
@@ -32,7 +32,7 @@ class HomeRepositoryImpl implements HomeRepositories {
   }
 
   @override
-  Future<Either<Failure, HeroResponse>> getHeroes() async{
+  Future<Either<Failure, HeroResponse>> getHeroes() async {
     try {
       final response = await homeRemoteDataSource.getHeroes();
       return Right(response);
@@ -46,7 +46,9 @@ class HomeRepositoryImpl implements HomeRepositories {
   }
 
   @override
-  Future<Either<Failure, PublicCoursesResponse>> getCourses({CoursesParams? params}) async{
+  Future<Either<Failure, PublicCoursesResponse>> getCourses({
+    CoursesParams? params,
+  }) async {
     try {
       final response = await homeRemoteDataSource.getCourses(params: params!);
       return Right(response);
@@ -60,9 +62,13 @@ class HomeRepositoryImpl implements HomeRepositories {
   }
 
   @override
-  Future<Either<Failure, CoursesDetailsResponse>> getCoursesDetails({CoursesDetailsParams? params}) async{
+  Future<Either<Failure, CoursesDetailsResponse>> getCoursesDetails({
+    CoursesDetailsParams? params,
+  }) async {
     try {
-      final response = await homeRemoteDataSource.getCoursesDetails(params: CoursesDetailsParams(slug: params!.slug));
+      final response = await homeRemoteDataSource.getCoursesDetails(
+        params: CoursesDetailsParams(slug: params!.slug),
+      );
       return Right(response);
     } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
@@ -74,9 +80,13 @@ class HomeRepositoryImpl implements HomeRepositories {
   }
 
   @override
-  Future<Either<Failure, PublicCoursesResponse>> getPrivateLessons({CoursesParams? params}) async{
+  Future<Either<Failure, PublicCoursesResponse>> getPrivateLessons({
+    CoursesParams? params,
+  }) async {
     try {
-      final response = await homeRemoteDataSource.getPrivateLessons(params: params!);
+      final response = await homeRemoteDataSource.getPrivateLessons(
+        params: params!,
+      );
       return Right(response);
     } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
@@ -88,7 +98,9 @@ class HomeRepositoryImpl implements HomeRepositories {
   }
 
   @override
-  Future<Either<Failure, WatchCourseResponse>> watchCourse({WatchCourseParams? params}) async{
+  Future<Either<Failure, WatchCourseResponse>> watchCourse({
+    WatchCourseParams? params,
+  }) async {
     try {
       final response = await homeRemoteDataSource.watchCourse(params: params!);
       return Right(response);
@@ -100,5 +112,4 @@ class HomeRepositoryImpl implements HomeRepositories {
       return left(ServerFailure(message: e.message));
     }
   }
-
 }

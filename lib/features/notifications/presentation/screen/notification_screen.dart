@@ -21,7 +21,7 @@ class NotificationsScreen extends StatefulWidget {
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
-  late final PagingController<int,Datum> pagingController;
+  late final PagingController<int, Datum> pagingController;
   static const int _pageSize = 8;
 
   @override
@@ -32,9 +32,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     });
     super.initState();
   }
+
   Future<void> fetchPage(int pageKey) async {
     final cubit = context.read<NotificationsCubit>();
-
 
     try {
       final newItems = await cubit.getPaginatedCourses(
@@ -54,30 +54,40 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       //pagingController.error = error;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: white,
       appBar: customAppBar(
         appBarInd: 0,
-          title: tr("notifications"),status: true,
-          context: context,
-          widget:Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Container(
+        title: tr("notifications"),
+        status: true,
+        context: context,
+        widget: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
               alignment: Alignment.center,
-              child: customSvg(name: delete)),
-          SizedBox(width: context.width/30,),
-          Text(tr("clear_all"),style:
-          TextStyles.textStyleNormal12.copyWith
-            (fontWeight: FontWeight.w500,color: red)
-            ,textScaler: TextScaler.linear(1),)],)),
+              child: customSvg(name: delete),
+            ),
+            SizedBox(width: context.width / 30),
+            Text(
+              tr("clear_all"),
+              style: TextStyles.textStyleNormal12.copyWith(
+                fontWeight: FontWeight.w500,
+                color: red,
+              ),
+              textScaler: TextScaler.linear(1),
+            ),
+          ],
+        ),
+      ),
       body: SizedBox(
         child: RefreshIndicator(
-          onRefresh: ()async{
+          onRefresh: () async {
             pagingController.refresh();
           },
           child: PagedListView<int, Datum>(
@@ -87,18 +97,19 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
             builderDelegate: PagedChildBuilderDelegate<Datum>(
               animateTransitions: true,
-              firstPageProgressIndicatorBuilder:  (val){
-                return SpinKitPulse(color: primary,size: 40,);
+              firstPageProgressIndicatorBuilder: (val) {
+                return SpinKitPulse(color: primary, size: 40);
               },
-              newPageProgressIndicatorBuilder: (val){
-                return SpinKitPulse(color: primary,size: 40,);
+              newPageProgressIndicatorBuilder: (val) {
+                return SpinKitPulse(color: primary, size: 40);
               },
-              firstPageErrorIndicatorBuilder: (val){
-                return SpinKitPulse(color: primary,size: 40,);
+              firstPageErrorIndicatorBuilder: (val) {
+                return SpinKitPulse(color: primary, size: 40);
               },
-              itemBuilder: (_, item, index) =>NotificationItem(data: item),
-            ),),
-        )
+              itemBuilder: (_, item, index) => NotificationItem(data: item),
+            ),
+          ),
+        ),
       ),
     );
   }

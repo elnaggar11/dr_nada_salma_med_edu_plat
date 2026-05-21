@@ -17,17 +17,19 @@ class PublicCoursesCubit extends Cubit<PublicCoursesState> {
   PublicCoursesResponse? publicCoursesResponse;
 
   PublicCoursesCubit(this.publicCoursesUseCase)
-      : super(PublicCoursesInitialState());
-
-
+    : super(PublicCoursesInitialState());
 
   int currentPage = 1;
   bool isFetching = false;
 
   /// Fetches public courses with optional params.
   /// Handles pagination, infinite scroll, and errors.
-  Future<void> getPublicCourses({required String? type,required String? name
-    ,required String? categoryId,required String topRated}) async {
+  Future<void> getPublicCourses({
+    required String? type,
+    required String? name,
+    required String? categoryId,
+    required String topRated,
+  }) async {
     if (isFetching) return; // prevent multiple simultaneous requests
     isFetching = true;
 
@@ -40,7 +42,7 @@ class PublicCoursesCubit extends Cubit<PublicCoursesState> {
 
     try {
       // Default params if none provided
-    CoursesParams  params = CoursesParams(
+      CoursesParams params = CoursesParams(
         page: currentPage,
         type: type,
         courseName: name,
@@ -52,20 +54,24 @@ class PublicCoursesCubit extends Cubit<PublicCoursesState> {
       final failOrResponse = await publicCoursesUseCase(params);
 
       failOrResponse.fold(
-            (failure) {
-              if(failure is ServerFailure){
-                emit(PublicCoursesError(failure.message));
-              }
-
+        (failure) {
+          if (failure is ServerFailure) {
+            emit(PublicCoursesError(failure.message));
+          }
         },
-            (response) {
+        (response) {
           // Append new courses immutably
           final newCourses = List<Data>.from(previousCourses)
             ..addAll(response.data ?? []);
 
           final hasReachedMax = response.data == null || response.data!.isEmpty;
 
-          emit(PublicCoursesLoaded(courses: newCourses, hasReachedMax: hasReachedMax));
+          emit(
+            PublicCoursesLoaded(
+              courses: newCourses,
+              hasReachedMax: hasReachedMax,
+            ),
+          );
 
           if (!hasReachedMax) currentPage++;
         },
@@ -76,37 +82,36 @@ class PublicCoursesCubit extends Cubit<PublicCoursesState> {
       isFetching = false;
     }
   }
+
   Future<void> resetCourses({required CoursesParams params}) async {
     loading = true;
     error = false;
     success = false;
     emit(PublicCoursesLoadingState());
-    try{
+    try {
       final failOrResponse = await publicCoursesUseCase(params);
 
-      failOrResponse.fold((fail) {
-        loading = false;
-        error = true;
-        success = false;
-        if(fail is ServerFailure){
-          emit(ResetCoursesError(message: fail.message));
-        }
-
-      }, (response) {
-        loading = false;
-        error = false;
-        success = true;
-        publicCoursesResponse = response;
-        emit(ResetCoursesSuccessState(publicCoursesResponse: response));
-      });
-    }catch(e){
+      failOrResponse.fold(
+        (fail) {
+          loading = false;
+          error = true;
+          success = false;
+          if (fail is ServerFailure) {
+            emit(ResetCoursesError(message: fail.message));
+          }
+        },
+        (response) {
+          loading = false;
+          error = false;
+          success = true;
+          publicCoursesResponse = response;
+          emit(ResetCoursesSuccessState(publicCoursesResponse: response));
+        },
+      );
+    } catch (e) {
       loading = false;
       error = true;
       success = false;
     }
-
-
   }
-
-
 }

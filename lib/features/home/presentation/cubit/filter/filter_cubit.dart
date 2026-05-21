@@ -21,16 +21,15 @@ class FilterCubit extends Cubit<FilterState> {
     {'name': 'Lowest rated', 'isChecked': true},
   ];
 
-
-
-  Future<void>setSelectedCheckBox({int? ind,bool? val})async{
-    for (var element in items!) {
+  Future<void> setSelectedCheckBox({int? ind, bool? val}) async {
+    for (var element in items) {
       element['isChecked'] = false;
     }
     items[ind!]['isChecked'] = val;
     emit(FilterUpdateItemState());
   }
-  Future<void>setSelectedRatedCheckBox({int? ind,bool? val})async{
+
+  Future<void> setSelectedRatedCheckBox({int? ind, bool? val}) async {
     for (var element in ratedItems) {
       element['isChecked'] = false;
     }

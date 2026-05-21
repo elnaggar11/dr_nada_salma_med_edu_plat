@@ -10,7 +10,6 @@ class AddToFavouriteResponse {
     message = json['message'];
     if (json['data'] != null) {
       data = <Null>[];
-
     }
   }
 

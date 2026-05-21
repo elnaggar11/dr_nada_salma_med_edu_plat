@@ -10,10 +10,18 @@ import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/watch_c
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/watch_course_response.dart';
 
 abstract class HomeRepositories {
-  Future<Either<Failure,SuccessStoriesResponse>>getSuccessStories();
-  Future<Either<Failure,HeroResponse>>getHeroes();
-  Future<Either<Failure,PublicCoursesResponse>>getCourses({CoursesParams? params});
-  Future<Either<Failure,PublicCoursesResponse>>getPrivateLessons({CoursesParams? params});
-  Future<Either<Failure,CoursesDetailsResponse>>getCoursesDetails({CoursesDetailsParams params});
-  Future<Either<Failure,WatchCourseResponse>>watchCourse({WatchCourseParams? params});
+  Future<Either<Failure, SuccessStoriesResponse>> getSuccessStories();
+  Future<Either<Failure, HeroResponse>> getHeroes();
+  Future<Either<Failure, PublicCoursesResponse>> getCourses({
+    CoursesParams? params,
+  });
+  Future<Either<Failure, PublicCoursesResponse>> getPrivateLessons({
+    CoursesParams? params,
+  });
+  Future<Either<Failure, CoursesDetailsResponse>> getCoursesDetails({
+    CoursesDetailsParams params,
+  });
+  Future<Either<Failure, WatchCourseResponse>> watchCourse({
+    WatchCourseParams? params,
+  });
 }

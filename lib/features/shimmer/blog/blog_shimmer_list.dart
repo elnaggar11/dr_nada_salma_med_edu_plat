@@ -8,12 +8,12 @@ class BlogShimmerList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: 5,
-          physics: ClampingScrollPhysics(),
-          scrollDirection: Axis.vertical,
-          itemBuilder: (context,index)=> BlogShimmerItem()),
+        shrinkWrap: true,
+        itemCount: 5,
+        physics: ClampingScrollPhysics(),
+        scrollDirection: Axis.vertical,
+        itemBuilder: (context, index) => BlogShimmerItem(),
+      ),
     );
   }
-
 }

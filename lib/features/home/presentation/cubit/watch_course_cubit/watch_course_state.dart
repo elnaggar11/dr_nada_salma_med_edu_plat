@@ -7,12 +7,12 @@ final class WatchCourseInitial extends WatchCourseState {}
 
 class WatchCourseLoading extends WatchCourseState {}
 
-
 class WatchCourseError extends WatchCourseState {
   final String message;
 
   WatchCourseError({required this.message});
 }
+
 class WatchCourseSuccess extends WatchCourseState {
   final WatchCourseResponse watchCourseResponse;
 

@@ -9,33 +9,49 @@ class CourseContentWidget extends StatelessWidget {
   final String lectureNum;
   final String totalTime;
 
-
-  const CourseContentWidget({required this.lectureNum,required this.totalTime});
+  const CourseContentWidget({
+    super.key,
+    required this.lectureNum,
+    required this.totalTime,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return  Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-          Text("sections",style: TextStyles.textStyleBold14
-              .copyWith(fontWeight: FontWeight.w600,color: primary)
-            ,textScaler: TextScaler.linear(1),),
-          SizedBox(width: context.width/30,),
-          customSvg(name: elipse),
-            SizedBox(width: context.width/30,),
-          Text("$lectureNum lectures",style: TextStyles.textStyleBold14
-              .copyWith(fontWeight: FontWeight.w600,color: primary)
-            ,textScaler: TextScaler.linear(1),),
-            SizedBox(width: context.width/30,),
-          customSvg(name: elipse),
-            SizedBox(width: context.width/30,),
-          Text(totalTime,style: TextStyles.textStyleBold14
-              .copyWith(fontWeight: FontWeight.w600,color: primary)
-            ,textScaler: TextScaler.linear(1),),
-        ],
-
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          "sections",
+          style: TextStyles.textStyleBold14.copyWith(
+            fontWeight: FontWeight.w600,
+            color: primary,
+          ),
+          textScaler: TextScaler.linear(1),
+        ),
+        SizedBox(width: context.width / 30),
+        customSvg(name: elipse),
+        SizedBox(width: context.width / 30),
+        Text(
+          "$lectureNum lectures",
+          style: TextStyles.textStyleBold14.copyWith(
+            fontWeight: FontWeight.w600,
+            color: primary,
+          ),
+          textScaler: TextScaler.linear(1),
+        ),
+        SizedBox(width: context.width / 30),
+        customSvg(name: elipse),
+        SizedBox(width: context.width / 30),
+        Text(
+          totalTime,
+          style: TextStyles.textStyleBold14.copyWith(
+            fontWeight: FontWeight.w600,
+            color: primary,
+          ),
+          textScaler: TextScaler.linear(1),
+        ),
+      ],
     );
   }
-
 }

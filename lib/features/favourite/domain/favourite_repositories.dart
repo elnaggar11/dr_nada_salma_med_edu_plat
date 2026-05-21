@@ -5,6 +5,8 @@ import 'package:dr_nada_salma_med_edu_plat/features/favourite/domain/entities/fa
 import 'package:dr_nada_salma_med_edu_plat/features/favourite/domain/entities/favourtie_response.dart';
 
 abstract class FavouriteRepositories {
-  Future<Either<Failure,AddToFavouriteResponse>>addToFavourite({FavouriteParams params});
-  Future<Either<Failure,FavouriteResponse>>getMyFavourites();
+  Future<Either<Failure, AddToFavouriteResponse>> addToFavourite({
+    FavouriteParams params,
+  });
+  Future<Either<Failure, FavouriteResponse>> getMyFavourites();
 }

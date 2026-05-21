@@ -5,7 +5,6 @@ sealed class CheckOtpState {}
 
 final class CheckOtpInitial extends CheckOtpState {}
 
-
 class CheckOtpLoading extends CheckOtpState {}
 
 class CheckOtpError extends CheckOtpState {
@@ -13,6 +12,7 @@ class CheckOtpError extends CheckOtpState {
 
   CheckOtpError({required this.msg});
 }
+
 class CheckOtpSuccess extends CheckOtpState {
   final CheckOtpResponse checkOtpResponse;
 

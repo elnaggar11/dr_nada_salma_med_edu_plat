@@ -18,13 +18,11 @@ class ForgotPasswordScreen extends StatefulWidget {
 
   @override
   State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
-
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController mailController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey();
-
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +30,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       backgroundColor: white,
       resizeToAvoidBottomInset: true,
       appBar: customAppBar(
-          appBarInd: -1,
-          widget: SizedBox(), title: tr("forgot_password"), status: false, context: context,index: -1),
+        appBarInd: -1,
+        widget: SizedBox(),
+        title: tr("forgot_password"),
+        status: false,
+        context: context,
+        index: -1,
+      ),
       body: Container(
         color: white,
         width: double.infinity,
@@ -45,52 +48,76 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                  alignment: Alignment.center,
-                  child: customSvg(name: forgotPass,width: context.width/4.5
-                      ,height: context.width/4.5)),
-              SizedBox(height: context.height/28,),
-              Text(tr("forgot_password"),style:
-              TextStyles.textStyleBold28.copyWith(color: orangeBold),textScaler: TextScaler.linear(1),),
-              SizedBox(height: context.height/32,),
-              Text(tr("enter_email_link"),style: TextStyles
-                  .textStyleNormal14.copyWith(color: primary),textScaler: TextScaler.linear(1),),
-              SizedBox(height: context.height/10,),
-              BlocBuilder<ForgotPasswordCubit,ForgotPasswordState>(
+                alignment: Alignment.center,
+                child: customSvg(
+                  name: forgotPass,
+                  width: context.width / 4.5,
+                  height: context.width / 4.5,
+                ),
+              ),
+              SizedBox(height: context.height / 28),
+              Text(
+                tr("forgot_password"),
+                style: TextStyles.textStyleBold28.copyWith(color: orangeBold),
+                textScaler: TextScaler.linear(1),
+              ),
+              SizedBox(height: context.height / 32),
+              Text(
+                tr("enter_email_link"),
+                style: TextStyles.textStyleNormal14.copyWith(color: primary),
+                textScaler: TextScaler.linear(1),
+              ),
+              SizedBox(height: context.height / 10),
+              BlocBuilder<ForgotPasswordCubit, ForgotPasswordState>(
                 builder: (context, state) {
-                  return CustomTextField(controller: context.read<ForgotPasswordCubit>().mailController
-                    , obscure: false,
-                validation: (String? val){
-                    if(val!.isEmpty){
-                      return tr("this_field_required");
-                    }else {
-                      return null;
-                    }
-                }
-                ,labelColor: orangeBold,labelTxt: tr("phone_email"),suffixIcon: Container(
-                    alignment: Alignment.center,
-                    width: context.width/7,
-                    child: customSvg(name: mail,color: black)),);
-            },
-          ),
+                  return CustomTextField(
+                    controller: context
+                        .read<ForgotPasswordCubit>()
+                        .mailController,
+                    obscure: false,
+                    validation: (String? val) {
+                      if (val!.isEmpty) {
+                        return tr("this_field_required");
+                      } else {
+                        return null;
+                      }
+                    },
+                    labelColor: orangeBold,
+                    labelTxt: tr("phone_email"),
+                    suffixIcon: Container(
+                      alignment: Alignment.center,
+                      width: context.width / 7,
+                      child: customSvg(name: mail, color: black),
+                    ),
+                  );
+                },
+              ),
 
-              SizedBox(height: context.height/18,),
+              SizedBox(height: context.height / 18),
               BlocBuilder<ForgotPasswordCubit, ForgotPasswordState>(
                 builder: (context, state) {
                   return FadeColorButton(
                     isLoading: context.read<ForgotPasswordCubit>().loading,
                     btnTitle: tr("get_the_code_now"),
-                buttonColor: context.read<ForgotPasswordCubit>().buttonColor
-                ,isPressed: false
-                ,onButtonPressed: (){
-                      if(formKey.currentState!.validate()){
-                        context.read<ForgotPasswordCubit>()
-                            .forgot(params: ForgotPasswordParams(email:context.read<ForgotPasswordCubit>()
-                            .mailController.text));
+                    buttonColor: context
+                        .read<ForgotPasswordCubit>()
+                        .buttonColor,
+                    isPressed: false,
+                    onButtonPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        context.read<ForgotPasswordCubit>().forgot(
+                          params: ForgotPasswordParams(
+                            email: context
+                                .read<ForgotPasswordCubit>()
+                                .mailController
+                                .text,
+                          ),
+                        );
                       }
-
-                    },);
-            },
-          )
+                    },
+                  );
+                },
+              ),
             ],
           ),
         ),

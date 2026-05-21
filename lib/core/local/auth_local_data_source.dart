@@ -7,15 +7,15 @@ const verifyInfoConst = "verify_info";
 const registerBodyConst = "register_body_const";
 const userInfoConst = 'user_info_const';
 
-
 abstract class AuthLocalDataSource {
   Future<void> clearCachedUser();
 
   Future<void> cacheUserAccessToken({required String token});
   Future<String> getCachedUserAccessToken();
 
-// Future<void>cacheUserLoginInfo({required User params});
+  // Future<void>cacheUserLoginInfo({required User params});
 }
+
 class AuthLocalDataSourceImpl extends AuthLocalDataSource {
   final SharedPreferences sharedPreferences;
 
@@ -48,8 +48,8 @@ class AuthLocalDataSourceImpl extends AuthLocalDataSource {
   @override
   Future<String> getCachedUserAccessToken() async {
     try {
-      final userShared = sharedPreferences.getString(cacheTokenConst) ??
-          'noAuth';
+      final userShared =
+          sharedPreferences.getString(cacheTokenConst) ?? 'noAuth';
       if (userShared != 'noAuth') {
         return userShared;
       } else {
@@ -61,6 +61,4 @@ class AuthLocalDataSourceImpl extends AuthLocalDataSource {
       throw CacheException();
     }
   }
-
-
 }

@@ -16,44 +16,55 @@ class NotificationItem extends StatelessWidget {
     final now = DateTime.now();
     final givenTime = DateTime.parse(data.createdAt!);
 
-   return Container(
-     margin: EdgeInsets.all(9),
-     child: Row(
-       crossAxisAlignment: CrossAxisAlignment.start,
-       mainAxisAlignment: MainAxisAlignment.start,
-       children: [
-         Container(
-           padding: EdgeInsets.all(context.width/19),
-           decoration: BoxDecoration(
-             color: primary,
-             shape: BoxShape.circle
-           ),
-             alignment: Alignment.center,
-             child: customSvg(name: notifications)),
-         SizedBox(width: context.width/30,),
-         Expanded(
-           child: Column(
-             mainAxisAlignment: MainAxisAlignment.start,
-             crossAxisAlignment: CrossAxisAlignment.start,
-             children: [
-               Text("${data.data!.title} 🎉",style: TextStyles.textStyleBold16.copyWith(color: black
-                   ,fontWeight: FontWeight.w600),textScaler: TextScaler.linear(1),),
-               SizedBox(height: context.height/70,),
-               Text("${data.data!.description} “"
-                 ,style: TextStyles.textStyleNormal12.copyWith(color: primary
-                     ,fontWeight: FontWeight.w500),textScaler: TextScaler.linear(1),),
-                   SizedBox(height: context.height/90,),
-               Text("${now.difference(givenTime).inMinutes} minutes ago",style: TextStyles.textStyleNormal12
-                   .copyWith(fontWeight: FontWeight.w400,color: greey1)
-                 ,textScaler: TextScaler.linear(1),)
-             ],
-           ),
-         )
-
-
-       ],
-     ),
-   );
+    return Container(
+      margin: EdgeInsets.all(9),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.all(context.width / 19),
+            decoration: BoxDecoration(color: primary, shape: BoxShape.circle),
+            alignment: Alignment.center,
+            child: customSvg(name: notifications),
+          ),
+          SizedBox(width: context.width / 30),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${data.data!.title} 🎉",
+                  style: TextStyles.textStyleBold16.copyWith(
+                    color: black,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  textScaler: TextScaler.linear(1),
+                ),
+                SizedBox(height: context.height / 70),
+                Text(
+                  "${data.data!.description} “",
+                  style: TextStyles.textStyleNormal12.copyWith(
+                    color: primary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textScaler: TextScaler.linear(1),
+                ),
+                SizedBox(height: context.height / 90),
+                Text(
+                  "${now.difference(givenTime).inMinutes} minutes ago",
+                  style: TextStyles.textStyleNormal12.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: greey1,
+                  ),
+                  textScaler: TextScaler.linear(1),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
-
 }

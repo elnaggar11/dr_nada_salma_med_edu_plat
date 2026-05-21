@@ -38,8 +38,7 @@ class BottomBarCubit extends Cubit<BottomBarState> {
 
   bool? visibility = true;
 
-
-  Future<void> changeNavBarStatus({int? ind,}) async {
+  Future<void> changeNavBarStatus({int? ind}) async {
     pageIndex = ind!;
 
     emit(BottomBarUpdateState());
@@ -51,21 +50,21 @@ class BottomBarCubit extends Cubit<BottomBarState> {
     emit(BottomBarUpdateState2());
   }
 
-
   List<Widget> pageList({BuildContext? context}) {
     return [
       Navigator(
         onGenerateRoute: (settings) {
           Widget page = MultiBlocProvider(
             providers: [
-              BlocProvider(create: (context) => sl<SuccessStoriesCubit>(),),
-              BlocProvider(create: (context) => sl<HeroesCubit>(),),
-              BlocProvider(create: (context) => sl<PublicCoursesCubit>(),),
-              BlocProvider(create: (context) => sl<PrivateLessonsCubit>(),),
-              BlocProvider(create: (context) => sl<ProfileCubit>(),),
-              BlocProvider(create: (context) => sl<NotificationsCubit>(),)
+              BlocProvider(create: (context) => sl<SuccessStoriesCubit>()),
+              BlocProvider(create: (context) => sl<HeroesCubit>()),
+              BlocProvider(create: (context) => sl<PublicCoursesCubit>()),
+              BlocProvider(create: (context) => sl<PrivateLessonsCubit>()),
+              BlocProvider(create: (context) => sl<ProfileCubit>()),
+              BlocProvider(create: (context) => sl<NotificationsCubit>()),
             ],
-            child: HomeScreen(),);
+            child: HomeScreen(),
+          );
 
           /*   Widget page = (settings.name == courseDetailsSc && ind == 0)
               ? BlocProvider(
@@ -97,56 +96,58 @@ class BottomBarCubit extends Cubit<BottomBarState> {
           if (settings.name == bestMedicalSc) {
             page = MultiBlocProvider(
               providers: [
-                BlocProvider(
-                  create: (context) => sl<PublicCoursesCubit>(),
-                ),
-                BlocProvider.value(value : context!.read<BottomBarCubit>()),
+                BlocProvider(create: (context) => sl<PublicCoursesCubit>()),
+                BlocProvider.value(value: context!.read<BottomBarCubit>()),
               ],
               child: BestMedicalScreen(),
             );
           } else if (settings.name == privateLessonsSc) {
             page = BlocProvider(
               create: (context) => sl<PrivateLessonsCubit>(),
-              child: TopPrivateLessonsScreen(),);
+              child: TopPrivateLessonsScreen(),
+            );
           } else if (settings.name == filterSc) {
             updateBottomBarVisibility(visible: false);
             page = MultiBlocProvider(
               providers: [
-                BlocProvider(
-                  create: (context) => sl<CategoriesCubit>(),
-                ),
+                BlocProvider(create: (context) => sl<CategoriesCubit>()),
                 BlocProvider.value(value: context!.read<BottomBarCubit>()),
               ],
-              child: FilterScreen(title: settings.arguments as String,),
+              child: FilterScreen(title: settings.arguments as String),
             );
           } else if (settings.name == bestMedicalSearchResultSc) {
             updateBottomBarVisibility(visible: true);
             page = MultiBlocProvider(
               providers: [
-                BlocProvider(create: (context) => sl<PublicCoursesCubit>(),
-                ),
+                BlocProvider(create: (context) => sl<PublicCoursesCubit>()),
                 BlocProvider.value(value: context!.read<BottomBarCubit>()),
               ],
               child: BestMedicalSearchResultScreen(
-                coursesParams: settings.arguments as CoursesParams,),
+                coursesParams: settings.arguments as CoursesParams,
+              ),
             );
           } else if (settings.name == privateLessonsSearchResultSc) {
             page = BlocProvider(
               create: (context) => sl<PrivateLessonsCubit>(),
               child: PrivateLessonsSearchResultScreen(
-                params: settings.arguments as CoursesParams,),
+                params: settings.arguments as CoursesParams,
+              ),
             );
           } else if (settings.name == courseDetailsSc) {
             updateBottomBarVisibility(visible: false);
-            page = MultiBlocProvider(providers: [
-              BlocProvider.value(value: context!.read<BottomBarCubit>()),
-              BlocProvider(create: (_) => sl<CoursesDetailsCubit>(),),
-            ],
-                child: CourseDetailsScreen(
-                  params: settings.arguments as CoursesDetailsParams,));
+            page = MultiBlocProvider(
+              providers: [
+                BlocProvider.value(value: context!.read<BottomBarCubit>()),
+                BlocProvider(create: (_) => sl<CoursesDetailsCubit>()),
+              ],
+              child: CourseDetailsScreen(
+                params: settings.arguments as CoursesDetailsParams,
+              ),
+            );
           } else if (settings.name == privateLessonsDetailsSc) {
             updateBottomBarVisibility(visible: false);
-            page = BlocProvider.value(value: context!.read<BottomBarCubit>(),
+            page = BlocProvider.value(
+              value: context!.read<BottomBarCubit>(),
               child: EmptyPrivateLessonsWidget(),
             );
             //   navKey.currentContext!.pushNamed(name: privateLessonsDetailsSc);
@@ -163,7 +164,8 @@ class BottomBarCubit extends Cubit<BottomBarState> {
           }*/ else if (settings.name == successStoriesSc) {
             page = BlocProvider(
               create: (context) => sl<SuccessStoriesCubit>(),
-              child: SuccessStoriesScreen(type: "stories"),);
+              child: SuccessStoriesScreen(type: "stories"),
+            );
           } else if (settings.name == notificationsSc) {
             updateBottomBarVisibility(visible: false);
             page = BlocProvider(
@@ -178,25 +180,29 @@ class BottomBarCubit extends Cubit<BottomBarState> {
             );
           }
           return MaterialPageRoute(builder: (_) => page);
-        },),
+        },
+      ),
       BlocProvider(
         create: (context) => sl<CategoryWithBlogCubit>(),
-        child: BlogScreens(appBarInd: 1,),),
-      BlocProvider(create: (context) => sl<CoursesStatusCubit>(),
-        child: CoursesLessonsScreen(index: 1, appBarInd: 2),),
-    /*  MultiBlocProvider(providers: [
+        child: BlogScreens(appBarInd: 1),
+      ),
+      BlocProvider(
+        create: (context) => sl<CoursesStatusCubit>(),
+        child: CoursesLessonsScreen(index: 1, appBarInd: 2),
+      ),
+      /*  MultiBlocProvider(providers: [
         BlocProvider(create: (context) => sl<CartCubit>()),
         BlocProvider(create: (context) => sl<CreateOrderFromCartCubit>()),
       ], child: CartScreen()),*/
-      BlocProvider(create: (context) => sl<ProfileCubit>(),
-        child: ProfileScreen(appBarInd: 4,),)
-
-    ];;
+      BlocProvider(
+        create: (context) => sl<ProfileCubit>(),
+        child: ProfileScreen(appBarInd: 4),
+      ),
+    ];
   }
 
   Future<void> updateBottomBarVisibility({bool? visible}) async {
     visibility = visible;
     emit(UpdateBottomBarVisibility());
   }
-
 }

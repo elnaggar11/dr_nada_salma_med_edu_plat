@@ -15,19 +15,21 @@ import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/cubit/succ
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/cubit/watch_course_cubit/watch_course_cubit.dart';
 import 'package:get_it/get_it.dart';
 
-Future<void>initHomeInj(GetIt s)async{
-  s.registerFactory(()=> SuccessStoriesCubit(s()));
-  s.registerFactory(()=>HeroesCubit(s()));
-  s.registerFactory(()=> PublicCoursesCubit(s()));
-  s.registerFactory(()=> PrivateLessonsCubit(s()));
-  s.registerFactory(()=> CoursesDetailsCubit(s()));
-  s.registerFactory(()=> WatchCourseCubit(s()));
-  s.registerLazySingleton(()=> WatchCourseUseCase(s()));
-  s.registerLazySingleton<HomeRemoteDataSource>(()=>HomeRemoteDataSourceImpl(s()));
-  s.registerLazySingleton<HomeRepositories>(()=>HomeRepositoryImpl(s()));
-  s.registerLazySingleton(()=> SuccessStoriesUseCase(s()));
-  s.registerLazySingleton(()=> HeroesUseCase(s()));
-  s.registerLazySingleton(()=>PublicCoursesUseCase(s()));
-  s.registerLazySingleton(()=> CoursesDetailsUseCase(s()));
-  s.registerLazySingleton(()=> PrivateLessonsUseCase(s()));
+Future<void> initHomeInj(GetIt s) async {
+  s.registerFactory(() => SuccessStoriesCubit(s()));
+  s.registerFactory(() => HeroesCubit(s()));
+  s.registerFactory(() => PublicCoursesCubit(s()));
+  s.registerFactory(() => PrivateLessonsCubit(s()));
+  s.registerFactory(() => CoursesDetailsCubit(s()));
+  s.registerFactory(() => WatchCourseCubit(s()));
+  s.registerLazySingleton(() => WatchCourseUseCase(s()));
+  s.registerLazySingleton<HomeRemoteDataSource>(
+    () => HomeRemoteDataSourceImpl(s()),
+  );
+  s.registerLazySingleton<HomeRepositories>(() => HomeRepositoryImpl(s()));
+  s.registerLazySingleton(() => SuccessStoriesUseCase(s()));
+  s.registerLazySingleton(() => HeroesUseCase(s()));
+  s.registerLazySingleton(() => PublicCoursesUseCase(s()));
+  s.registerLazySingleton(() => CoursesDetailsUseCase(s()));
+  s.registerLazySingleton(() => PrivateLessonsUseCase(s()));
 }

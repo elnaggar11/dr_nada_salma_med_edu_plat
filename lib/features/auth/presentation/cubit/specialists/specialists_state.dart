@@ -21,7 +21,6 @@ class SpecialistsSuccessState extends SpecialistsState {
 
 class UpdateSpecialistCheckBox extends SpecialistsState {}
 
-
 class UpdateAcademicDegreesCheckBox extends SpecialistsState {}
 
 class UpdateSpecialistExpandableState extends SpecialistsState {}

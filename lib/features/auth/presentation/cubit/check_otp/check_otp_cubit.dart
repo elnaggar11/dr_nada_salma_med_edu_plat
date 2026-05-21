@@ -19,40 +19,51 @@ class CheckOtpCubit extends Cubit<CheckOtpState> {
   bool? error = false;
   bool? success = false;
 
-  Future<void>checkOtp({CheckOtpParams? params})async{
+  Future<void> checkOtp({CheckOtpParams? params}) async {
     loading = true;
     error = false;
     success = false;
     emit(CheckOtpLoading());
-    try{
+    try {
       final failOrUser = await checkOtpUseCase(params!);
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            error = true;
+            success = false;
+            msgKey.currentState!.showSnackBar(
+              SnackBar(
+                behavior: SnackBarBehavior.floating,
+                content: Text(
+                  fail.message,
+                  style: TextStyles.textStyleNormal13.copyWith(color: white),
+                  textScaler: TextScaler.linear(1),
+                ),
+              ),
+            );
+            emit(CheckOtpError(msg: fail.message));
+          }
+        },
+        (response) {
           loading = false;
-          error = true;
-          success = false;
-          msgKey.currentState!
-              .showSnackBar(SnackBar(
+          error = false;
+          success = true;
+          msgKey.currentState!.showSnackBar(
+            SnackBar(
               behavior: SnackBarBehavior.floating,
-              content: Text(fail.message,
-            style: TextStyles.textStyleNormal13.copyWith(color: white),
-            textScaler: TextScaler.linear(1),)));
-          emit(CheckOtpError(msg: fail.message));
-        }
-      }, (response){
-        loading = false;
-        error = false;
-        success = true;
-        msgKey.currentState!
-            .showSnackBar(SnackBar(
-            behavior: SnackBarBehavior.floating,
-            content: Text(response.message!,
-              style: TextStyles.textStyleNormal13.copyWith(color: white),
-              textScaler: TextScaler.linear(1),)));
-        navKey.currentContext!.pushNamed(name: resetPassSc,args: params);
-        emit(CheckOtpSuccess(checkOtpResponse: response));
-      });
-    }catch(e){
+              content: Text(
+                response.message!,
+                style: TextStyles.textStyleNormal13.copyWith(color: white),
+                textScaler: TextScaler.linear(1),
+              ),
+            ),
+          );
+          navKey.currentContext!.pushNamed(name: resetPassSc, args: params);
+          emit(CheckOtpSuccess(checkOtpResponse: response));
+        },
+      );
+    } catch (e) {
       loading = false;
       error = true;
       success = false;

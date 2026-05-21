@@ -7,7 +7,6 @@ final class PrivateLessonsInitial extends PrivateLessonsState {}
 
 class PrivateLessonsLoadingState extends PrivateLessonsState {}
 
-
 class PrivateLessonsErrorState extends PrivateLessonsState {
   final String message;
 

@@ -15,7 +15,8 @@ import 'package:url_launcher/url_launcher.dart';
 part 'blog_details_state.dart';
 
 class BlogDetailsCubit extends Cubit<BlogDetailsState> {
-  BlogDetailsCubit(this.blogByCategoryUseCase, this.socialMediaUseCase) : super(BlogDetailsInitial());
+  BlogDetailsCubit(this.blogByCategoryUseCase, this.socialMediaUseCase)
+    : super(BlogDetailsInitial());
   final BlogByCategoryUseCase blogByCategoryUseCase;
   final SocialMediaUseCase socialMediaUseCase;
   bool? loading = false;
@@ -29,7 +30,7 @@ class BlogDetailsCubit extends Cubit<BlogDetailsState> {
   BlogBySlugResponse? blogBySlugResponse;
   SocialMediaResponse? socialMediaResponse;
 
-  Future<void>getBlogDetails({BlogDetailsParams? params})async{
+  Future<void> getBlogDetails({BlogDetailsParams? params}) async {
     loading = true;
     error = false;
     success = false;
@@ -37,55 +38,70 @@ class BlogDetailsCubit extends Cubit<BlogDetailsState> {
     emit(BlogDetailsLoadingState());
     try {
       final failOrUser = await blogByCategoryUseCase(params!);
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            error = true;
+            success = false;
+            msgKey.currentState!.showSnackBar(
+              SnackBar(
+                content: Text(
+                  fail.message,
+                  style: TextStyles.textStyleNormal13.copyWith(color: white),
+                  textScaler: TextScaler.linear(1),
+                ),
+              ),
+            );
+            emit(BlogDetailsErrorState(message: fail.message));
+          }
+        },
+        (response) {
           loading = false;
-          error = true;
-          success = false;
-          msgKey.currentState!.showSnackBar(SnackBar(content: Text(fail.message
-            ,style: TextStyles.textStyleNormal13.copyWith(color: white),textScaler: TextScaler.linear(1),)));
-          emit(BlogDetailsErrorState(message: fail.message));
-        }
-      }, (response){
-        loading = false;
-        error = false;
-        success = true;
-        blogBySlugResponse = response;
-        emit(BlogDetailsSuccessState(blogByCategoryIdResponse: response));
-      });
-    }catch(e){
+          error = false;
+          success = true;
+          blogBySlugResponse = response;
+          emit(BlogDetailsSuccessState(blogByCategoryIdResponse: response));
+        },
+      );
+    } catch (e) {
       loading = false;
       error = true;
       success = false;
     }
   }
-  Future<void>getSocial ()async{
+
+  Future<void> getSocial() async {
     socialLoading = true;
     socialError = false;
     socialSuccess = false;
     emit(BlogSocialLoading());
-    try{
+    try {
       final failOrUser = await socialMediaUseCase(NoParams());
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            socialLoading = false;
+            socialError = true;
+            socialSuccess = false;
+            emit(BlogSocialError(message: fail.message));
+          }
+        },
+        (response) {
+          socialMediaResponse = response;
           socialLoading = false;
-          socialError = true;
-          socialSuccess = false;
-          emit(BlogSocialError(message: fail.message));
-        }
-      }, (response){
-        socialMediaResponse = response;
-        socialLoading = false;
-        socialError = false;
-        socialSuccess = true;
-        emit(BlogSocialSuccess(socialMediaResponse: response));
-      });
-    }catch(e){
+          socialError = false;
+          socialSuccess = true;
+          emit(BlogSocialSuccess(socialMediaResponse: response));
+        },
+      );
+    } catch (e) {
       socialLoading = false;
       socialError = true;
       socialSuccess = false;
     }
   }
+
   Future<void> fetchUrl({String? url}) async {
     if (!await launchUrl(Uri.parse(url!))) {
       throw Exception('Could not launch $url');
