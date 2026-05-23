@@ -34,3 +34,4 @@ const String notificationsSc = "notificationSc";
 const String aboutUsSc = "aboutUsSc";
 const String termsAndConditions = "termsConditionsSc";
 const String emptyPrivateLessons = "emptyPrivateLessonsSc";
+const String teacherRegistrationSc = "teacherRegistrationSc";

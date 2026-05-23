@@ -18,6 +18,9 @@ import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/reset_p
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/specialists/specialist_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/verify/verify_otp_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/verify/verify_otp_response.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/teacher_registration/subject_response.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/teacher_registration/teacher_application_params.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/teacher_registration/teacher_application_response.dart';
 
 abstract class AuthRepositories {
   Future<Either<Failure,RegisterResponse>>register({RegisterParams params});
@@ -30,5 +33,7 @@ abstract class AuthRepositories {
   Future<Either<Failure,ResendOtpResponse>>resendOtp({ResendOtpParams params});
   Future<Either<Failure,ForgotPasswordResponse>>forgotPassword({ForgotPasswordParams params});
   Future<Either<Failure,CheckOtpResponse>>checkOtp({CheckOtpParams params});
-
+  Future<Either<Failure,SpecialistResponse>>getSpecialties();
+  Future<Either<Failure,SubjectResponse>>getSubjects();
+  Future<Either<Failure,TeacherApplicationResponse>>submitTeacherApplication({TeacherApplicationParams params});
 }

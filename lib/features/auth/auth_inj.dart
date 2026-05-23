@@ -22,6 +22,10 @@ import 'package:dr_nada_salma_med_edu_plat/features/auth/presentation/cubit/rese
 import 'package:dr_nada_salma_med_edu_plat/features/auth/presentation/cubit/reset/reset_pass_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/presentation/cubit/specialists/specialists_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/presentation/cubit/verify/verify_cubit.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/usecases/get_specialties_use_case.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/usecases/get_subjects_use_case.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/usecases/submit_teacher_application_use_case.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/auth/presentation/cubit/teacher_registration/teacher_registration_cubit.dart';
 import 'package:get_it/get_it.dart';
 
 Future<void>authInj(GetIt s)async{
@@ -35,6 +39,11 @@ Future<void>authInj(GetIt s)async{
   s.registerFactory(()=> ForgotPasswordCubit(s()));
   s.registerFactory(()=> ResendOtpCubit(s()));
   s.registerFactory(()=> CheckOtpCubit(s()));
+  s.registerFactory(()=> TeacherRegistrationCubit(
+    getSpecialtiesUseCase: s(),
+    getSubjectsUseCase: s(),
+    submitTeacherApplicationUseCase: s(),
+  ));
 
   s.registerLazySingleton<AuthRemoteDataSource>(()=> AuthRemoteDataSourceImpl(s()));
   s.registerLazySingleton<AuthRepositories>(()=> AuthRepositoryImpl(s(),s()));
@@ -49,5 +58,8 @@ Future<void>authInj(GetIt s)async{
   s.registerLazySingleton(()=> ResendOtpUseCase(s()));
   s.registerLazySingleton(()=> ForgotPasswordUseCase(s()));
   s.registerLazySingleton(()=> CheckOtpUseCase(s()));
+  s.registerLazySingleton(()=> GetSpecialtiesUseCase(s()));
+  s.registerLazySingleton(()=> GetSubjectsUseCase(s()));
+  s.registerLazySingleton(()=> SubmitTeacherApplicationUseCase(s()));
 
 }

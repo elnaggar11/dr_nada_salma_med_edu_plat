@@ -1,0 +1,16 @@
+import 'package:dartz/dartz.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/errors/failure.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/usecase/usecase.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/specialists/specialist_response.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/repositories/auth_repositories.dart';
+
+class GetSpecialtiesUseCase extends UseCase<SpecialistResponse, NoParams> {
+  final AuthRepositories repository;
+
+  GetSpecialtiesUseCase(this.repository);
+
+  @override
+  Future<Either<Failure, SpecialistResponse>> call(NoParams params) async {
+    return await repository.getSpecialties();
+  }
+}

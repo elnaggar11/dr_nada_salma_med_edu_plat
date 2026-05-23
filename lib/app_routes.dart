@@ -66,6 +66,8 @@ import 'package:dr_nada_salma_med_edu_plat/features/splash/presentation/cubit/sp
 import 'package:dr_nada_salma_med_edu_plat/features/splash/presentation/screens/second_splash_screen.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/splash/presentation/screens/splash_screen.dart';
 import 'package:dr_nada_salma_med_edu_plat/injection_container/injection_container.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/auth/presentation/cubit/teacher_registration/teacher_registration_cubit.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/auth/presentation/screens/teacher_registration/teacher_registration_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,6 +75,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class AppRoutes {
   Route? onGenerateRoutes(RouteSettings settings) {
     switch (settings.name) {
+      case teacherRegistrationSc:
+        return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (_) => sl<TeacherRegistrationCubit>()..loadInitialData(),
+              ),
+              BlocProvider(
+                create: (_) => sl<BottomBarCubit>(),
+              ),
+            ],
+            child: const TeacherRegistrationScreen(),
+          ),
+        );
       case splash:
         return MaterialPageRoute(
           builder: (_) =>

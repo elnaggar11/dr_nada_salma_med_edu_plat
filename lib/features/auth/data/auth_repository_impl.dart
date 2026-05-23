@@ -21,6 +21,9 @@ import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/reset_p
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/specialists/specialist_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/verify/verify_otp_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/verify/verify_otp_response.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/teacher_registration/subject_response.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/teacher_registration/teacher_application_params.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/teacher_registration/teacher_application_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/repositories/auth_repositories.dart';
 
 class AuthRepositoryImpl implements AuthRepositories {
@@ -171,4 +174,45 @@ class AuthRepositoryImpl implements AuthRepositories {
     }
   }
 
+  @override
+  Future<Either<Failure, SpecialistResponse>> getSpecialties() async {
+    try {
+      final response = await authRemoteDataSource.getSpecialties();
+      return Right(response);
+    } on ServerException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on UnAuthorizedException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on UnprocessableContentException catch (e) {
+      return left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, SubjectResponse>> getSubjects() async {
+    try {
+      final response = await authRemoteDataSource.getSubjects();
+      return Right(response);
+    } on ServerException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on UnAuthorizedException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on UnprocessableContentException catch (e) {
+      return left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, TeacherApplicationResponse>> submitTeacherApplication({TeacherApplicationParams? params}) async {
+    try {
+      final response = await authRemoteDataSource.submitTeacherApplication(params: params);
+      return Right(response);
+    } on ServerException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on UnAuthorizedException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on UnprocessableContentException catch (e) {
+      return left(ServerFailure(message: e.message));
+    }
+  }
 }
