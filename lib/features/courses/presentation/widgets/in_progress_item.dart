@@ -30,16 +30,31 @@ class InProgressItem extends StatelessWidget {
   final String lectureNum;
   final String sectionNum;
 
-  InProgressItem({required this.title,required this.image,
-    required this.points,required this.progress, required this.slug
-    ,required this.favorited,required this.id, required this.status, required this.totalHours, required this.categoryName, required this.lectureNum, required this.sectionNum});
+  const InProgressItem({
+    super.key,
+    required this.title,
+    required this.image,
+    required this.points,
+    required this.progress,
+    required this.slug,
+    required this.favorited,
+    required this.id,
+    required this.status,
+    required this.totalHours,
+    required this.categoryName,
+    required this.lectureNum,
+    required this.sectionNum,
+  });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
-        CoursesDetailsParams params = CoursesDetailsParams(slug: slug,status: status);
-        context.pushNamed(name: courseDetailsSc,args: params);
+      onTap: () {
+        CoursesDetailsParams params = CoursesDetailsParams(
+          slug: slug,
+          status: status,
+        );
+        context.pushNamed(name: courseDetailsSc, args: params);
       },
       child: Container(
         color: Colors.transparent,
@@ -53,121 +68,201 @@ class InProgressItem extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(20)),
-                      child: NetWorkImageHandler(image: image, width: context.width/3.2,
-                          height: context.width/3.5),),
+                      child: NetWorkImageHandler(
+                        image: image,
+                        width: context.width / 3.2,
+                        height: context.width / 3.5,
+                      ),
+                    ),
                     BlocProvider(
                       create: (context) => sl<FavouriteCubit>(),
-                      child: FavouriteButton(isFavourite: favorited, courseId: id.toString()),
-                    )],),
-                SizedBox(width: context.width/50,),
+                      child: FavouriteButton(
+                        isFavourite: favorited,
+                        courseId: id.toString(),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(width: context.width / 50),
                 Flexible(
                   fit: FlexFit.loose,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Row(children: [
-                        Text(categoryName,style: TextStyles.textStyleBold10
-                            .copyWith(fontWeight: FontWeight.w600
-                            ,color: primary)
-                          ,textScaler: TextScaler.linear(1),),
-                        SizedBox(width: context.width/20,),
-                        Text("+$points points",style: TextStyles.textStyleBold10
-                            .copyWith(fontWeight: FontWeight.w600,color: primary)
-                          ,textScaler: TextScaler.linear(1),),],),
+                      Row(
+                        children: [
+                          Text(
+                            categoryName,
+                            style: TextStyles.textStyleBold10.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: primary,
+                            ),
+                            textScaler: TextScaler.linear(1),
+                          ),
+                          SizedBox(width: context.width / 20),
+                          Text(
+                            "+$points points",
+                            style: TextStyles.textStyleBold10.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: primary,
+                            ),
+                            textScaler: TextScaler.linear(1),
+                          ),
+                        ],
+                      ),
 
+                      SizedBox(height: context.height / 110),
 
-                      SizedBox(height: context.height/110,),
-
-                      Text(title,style: TextStyles.textStyleBold16.copyWith
-                        (fontWeight: FontWeight.w800,color: orangeBold)
-                        ,textScaler: TextScaler.linear(1),overflow: TextOverflow.ellipsis,),
-                      SizedBox(height: context.height/120,),
+                      Text(
+                        title,
+                        style: TextStyles.textStyleBold16.copyWith(
+                          fontWeight: FontWeight.w800,
+                          color: orangeBold,
+                        ),
+                        textScaler: TextScaler.linear(1),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: context.height / 120),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Flexible(
-                            child: Text("${sectionNum} sections",style: TextStyles.textStyleBold10.copyWith
-                              (color: primary,fontWeight: FontWeight.w600),
-                              textScaler: TextScaler.linear(1),overflow: TextOverflow.ellipsis,maxLines: 1,),
+                            child: Text(
+                              "$sectionNum sections",
+                              style: TextStyles.textStyleBold10.copyWith(
+                                color: primary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              textScaler: TextScaler.linear(1),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
                           ),
                           customSvg(name: elipse),
                           Flexible(
-                            child: Text("${lectureNum} lectures",style: TextStyles.textStyleNormal10.copyWith
-                              (color: primary,fontWeight: FontWeight.w600)
-                              ,textScaler: TextScaler.linear(1),overflow: TextOverflow.ellipsis,maxLines: 1,),),
+                            child: Text(
+                              "$lectureNum lectures",
+                              style: TextStyles.textStyleNormal10.copyWith(
+                                color: primary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              textScaler: TextScaler.linear(1),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
                           customSvg(name: elipse),
                           Flexible(
-                            child: Text("",style: TextStyles.textStyleNormal10.copyWith
-                              (color: primary,fontWeight: FontWeight.w600)
-                              ,textScaler: TextScaler.linear(1),overflow: TextOverflow.ellipsis,maxLines: 1,),),
-                        ],)
+                            child: Text(
+                              "",
+                              style: TextStyles.textStyleNormal10.copyWith(
+                                color: primary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              textScaler: TextScaler.linear(1),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                ),],),
-            SizedBox(height: context.height/50,),
-            Row(children: [
-             Container(
+                ),
+              ],
+            ),
+            SizedBox(height: context.height / 50),
+            Row(
+              children: [
+                Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.only(
-                      left: context.width/30,right: context.width/30,
-                      top: context.height/60,bottom: context.height/60),
+                    left: context.width / 30,
+                    right: context.width / 30,
+                    top: context.height / 60,
+                    bottom: context.height / 60,
+                  ),
                   decoration: BoxDecoration(
                     color: primary,
-                    borderRadius: BorderRadius.all(Radius.circular(38))),
+                    borderRadius: BorderRadius.all(Radius.circular(38)),
+                  ),
                   child: Row(
                     children: [
                       Container(
                         padding: EdgeInsets.all(6),
                         decoration: BoxDecoration(
                           color: white,
-                          borderRadius: BorderRadius.all(Radius.circular(23))),
-                        child: customSvg(name: carrier,color: primary),),
-                      SizedBox(width: context.width/60,),
-                      Text(tr("keep_learning"),style: TextStyles.textStyleNormal10
-                          .copyWith(fontWeight: FontWeight.w500,color: white),
-                        textScaler: TextScaler.linear(1),),
-                      SizedBox(width: context.width/60,),
-                      context.locale.languageCode == "ar" ?
-                      Transform.rotate(
-                        angle: 180 * math.pi / 180,
-                        child:  Container(
-                            alignment: Alignment.center,
-                            child: customSvg(name: arrowRight)),
-
-                      ):
-                      Container(
-                          alignment: Alignment.center,
-                          child: customSvg(name: arrowRight))],),),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                        margin: EdgeInsets.only(left: context.width/30,right: context.width/30),
-                        child: Text("$progress%",style: TextStyles.textStyleNormal12
-                            .copyWith(fontWeight: FontWeight.w600,
-                            color: primary),textScaler: TextScaler.linear(1),)),
-                    SizedBox(height: context.height/80,),
-                    Container(
-                      margin: EdgeInsets.only(left: context.width/28,right: context.width/28),
-                      child: LinearPercentIndicator(
-                        percent: double.parse(progress.toString())/100,
-                        linearStrokeCap: LinearStrokeCap.round,
-                        barRadius: Radius.circular(6.0),
-                        progressColor: primary,
+                          borderRadius: BorderRadius.all(Radius.circular(23)),
+                        ),
+                        child: customSvg(name: carrier, color: primary),
                       ),
-                    ),
-                  ],
+                      SizedBox(width: context.width / 60),
+                      Text(
+                        tr("keep_learning"),
+                        style: TextStyles.textStyleNormal10.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: white,
+                        ),
+                        textScaler: TextScaler.linear(1),
+                      ),
+                      SizedBox(width: context.width / 60),
+                      context.locale.languageCode == "ar"
+                          ? Transform.rotate(
+                              angle: 180 * math.pi / 180,
+                              child: Container(
+                                alignment: Alignment.center,
+                                child: customSvg(name: arrowRight),
+                              ),
+                            )
+                          : Container(
+                              alignment: Alignment.center,
+                              child: customSvg(name: arrowRight),
+                            ),
+                    ],
+                  ),
                 ),
-              )
-            ],)
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: context.width / 30,
+                          right: context.width / 30,
+                        ),
+                        child: Text(
+                          "$progress%",
+                          style: TextStyles.textStyleNormal12.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: primary,
+                          ),
+                          textScaler: TextScaler.linear(1),
+                        ),
+                      ),
+                      SizedBox(height: context.height / 80),
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: context.width / 28,
+                          right: context.width / 28,
+                        ),
+                        child: LinearPercentIndicator(
+                          percent: double.parse(progress.toString()) / 100,
+                          linearStrokeCap: LinearStrokeCap.round,
+                          barRadius: Radius.circular(6.0),
+                          progressColor: primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
-  
 }

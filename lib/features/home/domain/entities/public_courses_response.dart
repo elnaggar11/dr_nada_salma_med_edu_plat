@@ -4,8 +4,12 @@ class PublicCoursesResponse {
   List<Data>? data;
   Pagination? pagination;
 
-  PublicCoursesResponse(
-      {this.status, this.message, this.data, this.pagination});
+  PublicCoursesResponse({
+    this.status,
+    this.message,
+    this.data,
+    this.pagination,
+  });
 
   PublicCoursesResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -13,11 +17,11 @@ class PublicCoursesResponse {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
     pagination = json['pagination'] != null
-        ? new Pagination.fromJson(json['pagination'])
+        ? Pagination.fromJson(json['pagination'])
         : null;
   }
 
@@ -56,26 +60,27 @@ class Data {
   ButtonActions? buttonActions;
   int? progress;
 
-  Data(
-      {this.id,
-        this.title,
-        this.slug,
-        this.totalHours,
-        this.contentsCount,
-        this.lecturesCount,
-        this.semiDescription,
-        this.longDescription,
-        this.price,
-        this.priceAfterDiscount,
-        this.image,
-        this.points,
-        this.reviewsCount,
-        this.categoryName,
-        this.averageRating,
-        this.favorited,
-        this.canWatchCourse,
-        this.buttonActions,
-        this.progress});
+  Data({
+    this.id,
+    this.title,
+    this.slug,
+    this.totalHours,
+    this.contentsCount,
+    this.lecturesCount,
+    this.semiDescription,
+    this.longDescription,
+    this.price,
+    this.priceAfterDiscount,
+    this.image,
+    this.points,
+    this.reviewsCount,
+    this.categoryName,
+    this.averageRating,
+    this.favorited,
+    this.canWatchCourse,
+    this.buttonActions,
+    this.progress,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -96,7 +101,7 @@ class Data {
     favorited = json['favorited'];
     canWatchCourse = json['can_watch_course'];
     buttonActions = json['button_actions'] != null
-        ? new ButtonActions.fromJson(json['button_actions'])
+        ? ButtonActions.fromJson(json['button_actions'])
         : null;
     progress = json['progress'];
   }
@@ -134,8 +139,12 @@ class ButtonActions {
   bool? viewCourse;
   bool? reviewCourse;
 
-  ButtonActions(
-      {this.enrollNow, this.addToCart, this.viewCourse, this.reviewCourse});
+  ButtonActions({
+    this.enrollNow,
+    this.addToCart,
+    this.viewCourse,
+    this.reviewCourse,
+  });
 
   ButtonActions.fromJson(Map<String, dynamic> json) {
     enrollNow = json['enroll_now'];

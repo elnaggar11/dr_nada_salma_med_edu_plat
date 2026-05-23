@@ -5,7 +5,6 @@ sealed class TermsState {}
 
 final class TermsInitial extends TermsState {}
 
-
 class TermsLoadingState extends TermsState {}
 
 class TermsErrorState extends TermsState {

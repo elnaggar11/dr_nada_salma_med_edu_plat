@@ -8,7 +8,7 @@ class PointsResponse {
   PointsResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -37,7 +37,7 @@ class Data {
     if (json['courses'] != null) {
       courses = <Courses>[];
       json['courses'].forEach((v) {
-        courses!.add(new Courses.fromJson(v));
+        courses!.add(Courses.fromJson(v));
       });
     }
   }
@@ -61,12 +61,13 @@ class Courses {
   List<Course>? course;
   String? createdAt;
 
-  Courses(
-      {this.orderId,
-        this.points,
-        this.totalAmount,
-        this.course,
-        this.createdAt});
+  Courses({
+    this.orderId,
+    this.points,
+    this.totalAmount,
+    this.course,
+    this.createdAt,
+  });
 
   Courses.fromJson(Map<String, dynamic> json) {
     orderId = json['order_id'];
@@ -75,7 +76,7 @@ class Courses {
     if (json['course'] != null) {
       course = <Course>[];
       json['course'].forEach((v) {
-        course!.add(new Course.fromJson(v));
+        course!.add(Course.fromJson(v));
       });
     }
     createdAt = json['created_at'];
@@ -97,16 +98,17 @@ class Courses {
 class Course {
   int? id;
   dynamic title;
- dynamic slug;
+  dynamic slug;
   dynamic semiDescription;
   dynamic longDescription;
 
-  Course(
-      {this.id,
-        this.title,
-        this.slug,
-        this.semiDescription,
-        this.longDescription});
+  Course({
+    this.id,
+    this.title,
+    this.slug,
+    this.semiDescription,
+    this.longDescription,
+  });
 
   Course.fromJson(Map<String, dynamic> json) {
     id = json['id'];

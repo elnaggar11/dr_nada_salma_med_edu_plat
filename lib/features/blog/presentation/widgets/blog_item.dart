@@ -16,51 +16,79 @@ class BlogItem extends StatelessWidget {
   final double height;
   final String slug;
 
-
-  BlogItem({required this.img,required this.width,required this.height,
-    required this.title, required this.description, required this.metaDescription,
-    required this.slug});
+  const BlogItem({
+    super.key,
+    required this.img,
+    required this.width,
+    required this.height,
+    required this.title,
+    required this.description,
+    required this.metaDescription,
+    required this.slug,
+  });
 
   @override
   Widget build(BuildContext context) {
-  return InkWell(
-    onTap: (){
-      context.pushNamed(name: blogDetails,args: BlogDetailsParams(slug: slug,title: title));
-    },
-    child: Container(
-      margin: EdgeInsets.all(9),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            child: NetWorkImageHandler(image: img, width: width, height: height),),
-          SizedBox(width: context.width/40,),
-          Flexible(
-            fit: FlexFit.loose,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title,style: TextStyles.textStyleNormal10.copyWith
-                  (fontWeight: FontWeight.w600,color: primary),textScaler: TextScaler.linear(1),),
-                SizedBox(height: context.height/80,),
-                Text(parse(description).documentElement!.text,
-                  style: TextStyles.textStyleBold12
-                      .copyWith(fontWeight: FontWeight.w800,color: primary)
-                  ,textScaler: TextScaler.linear(1),),
-                SizedBox(height: context.height/60,),
-                Text("“ $metaDescription"
-                  ,style: TextStyles.textStyleNormal10
-                      .copyWith(fontWeight: FontWeight.w500,color: primary),
-                textScaler: TextScaler.linear(1),)
-            ],),
-          )
-        ],
+    return InkWell(
+      onTap: () {
+        context.pushNamed(
+          name: blogDetails,
+          args: BlogDetailsParams(slug: slug, title: title),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.all(9),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+              child: NetWorkImageHandler(
+                image: img,
+                width: width,
+                height: height,
+              ),
+            ),
+            SizedBox(width: context.width / 40),
+            Flexible(
+              fit: FlexFit.loose,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyles.textStyleNormal10.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: primary,
+                    ),
+                    textScaler: TextScaler.linear(1),
+                  ),
+                  SizedBox(height: context.height / 80),
+                  Text(
+                    parse(description).documentElement!.text,
+                    style: TextStyles.textStyleBold12.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: primary,
+                    ),
+                    textScaler: TextScaler.linear(1),
+                  ),
+                  SizedBox(height: context.height / 60),
+                  Text(
+                    "“ $metaDescription",
+                    style: TextStyles.textStyleNormal10.copyWith(
+                      fontWeight: FontWeight.w500,
+                      color: primary,
+                    ),
+                    textScaler: TextScaler.linear(1),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
-  );
+    );
   }
-
 }

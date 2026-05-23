@@ -21,40 +21,52 @@ class CategoriesCubit extends Cubit<CategoriesState> {
   int? categoryId;
   String? courseName;
 
-  Future<void>getCategories()async{
+  Future<void> getCategories() async {
     loading = true;
     error = false;
     success = false;
     emit(CategoriesLoadingState());
-    try{
+    try {
       final failOrUser = await categoriesUseCase(NoParams());
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            error = true;
+            success = false;
+            msgKey.currentState!.showSnackBar(
+              SnackBar(
+                content: Text(
+                  fail.message,
+                  style: TextStyles.textStyleNormal13.copyWith(color: white),
+                  textScaler: TextScaler.linear(1),
+                ),
+              ),
+            );
+            emit(CategoriesErrorState(msg: fail.message));
+          }
+        },
+        (response) {
           loading = false;
-          error = true;
-          success = false;
-          msgKey.currentState!.showSnackBar(SnackBar(content: Text(fail.message,style:
-          TextStyles.textStyleNormal13.copyWith(color: white),textScaler: TextScaler.linear(1),)));
-          emit(CategoriesErrorState(msg: fail.message));
-        }
-      }, (response){
-        loading = false;
-        error = false;
-        success = true;
-        categoriesResponse = response;
-        emit(CategoriesSuccessState(categoriesResponse: response));
-      });
-    }catch(e){
+          error = false;
+          success = true;
+          categoriesResponse = response;
+          emit(CategoriesSuccessState(categoriesResponse: response));
+        },
+      );
+    } catch (e) {
       loading = false;
       error = true;
       success = false;
     }
   }
-  Future<void>updateCategoryState({String? type})async{
+
+  Future<void> updateCategoryState({String? type}) async {
     type1 = type;
     emit(UpdateCategoryTypeState());
   }
-  Future<void>setSelectedCheckBox({int? ind,bool? val})async{
+
+  Future<void> setSelectedCheckBox({int? ind, bool? val}) async {
     for (var element in categoriesResponse!.data!) {
       element.checked = false;
     }
@@ -62,7 +74,8 @@ class CategoriesCubit extends Cubit<CategoriesState> {
     categoryId = categoriesResponse!.data![ind].id;
     emit(FilterUpdateItemState());
   }
- /* Future<void>setSelectedRatedCheckBox({int? ind,bool? val})async{
+
+  /* Future<void>setSelectedRatedCheckBox({int? ind,bool? val})async{
     for (var element in ratedItems) {
       element['isChecked'] = false;
     }

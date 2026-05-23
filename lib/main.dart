@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:device_preview/device_preview.dart';
-import 'package:dr_nada_salma_med_edu_plat/app_routes.dart';
+import 'app_routes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

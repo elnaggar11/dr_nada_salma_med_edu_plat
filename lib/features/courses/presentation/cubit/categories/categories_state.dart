@@ -5,12 +5,12 @@ sealed class CategoriesState {}
 
 final class CategoriesInitial extends CategoriesState {}
 
-
 class CategoriesErrorState extends CategoriesState {
   final String msg;
 
   CategoriesErrorState({required this.msg});
 }
+
 class CategoriesLoadingState extends CategoriesState {}
 
 class CategoriesSuccessState extends CategoriesState {

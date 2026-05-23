@@ -7,11 +7,11 @@ class SuccessStoriesShimmerVerticalList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        itemCount: 7,
-        physics: ClampingScrollPhysics(),
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        itemBuilder: (context,index)=>SuccessStoriesShimmerItem());
+      itemCount: 7,
+      physics: ClampingScrollPhysics(),
+      shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+      itemBuilder: (context, index) => SuccessStoriesShimmerItem(),
+    );
   }
-
 }

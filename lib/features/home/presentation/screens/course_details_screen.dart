@@ -20,44 +20,49 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:share_plus/share_plus.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
-   CourseDetailsScreen({super.key, required this.params});
-   final CoursesDetailsParams params;
-
-
-
-
+  const CourseDetailsScreen({super.key, required this.params});
+  final CoursesDetailsParams params;
 
   @override
   State<CourseDetailsScreen> createState() => _CourseDetailsScreenState();
 }
 
 class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
-
   final box = navKey.currentContext!.findRenderObject() as RenderBox?;
 
   @override
   void initState() {
-   context.read<CoursesDetailsCubit>()
-       .getCoursesDetails(params: CoursesDetailsParams(slug: widget.params.slug));
+    context.read<CoursesDetailsCubit>().getCoursesDetails(
+      params: CoursesDetailsParams(slug: widget.params.slug),
+    );
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: white,
       appBar: customAppBar(
         appBarInd: 0,
-          title: tr("course_details"),widget: InkWell(onTap: (){}
-        ,child: InkWell(
-            onTap: ()async{
+        title: tr("course_details"),
+        widget: InkWell(
+          onTap: () {},
+          child: InkWell(
+            onTap: () async {
               await SharePlus.instance.share(
-                  ShareParams(
-                    text: "share",
-                    sharePositionOrigin: box!.localToGlobal(Offset.zero) & box!.size,
-                  )
+                ShareParams(
+                  text: "share",
+                  sharePositionOrigin:
+                      box!.localToGlobal(Offset.zero) & box!.size,
+                ),
               );
             },
-            child: customSvg(name: share)),),status: true,context: context,),
+            child: customSvg(name: share),
+          ),
+        ),
+        status: true,
+        context: context,
+      ),
 
       body: Container(
         width: double.infinity,
@@ -65,125 +70,229 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
         color: white,
         child: SingleChildScrollView(
           child: BlocBuilder<CoursesDetailsCubit, CoursesDetailsState>(
-          builder: (context, state) {
-            return context.read<CoursesDetailsCubit>().loading == true ?
+            builder: (context, state) {
+              return context.read<CoursesDetailsCubit>().loading == true
+                  ? Container(
+                      width: context.width,
+                      height: context.height,
+                      color: white,
+                      child: SpinKitPulse(color: primary, size: 90),
+                    )
+                  : Container(
+                      color: white,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: context.height / 70),
 
-          Container(
-            width: context.width,
-            height: context.height,
-            color: white,
-            child: SpinKitPulse(color: primary,size: 90,),
-          ):
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: context.width / 20,
+                              right: context.width / 20,
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(40.0),
+                              ),
+                              child: NetWorkImageHandler(
+                                image: context
+                                    .read<CoursesDetailsCubit>()
+                                    .coursesDetailsResponse!
+                                    .data!
+                                    .image
+                                    .toString(),
+                                width: double.infinity,
+                                height: context.height / 3.5,
+                              ),
+                            ),
+                          ),
 
-        Container(
-            color: white,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: context.height/70,),
+                          SizedBox(height: context.height / 45),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SizedBox(width: context.width / 20),
+                                Container(
+                                  padding: EdgeInsets.only(
+                                    top: 8,
+                                    bottom: 8,
+                                    left: 5,
+                                    right: 10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: accent,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(38),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      customSvg(name: pathology),
+                                      SizedBox(width: context.width / 50),
 
-                  Container(
-                  margin: EdgeInsets.only(left: context.width/20,right: context.width/20),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(40.0)),
-                    child: NetWorkImageHandler(image: context.read<CoursesDetailsCubit>()
-                        .coursesDetailsResponse!.data!.image.toString()!
-                        , width: double.infinity, height: context.height/3.5),),),
+                                      Text(
+                                        "${context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.categoryName}",
+                                        style: TextStyles.textStyleBold10
+                                            .copyWith(
+                                              fontWeight: FontWeight.w600,
+                                              color: primary,
+                                            ),
+                                        textScaler: TextScaler.linear(1.0),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: context.width / 40),
+                                Container(
+                                  padding: EdgeInsets.only(
+                                    top: 8,
+                                    bottom: 8,
+                                    left: 5,
+                                    right: 10,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: accent,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(38),
+                                    ),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      customSvg(name: time),
+                                      SizedBox(width: context.width / 50),
+                                      Text(
+                                        "${context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.totalHours}",
+                                        style: TextStyles.textStyleBold10
+                                            .copyWith(
+                                              fontWeight: FontWeight.w600,
+                                              color: primary,
+                                            ),
+                                        textScaler: TextScaler.linear(1.0),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: context.width / 20),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: context.height / 40),
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: context.width / 20,
+                              right: context.width / 20,
+                            ),
+                            child: Text(
+                              "${context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.title} ",
+                              style: TextStyles.textStyleBold24.copyWith(
+                                color: orangeBold,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textScaler: TextScaler.linear(1.0),
+                            ),
+                          ),
+                          SizedBox(height: context.height / 80),
 
-                SizedBox(height: context.height/45,),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(width: context.width/20,),
-                      Container(
-                        padding: EdgeInsets.only(top: 8,bottom: 8,left: 5,right: 10),
-                        decoration: BoxDecoration(
-                            color: accent,
-                            borderRadius: BorderRadius.all(Radius.circular(38))),
-                        child: Row(children: [
-                          customSvg(name: pathology),
-                          SizedBox(width: context.width/50,),
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: context.width / 20,
+                              right: context.width / 20,
+                            ),
+                            child: Text(
+                              "– ${context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.totalHours} Hours",
+                              style: TextStyles.textStyleBold24.copyWith(
+                                color: orangeBold,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textScaler: TextScaler.linear(1.0),
+                            ),
+                          ),
+                          SizedBox(height: context.height / 50),
 
-
-                                Text("${context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.categoryName}"
-                                  ,style: TextStyles.textStyleBold10.copyWith(fontWeight: FontWeight.w600
-                              ,color: primary),textScaler: TextScaler.linear(1.0),)
-                              ],),),
-                      SizedBox(width: context.width/40,),
-                            Container(
-                        padding: EdgeInsets.only(top: 8,bottom: 8,left: 5,right: 10),
-                        decoration: BoxDecoration(
-                            color: accent,
-                            borderRadius: BorderRadius.all(Radius.circular(38))),
-                        child: Row(children: [
-                          customSvg(name: time),
-                          SizedBox(width: context.width/50,),
-                          Text("${context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.totalHours}",style: TextStyles.textStyleBold10.copyWith(fontWeight: FontWeight.w600
-                              ,color: primary),textScaler: TextScaler.linear(1.0),)],),)
-                             ,
-                      SizedBox(width: context.width/20,),
-                    ],),
-                ),
-                SizedBox(height: context.height/40,),
-                      Container(
-                  margin: EdgeInsets.only(left: context.width/20,right: context.width/20),
-                  child: Text("${context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.title} "
-                      ,style: TextStyles.textStyleBold24.copyWith(color: orangeBold
-                      ,fontWeight: FontWeight.bold),textScaler: TextScaler.linear(1.0)),
-                ),
-                SizedBox(height: context.height/80,),
-
-               Container(
-                  margin: EdgeInsets.only(left: context.width/20,right: context.width/20),
-                  child: Text("– ${context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.totalHours} Hours",style: TextStyles.textStyleBold24.copyWith(color: orangeBold
-                      ,fontWeight: FontWeight.bold),textScaler: TextScaler.linear(1.0)),
-                ),
-                SizedBox(height: context.height/50,),
-
-                    Container(
-                  margin: EdgeInsets.only(left: context.width/20,right: context.width/20),
-                  child: Text(context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.semiDescription!
-                      ,style: TextStyles.textStyleNormal12.copyWith(color: black,
-                          fontWeight: FontWeight.w500),textScaler: TextScaler.linear(1.0)),),
-                SizedBox(height: context.height/40,),
-                Container(
-                  margin: EdgeInsets.only(left: context.width/30,right: context.width/30),
-                  child:  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text("${context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.averageRating}",style: TextStyles.textStyleBold16
-                          .copyWith(fontWeight: FontWeight.w800,color: primary)
-                        ,textScaler: TextScaler.linear(1),),
-                      SizedBox(width: context.width/40,),
-                      RatingBarIndicator(
-                          itemCount: 5,
-                          rating: double.parse(context.read<CoursesDetailsCubit>()
-                              .coursesDetailsResponse!.data!.averageRating.toString() ?? '0.0'),
-                          itemPadding: EdgeInsets.only(left: 3,right: 3),
-                          itemSize: 15,
-                          itemBuilder: (context,index)=>customSvg(name: star,color: gold)),
-                      SizedBox(width: context.width/40,),
-                      Text("${context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.reviewsCount ?? 0} students",style: TextStyles.textStyleBold14
-                          .copyWith(fontWeight: FontWeight.w400),textScaler: TextScaler.linear(1),)
-                    ],)
-                ),
-                SizedBox(height: context.height/60,),
-                Container(
-                  margin: EdgeInsets.only(left: context.width/30,right: context.width/30),
-                  child:
-
-                        Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                   /*   Text("\$${context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.priceAfterDiscount??""}"
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: context.width / 20,
+                              right: context.width / 20,
+                            ),
+                            child: Text(
+                              context
+                                  .read<CoursesDetailsCubit>()
+                                  .coursesDetailsResponse!
+                                  .data!
+                                  .semiDescription!,
+                              style: TextStyles.textStyleNormal12.copyWith(
+                                color: black,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textScaler: TextScaler.linear(1.0),
+                            ),
+                          ),
+                          SizedBox(height: context.height / 40),
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: context.width / 30,
+                              right: context.width / 30,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "${context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.averageRating}",
+                                  style: TextStyles.textStyleBold16.copyWith(
+                                    fontWeight: FontWeight.w800,
+                                    color: primary,
+                                  ),
+                                  textScaler: TextScaler.linear(1),
+                                ),
+                                SizedBox(width: context.width / 40),
+                                RatingBarIndicator(
+                                  itemCount: 5,
+                                  rating: double.parse(
+                                    context
+                                            .read<CoursesDetailsCubit>()
+                                            .coursesDetailsResponse!
+                                            .data!
+                                            .averageRating
+                                            .toString() ??
+                                        '0.0',
+                                  ),
+                                  itemPadding: EdgeInsets.only(
+                                    left: 3,
+                                    right: 3,
+                                  ),
+                                  itemSize: 15,
+                                  itemBuilder: (context, index) =>
+                                      customSvg(name: star, color: gold),
+                                ),
+                                SizedBox(width: context.width / 40),
+                                Text(
+                                  "${context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.reviewsCount ?? 0} students",
+                                  style: TextStyles.textStyleBold14.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  textScaler: TextScaler.linear(1),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: context.height / 60),
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: context.width / 30,
+                              right: context.width / 30,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                /*   Text("\$${context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.priceAfterDiscount??""}"
                         ,style: TextStyles.textStyleBold24
                           .copyWith(fontWeight: FontWeight.w800,color: orangeBold)
                         ,textScaler: TextScaler.linear(1),),
@@ -192,187 +301,365 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                         ,style: TextStyles.textStyleNormal12
                           .copyWith(fontWeight: FontWeight.w500,color: grey1)
                         ,textScaler: TextScaler.linear(1),)*/
-                    ],),
-                ),
-                SizedBox(height: context.height/40,),
-                Container(
-                  margin: EdgeInsets.only(left: context.width/30,right: context.width/30),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(children: [
-                      Text("30-Day Money-Back Guarantee",style: TextStyles
-                          .textStyleBold12.copyWith(color: primary,fontWeight: FontWeight.w700)
-                        ,textScaler: TextScaler.linear(1),),
-                      SizedBox(width: context.width/20,),
-                      customSvg(name: elipse),
-                      SizedBox(width: context.width/20,),
-                      Text("Full Lifetime Access",style: TextStyles
-                          .textStyleBold12.copyWith(color: primary,fontWeight: FontWeight.w700)
-                        ,textScaler: TextScaler.linear(1),)
-                    ],),
-                  ),
-                ),
-                SizedBox(height: context.height/20,),
-                Container(
-                  margin: EdgeInsets.only(left: context.width/30,right: context.width/30),
-                  child: Text(tr("course_content"),style: TextStyles.textStyleBold32.copyWith(color: orangeBold)
-                    ,textScaler: TextScaler.linear(1),),
-                ),
-                SizedBox(height: context.height/35,),
-                Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.only(left: context.width/30,right: context.width/30),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(" ${tr("sections")}",style: TextStyles.textStyleBold14
-                          .copyWith(fontWeight: FontWeight.w600,color: primary)
-                        ,textScaler: TextScaler.linear(1),),
-                      SizedBox(width: context.width/30,),
-                      customSvg(name: elipse),
-                      SizedBox(width: context.width/30,),
-                      Text("${context.read<CoursesDetailsCubit>().coursesDetailsResponse
-                      !.data!.contents!.length} ${tr("lectures")}",style: TextStyles.textStyleBold14
-                          .copyWith(fontWeight: FontWeight.w600,color: primary)
-                        ,textScaler: TextScaler.linear(1),),
-                      SizedBox(width: context.width/30,),
-                      customSvg(name: elipse),
-                      SizedBox(width: context.width/30,),
-                      Text("${context.read<CoursesDetailsCubit>().totalTime} ${tr("minutes")}",style: TextStyles.textStyleBold14
-                          .copyWith(fontWeight: FontWeight.w600,color: primary)
-                        ,textScaler: TextScaler.linear(1),),
-                    ])
-                  ),),
-                SizedBox(height: context.height/25),
-                 SizedBox(
-                  child: ListView.builder(
-                      itemCount: context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.contents!.length,
-                      shrinkWrap: true,
-                      padding: EdgeInsets.only(left: context.width/80,right: context.width/80),
-                      physics: ClampingScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (context,index)=>
-                          CourseContentItem(title: context.read<CoursesDetailsCubit>().coursesDetailsResponse!
-                              .data!.contents![index].title!
-                              , lecture: context.read<CoursesDetailsCubit>().coursesDetailsResponse!
-                                .data!.contents![index].lectures!
-                              , time: context.read<CoursesDetailsCubit>()
-                                .coursesDetailsResponse!.data!.contents![index].totalTime!,
-                            courseId: context.read<CoursesDetailsCubit>()
-                                .coursesDetailsResponse!.data!.id.toString()
-                            , canWatch: context.read<CoursesDetailsCubit>()
-                                .coursesDetailsResponse!.data!.canWatchCourse!,)),
-                ),
-                SizedBox(height: context.height/40,),
-                Container(
-                  margin: EdgeInsets.only(left: context.width/22,right: context.width/22),
-                  child: Text(tr("description"),style: TextStyles.textStyleBold32
-                      .copyWith(color: orangeBold),textScaler: TextScaler.linear(1),),),
-
-                SizedBox(height: context.height/20,),
-                      DescriptionHeadTitle(title: context.read<CoursesDetailsCubit>()
-                          .coursesDetailsResponse!.data!.semiDescription!),
-                SizedBox(height: context.height/60,),
-
-                      DescriptionContentItem(content: context.read<CoursesDetailsCubit>()
-                          .coursesDetailsResponse!.data!.longDescription!),
-
-
-                SizedBox(height: context.height/20,),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: orange),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SizedBox(height: context.height/30,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(width: context.width/20,),
-                          Text(tr("reviews_student"),style: TextStyles.textStyleBold20
-                              .copyWith(color: white,fontWeight: FontWeight.w800,),textScaler: TextScaler.linear(1),),
-                          Spacer(),
-                          Row(
-                            children: [
-                              Text(tr("view_all"),style: TextStyles.textStyleNormal12
-                                  .copyWith(color: white,fontWeight: FontWeight.w600,)
-                                ,textScaler: TextScaler.linear(1),),
-                              SizedBox(width: context.width/50,),
-                              customSvg(name: arrow,color: greyLight,width: context.width/40,height: context.width/40)
-                            ],),
-                          SizedBox(width: context.width/20,),
-                        ],),
-                      SizedBox(height: context.height/20,),
-
-                          context.read<CoursesDetailsCubit>()
-                              .coursesDetailsResponse!.data!.reviews == null ?
+                              ],
+                            ),
+                          ),
+                          SizedBox(height: context.height / 40),
                           Container(
-                            color: Colors.transparent,
+                            margin: EdgeInsets.only(
+                              left: context.width / 30,
+                              right: context.width / 30,
+                            ),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    "30-Day Money-Back Guarantee",
+                                    style: TextStyles.textStyleBold12.copyWith(
+                                      color: primary,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    textScaler: TextScaler.linear(1),
+                                  ),
+                                  SizedBox(width: context.width / 20),
+                                  customSvg(name: elipse),
+                                  SizedBox(width: context.width / 20),
+                                  Text(
+                                    "Full Lifetime Access",
+                                    style: TextStyles.textStyleBold12.copyWith(
+                                      color: primary,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    textScaler: TextScaler.linear(1),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: context.height / 20),
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: context.width / 30,
+                              right: context.width / 30,
+                            ),
+                            child: Text(
+                              tr("course_content"),
+                              style: TextStyles.textStyleBold32.copyWith(
+                                color: orangeBold,
+                              ),
+                              textScaler: TextScaler.linear(1),
+                            ),
+                          ),
+                          SizedBox(height: context.height / 35),
+                          Container(
+                            width: double.infinity,
+                            margin: EdgeInsets.only(
+                              left: context.width / 30,
+                              right: context.width / 30,
+                            ),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    " ${tr("sections")}",
+                                    style: TextStyles.textStyleBold14.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: primary,
+                                    ),
+                                    textScaler: TextScaler.linear(1),
+                                  ),
+                                  SizedBox(width: context.width / 30),
+                                  customSvg(name: elipse),
+                                  SizedBox(width: context.width / 30),
+                                  Text(
+                                    "${context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.contents!.length} ${tr("lectures")}",
+                                    style: TextStyles.textStyleBold14.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: primary,
+                                    ),
+                                    textScaler: TextScaler.linear(1),
+                                  ),
+                                  SizedBox(width: context.width / 30),
+                                  customSvg(name: elipse),
+                                  SizedBox(width: context.width / 30),
+                                  Text(
+                                    "${context.read<CoursesDetailsCubit>().totalTime} ${tr("minutes")}",
+                                    style: TextStyles.textStyleBold14.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                      color: primary,
+                                    ),
+                                    textScaler: TextScaler.linear(1),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: context.height / 25),
+                          SizedBox(
+                            child: ListView.builder(
+                              itemCount: context
+                                  .read<CoursesDetailsCubit>()
+                                  .coursesDetailsResponse!
+                                  .data!
+                                  .contents!
+                                  .length,
+                              shrinkWrap: true,
+                              padding: EdgeInsets.only(
+                                left: context.width / 80,
+                                right: context.width / 80,
+                              ),
+                              physics: ClampingScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              itemBuilder: (context, index) =>
+                                  CourseContentItem(
+                                    title: context
+                                        .read<CoursesDetailsCubit>()
+                                        .coursesDetailsResponse!
+                                        .data!
+                                        .contents![index]
+                                        .title!,
+                                    lecture: context
+                                        .read<CoursesDetailsCubit>()
+                                        .coursesDetailsResponse!
+                                        .data!
+                                        .contents![index]
+                                        .lectures!,
+                                    time: context
+                                        .read<CoursesDetailsCubit>()
+                                        .coursesDetailsResponse!
+                                        .data!
+                                        .contents![index]
+                                        .totalTime!,
+                                    courseId: context
+                                        .read<CoursesDetailsCubit>()
+                                        .coursesDetailsResponse!
+                                        .data!
+                                        .id
+                                        .toString(),
+                                    canWatch: context
+                                        .read<CoursesDetailsCubit>()
+                                        .coursesDetailsResponse!
+                                        .data!
+                                        .canWatchCourse!,
+                                  ),
+                            ),
+                          ),
+                          SizedBox(height: context.height / 40),
+                          Container(
+                            margin: EdgeInsets.only(
+                              left: context.width / 22,
+                              right: context.width / 22,
+                            ),
+                            child: Text(
+                              tr("description"),
+                              style: TextStyles.textStyleBold32.copyWith(
+                                color: orangeBold,
+                              ),
+                              textScaler: TextScaler.linear(1),
+                            ),
+                          ),
+
+                          SizedBox(height: context.height / 20),
+                          DescriptionHeadTitle(
+                            title: context
+                                .read<CoursesDetailsCubit>()
+                                .coursesDetailsResponse!
+                                .data!
+                                .semiDescription!,
+                          ),
+                          SizedBox(height: context.height / 60),
+
+                          DescriptionContentItem(
+                            content: context
+                                .read<CoursesDetailsCubit>()
+                                .coursesDetailsResponse!
+                                .data!
+                                .longDescription!,
+                          ),
+
+                          SizedBox(height: context.height / 20),
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(color: orange),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                customSvg(name: review,color: white),
-                                SizedBox(height: context.height/60,),
-                                Text(tr("no_reviews"),style: TextStyles
-                                    .textStyleBold13.copyWith(color: white)
-                                  ,textScaler: TextScaler.linear(1),),
-                                SizedBox(height: context.height/5,)
-                              ],
-                            ),
-                          ):
-
-                          context.read<CoursesDetailsCubit>()
-                              .coursesDetailsResponse!.data!.reviews!.isEmpty ?
-                              Container(
-                                color: Colors.transparent,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                                SizedBox(height: context.height / 30),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    customSvg(name: review,color: white),
-                                    SizedBox(height: context.height/60,),
-                                    Text(tr("no_reviews"),style: TextStyles
-                                        .textStyleBold13.copyWith(color: white)
-                                      ,textScaler: TextScaler.linear(1),),
-                                    SizedBox(height: context.height/5,)
+                                    SizedBox(width: context.width / 20),
+                                    Text(
+                                      tr("reviews_student"),
+                                      style: TextStyles.textStyleBold20
+                                          .copyWith(
+                                            color: white,
+                                            fontWeight: FontWeight.w800,
+                                          ),
+                                      textScaler: TextScaler.linear(1),
+                                    ),
+                                    Spacer(),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          tr("view_all"),
+                                          style: TextStyles.textStyleNormal12
+                                              .copyWith(
+                                                color: white,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                          textScaler: TextScaler.linear(1),
+                                        ),
+                                        SizedBox(width: context.width / 50),
+                                        customSvg(
+                                          name: arrow,
+                                          color: greyLight,
+                                          width: context.width / 40,
+                                          height: context.width / 40,
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(width: context.width / 20),
                                   ],
                                 ),
-                              ) :
+                                SizedBox(height: context.height / 20),
 
-                          SizedBox(child: ListView.builder(
-                          itemCount:context.read<CoursesDetailsCubit>()
-                              .coursesDetailsResponse!.data!.reviews!.length,
-                          padding: EdgeInsets.only(top: 0),
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          itemBuilder: (context,index)=>
-                              ReviewsItem(image: context.read<CoursesDetailsCubit>()
-                                  .coursesDetailsResponse!.data!.reviews![index].user!.image
-                                , description: context.read<CoursesDetailsCubit>()
-                                    .coursesDetailsResponse!.data!.reviews![index].content ?? "No content found"
-                                , name: context.read<CoursesDetailsCubit>()
-                                    .coursesDetailsResponse!.data!.reviews![index].user!.fullName.toString()
-                                , specialist: "", rating: context.read<CoursesDetailsCubit>()
-                                    .coursesDetailsResponse!.data!.reviews![index].rating,)),),
-                      SizedBox(height: context.height/6,)
-
-                    ],
-                  ),)],),
-          );
-          },
-        ),),
+                                context
+                                            .read<CoursesDetailsCubit>()
+                                            .coursesDetailsResponse!
+                                            .data!
+                                            .reviews ==
+                                        null
+                                    ? Container(
+                                        color: Colors.transparent,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            customSvg(
+                                              name: review,
+                                              color: white,
+                                            ),
+                                            SizedBox(
+                                              height: context.height / 60,
+                                            ),
+                                            Text(
+                                              tr("no_reviews"),
+                                              style: TextStyles.textStyleBold13
+                                                  .copyWith(color: white),
+                                              textScaler: TextScaler.linear(1),
+                                            ),
+                                            SizedBox(
+                                              height: context.height / 5,
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : context
+                                          .read<CoursesDetailsCubit>()
+                                          .coursesDetailsResponse!
+                                          .data!
+                                          .reviews!
+                                          .isEmpty
+                                    ? Container(
+                                        color: Colors.transparent,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            customSvg(
+                                              name: review,
+                                              color: white,
+                                            ),
+                                            SizedBox(
+                                              height: context.height / 60,
+                                            ),
+                                            Text(
+                                              tr("no_reviews"),
+                                              style: TextStyles.textStyleBold13
+                                                  .copyWith(color: white),
+                                              textScaler: TextScaler.linear(1),
+                                            ),
+                                            SizedBox(
+                                              height: context.height / 5,
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : SizedBox(
+                                        child: ListView.builder(
+                                          itemCount: context
+                                              .read<CoursesDetailsCubit>()
+                                              .coursesDetailsResponse!
+                                              .data!
+                                              .reviews!
+                                              .length,
+                                          padding: EdgeInsets.only(top: 0),
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.vertical,
+                                          itemBuilder: (context, index) =>
+                                              ReviewsItem(
+                                                image: context
+                                                    .read<CoursesDetailsCubit>()
+                                                    .coursesDetailsResponse!
+                                                    .data!
+                                                    .reviews![index]
+                                                    .user!
+                                                    .image,
+                                                description:
+                                                    context
+                                                        .read<
+                                                          CoursesDetailsCubit
+                                                        >()
+                                                        .coursesDetailsResponse!
+                                                        .data!
+                                                        .reviews![index]
+                                                        .content ??
+                                                    "No content found",
+                                                name: context
+                                                    .read<CoursesDetailsCubit>()
+                                                    .coursesDetailsResponse!
+                                                    .data!
+                                                    .reviews![index]
+                                                    .user!
+                                                    .fullName
+                                                    .toString(),
+                                                specialist: "",
+                                                rating: context
+                                                    .read<CoursesDetailsCubit>()
+                                                    .coursesDetailsResponse!
+                                                    .data!
+                                                    .reviews![index]
+                                                    .rating,
+                                              ),
+                                        ),
+                                      ),
+                                SizedBox(height: context.height / 6),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+            },
+          ),
+        ),
       ),
-     // bottomSheet:/* BlocBuilder<CoursesDetailsCubit, CoursesDetailsState>(
-     /*   builder: (context, state) {
+      // bottomSheet:/* BlocBuilder<CoursesDetailsCubit, CoursesDetailsState>(
+      /*   builder: (context, state) {
     return context.read<CoursesDetailsCubit>().loading == true ?
     Container(
         color: white,
@@ -514,6 +801,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
             ),
           ],),);
   },
-)*/);
+)*/
+    );
   }
 }

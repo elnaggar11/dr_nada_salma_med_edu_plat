@@ -32,7 +32,7 @@ class Data {
   String? name;
   bool? checked;
 
-  Data({this.id, this.name,this.checked = false});
+  Data({this.id, this.name, this.checked = false});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];

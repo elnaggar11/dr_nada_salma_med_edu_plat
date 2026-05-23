@@ -13,33 +13,34 @@ class FavouritesRepositoryImpl implements FavouriteRepositories {
   FavouritesRepositoryImpl(this.favouriteRemoteDataSource);
 
   @override
-  Future<Either<Failure, AddToFavouriteResponse>> addToFavourite({FavouriteParams? params}) async{
-    try{
-      final response = await favouriteRemoteDataSource.addToFavourite(params: params);
+  Future<Either<Failure, AddToFavouriteResponse>> addToFavourite({
+    FavouriteParams? params,
+  }) async {
+    try {
+      final response = await favouriteRemoteDataSource.addToFavourite(
+        params: params,
+      );
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, FavouriteResponse>> getMyFavourites() async{
-    try{
+  Future<Either<Failure, FavouriteResponse>> getMyFavourites() async {
+    try {
       final response = await favouriteRemoteDataSource.getMyFavourite();
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
-
-
-
 }

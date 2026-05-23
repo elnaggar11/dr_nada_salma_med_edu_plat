@@ -29,9 +29,12 @@ const String favouriteSc = "favouriteSc";
 const String coursesSc = "coursesSc";
 const String privateLessons = "privateLessons";
 const String certificateSc = "certificateSc";
-const String successStoriesSc= "successStoriesSc";
+const String successStoriesSc = "successStoriesSc";
 const String notificationsSc = "notificationSc";
 const String aboutUsSc = "aboutUsSc";
 const String termsAndConditions = "termsConditionsSc";
 const String emptyPrivateLessons = "emptyPrivateLessonsSc";
+<<<<<<< HEAD
 const String teacherRegistrationSc = "teacherRegistrationSc";
+=======
+>>>>>>> 25308fc87a2b1cb6c15d8db7da4ba6113add6532

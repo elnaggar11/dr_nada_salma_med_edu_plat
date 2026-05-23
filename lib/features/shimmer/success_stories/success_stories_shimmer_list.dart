@@ -3,21 +3,23 @@ import 'package:dr_nada_salma_med_edu_plat/features/shimmer/success_stories/succ
 import 'package:flutter/cupertino.dart';
 
 class SuccessStoriesShimmerList extends StatelessWidget {
-  List<int> intList= [0,1,2,];
+  List<int> intList = [0, 1, 2];
 
   SuccessStoriesShimmerList({super.key});
   @override
   Widget build(BuildContext context) {
-   return Container(
-     margin: EdgeInsets.only(
-         left: context.width / 30, right: context.width / 30),
-     child: SingleChildScrollView(
-       scrollDirection: Axis.horizontal,
-       physics: ClampingScrollPhysics(),
-       child:
-
-       Row(
-           children: intList.map((e) => SuccessStoriesShimmerItem()).toList()),),);
+    return Container(
+      margin: EdgeInsets.only(
+        left: context.width / 30,
+        right: context.width / 30,
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        physics: ClampingScrollPhysics(),
+        child: Row(
+          children: intList.map((e) => SuccessStoriesShimmerItem()).toList(),
+        ),
+      ),
+    );
   }
-
 }

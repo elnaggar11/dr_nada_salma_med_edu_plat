@@ -18,36 +18,52 @@ class AboutUsCubit extends Cubit<AboutUsState> {
   bool? success = false;
   AboutUsResponse? aboutUsResponse;
 
-  Future<void>getAboutUs()async{
+  Future<void> getAboutUs() async {
     loading = true;
     error = false;
     success = false;
     emit(AboutUsLoadingState());
-    try{
+    try {
       final failOrUser = await aboutUsUseCase(NoParams());
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            error = true;
+            success = false;
+            msgKey.currentState!.showSnackBar(
+              SnackBar(
+                content: Text(
+                  fail.message,
+                  style: TextStyles.textStyleNormal13.copyWith(color: white),
+                  textScaler: TextScaler.linear(1),
+                ),
+              ),
+            );
+            emit(AboutUsErrorState(message: fail.message));
+          }
+        },
+        (response) {
           loading = false;
           error = true;
-          success = false;
-          msgKey.currentState!.showSnackBar(SnackBar(content: Text(fail.message
-            ,style: TextStyles.textStyleNormal13.copyWith(color: white),textScaler: TextScaler.linear(1),)));
-          emit(AboutUsErrorState(message: fail.message));
-        }
-      }, (response){
-        loading = false;
-        error = true;
-        success = true;
-        aboutUsResponse = response;
-        emit(AboutUsSuccessState(aboutUsResponse: response));
-      });
-    }catch(e){
-      msgKey.currentState!.showSnackBar(SnackBar(content: Text(e.toString()
-        ,style: TextStyles.textStyleNormal13.copyWith(color: white),textScaler: TextScaler.linear(1),)));
+          success = true;
+          aboutUsResponse = response;
+          emit(AboutUsSuccessState(aboutUsResponse: response));
+        },
+      );
+    } catch (e) {
+      msgKey.currentState!.showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString(),
+            style: TextStyles.textStyleNormal13.copyWith(color: white),
+            textScaler: TextScaler.linear(1),
+          ),
+        ),
+      );
       loading = false;
       error = true;
       success = false;
     }
   }
-
 }

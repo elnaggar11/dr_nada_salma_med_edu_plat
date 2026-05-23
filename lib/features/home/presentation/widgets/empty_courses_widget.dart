@@ -7,14 +7,17 @@ import 'package:dr_nada_salma_med_edu_plat/core/widgets/svg_handler.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-class EmptyPrivateLessonsWidget extends StatelessWidget{
+class EmptyPrivateLessonsWidget extends StatelessWidget {
+  const EmptyPrivateLessonsWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(
-          appBarInd: 0,
-          title: tr("my_private_lessons"),
-          widget: SizedBox()),
+        appBarInd: 0,
+        title: tr("my_private_lessons"),
+        widget: SizedBox(),
+      ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -24,16 +27,23 @@ class EmptyPrivateLessonsWidget extends StatelessWidget{
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-                alignment: Alignment.center,
-                child: customSvg(name: course,color: white,width: context.width/5
-                    ,height: context.width/5)),
-            SizedBox(height: context.height/50,),
-            Text(tr("no_private_lessons"),style: TextStyles.textStyleBold15
-                .copyWith(color: white),textScaler: TextScaler.linear(1),)
+              alignment: Alignment.center,
+              child: customSvg(
+                name: course,
+                color: white,
+                width: context.width / 5,
+                height: context.width / 5,
+              ),
+            ),
+            SizedBox(height: context.height / 50),
+            Text(
+              tr("no_private_lessons"),
+              style: TextStyles.textStyleBold15.copyWith(color: white),
+              textScaler: TextScaler.linear(1),
+            ),
           ],
         ),
       ),
     );
   }
-
 }

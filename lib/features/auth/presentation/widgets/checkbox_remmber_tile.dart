@@ -8,45 +8,48 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CheckboxRememberWidget extends StatelessWidget {
-
-
-  CheckboxRememberWidget({super.key,});
+  const CheckboxRememberWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return  Center(
+    return Center(
       child: CheckboxListTile(
-          controlAffinity: ListTileControlAffinity.leading,
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        controlAffinity: ListTileControlAffinity.leading,
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
 
-          activeColor: greenLight,
-          checkboxShape: RoundedRectangleBorder(borderRadius:
-          BorderRadius.all(Radius.circular(8.0))),
-          title:  Transform.translate(
-            offset: const Offset(-10, 0),
-            child: RichText(
-                textScaler: TextScaler.linear(1.0),
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.start,
-                maxLines: 1,
-                text: TextSpan(
-                    children: [
-                      TextSpan(text: tr("remember_me")
-                        ,style: TextStyles.textStyleNormal13
-                            .copyWith(fontFamily: lamaSans,color: primary),),
-
-                    ]
-                )),
+        activeColor: greenLight,
+        checkboxShape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(8.0)),
+        ),
+        title: Transform.translate(
+          offset: const Offset(-10, 0),
+          child: RichText(
+            textScaler: TextScaler.linear(1.0),
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.start,
+            maxLines: 1,
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: tr("remember_me"),
+                  style: TextStyles.textStyleNormal13.copyWith(
+                    fontFamily: lamaSans,
+                    color: primary,
+                  ),
+                ),
+              ],
+            ),
           ),
-          value: context.read<LoginCubit>().isChecked,
-          onChanged: (bool? newValue) {
-
-              context.read<LoginCubit>().updateChecked(val: newValue);
-
-          },
-          contentPadding: EdgeInsets.only(left: context.width/50,right: context.width/50)
+        ),
+        value: context.read<LoginCubit>().isChecked,
+        onChanged: (bool? newValue) {
+          context.read<LoginCubit>().updateChecked(val: newValue);
+        },
+        contentPadding: EdgeInsets.only(
+          left: context.width / 50,
+          right: context.width / 50,
+        ),
       ),
     );
-
   }
 }

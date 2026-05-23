@@ -5,6 +5,8 @@ import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/cour
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/courses_status_params.dart';
 
 abstract class CoursesRepositories {
-  Future<Either<Failure,CategoriesResponse>>getCategories();
-  Future<Either<Failure,CoursesStatusResponse>>getCoursesStatus({CoursesStatusParams? params});
+  Future<Either<Failure, CategoriesResponse>> getCategories();
+  Future<Either<Failure, CoursesStatusResponse>> getCoursesStatus({
+    CoursesStatusParams? params,
+  });
 }

@@ -5,7 +5,6 @@ sealed class ResendOtpState {}
 
 final class ResendOtpInitial extends ResendOtpState {}
 
-
 class ResendOtpLoadingState extends ResendOtpState {}
 
 class ResendOtpErrorState extends ResendOtpState {
@@ -13,6 +12,7 @@ class ResendOtpErrorState extends ResendOtpState {
 
   ResendOtpErrorState({required this.message});
 }
+
 class ResendOtpSuccessState extends ResendOtpState {
   final ResendOtpResponse response;
 

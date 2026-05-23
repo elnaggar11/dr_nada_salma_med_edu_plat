@@ -103,20 +103,15 @@ class FlutterWindowManager {
   /// Window flag: when set as a window is being added or made visible, once the window has been shown then the system will poke the power manager's user activity (as if the user had woken up the device) to turn the screen on.
   static const int FLAG_TURN_SCREEN_ON = 0x00200000;
 
-  static const MethodChannel _channel =
-      const MethodChannel('flutter_windowmanager');
+  static const MethodChannel _channel = MethodChannel('flutter_windowmanager');
 
   /// Adds flags [flags] to the WindowManager.LayoutParams
   static Future<bool> addFlags(int flags) async {
-    return await _channel.invokeMethod("addFlags", {
-      "flags": flags,
-    });
+    return await _channel.invokeMethod("addFlags", {"flags": flags});
   }
 
   /// Clears flags [flags] from the WindowManager.LayoutParams
   static Future<bool> clearFlags(int flags) async {
-    return await _channel.invokeMethod("clearFlags", {
-      "flags": flags,
-    });
+    return await _channel.invokeMethod("clearFlags", {"flags": flags});
   }
 }

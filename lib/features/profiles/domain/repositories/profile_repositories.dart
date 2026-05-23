@@ -13,14 +13,16 @@ import 'package:dr_nada_salma_med_edu_plat/features/profiles/domain/entities/upd
 import 'package:dr_nada_salma_med_edu_plat/features/profiles/domain/entities/update_profile_response.dart';
 
 abstract class ProfileRepositories {
-  Future<Either<Failure,ProfileResponse>>getProfile();
-  Future<Either<Failure,PointsResponse>>getPoints();
-  Future<Either<Failure,FaqsResponse>>getFaqs();
-  Future<Either<Failure,CertificateResponse>>getCertificates();
-  Future<Either<Failure,AboutUsResponse>>getAboutUs();
-  Future<Either<Failure,TermsConditionsResponse>>getTermsConditions();
-  Future<Either<Failure,UpdateProfileResponse>>updateProfile({UpdateProfileParams params});
-  Future<Either<Failure,SettingsResponse>>getSettings();
-  Future<Either<Failure,LogOutResponse>>logOut();
-  Future<Either<Failure,DeleteAccountResponse>>deleteAccount();
+  Future<Either<Failure, ProfileResponse>> getProfile();
+  Future<Either<Failure, PointsResponse>> getPoints();
+  Future<Either<Failure, FaqsResponse>> getFaqs();
+  Future<Either<Failure, CertificateResponse>> getCertificates();
+  Future<Either<Failure, AboutUsResponse>> getAboutUs();
+  Future<Either<Failure, TermsConditionsResponse>> getTermsConditions();
+  Future<Either<Failure, UpdateProfileResponse>> updateProfile({
+    UpdateProfileParams params,
+  });
+  Future<Either<Failure, SettingsResponse>> getSettings();
+  Future<Either<Failure, LogOutResponse>> logOut();
+  Future<Either<Failure, DeleteAccountResponse>> deleteAccount();
 }

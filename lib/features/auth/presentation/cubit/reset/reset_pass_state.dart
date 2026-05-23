@@ -12,6 +12,7 @@ class ResetPasswordErrorState extends ResetPassState {
 
   ResetPasswordErrorState({required this.message});
 }
+
 class ResetPasswordSuccessState extends ResetPassState {
   final ResetPasswordResponse resetPasswordResponse;
 

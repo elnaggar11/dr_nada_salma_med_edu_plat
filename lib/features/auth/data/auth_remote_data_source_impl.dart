@@ -49,12 +49,15 @@ abstract class AuthRemoteDataSource {
   Future<ResendOtpResponse> resendOtp({ResendOtpParams params});
   Future<ForgotPasswordResponse> forgotPass({ForgotPasswordParams params});
   Future<CheckOtpResponse> checkOtp({CheckOtpParams params});
+<<<<<<< HEAD
 
   Future<SpecialistResponse> getSpecialties();
   Future<SubjectResponse> getSubjects();
   Future<TeacherApplicationResponse> submitTeacherApplication({
     TeacherApplicationParams? params,
   });
+=======
+>>>>>>> 25308fc87a2b1cb6c15d8db7da4ba6113add6532
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -237,6 +240,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ForbiddenException(message: e.message);
     }
   }
+<<<<<<< HEAD
 
   @override
   Future<SpecialistResponse> getSpecialties() async {
@@ -290,4 +294,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ForbiddenException(message: e.message);
     }
   }
+=======
+>>>>>>> 25308fc87a2b1cb6c15d8db7da4ba6113add6532
 }

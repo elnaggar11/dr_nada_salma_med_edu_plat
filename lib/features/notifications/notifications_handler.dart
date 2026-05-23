@@ -17,12 +17,15 @@ class NotificationHandler {
       criticalAlert: false,
     );
 
-    debugPrint('🔔 Notification permission status: ${settings.authorizationStatus}');
+    debugPrint(
+      '🔔 Notification permission status: ${settings.authorizationStatus}',
+    );
   }
 
   /// Loads the FCM notification channel for Android
   static Future<AndroidNotificationChannel> loadFcmChannel(
-      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
+  ) async {
     const channel = AndroidNotificationChannel(
       'high_importance_channel', // Channel ID
       'High Importance Notifications', // Channel Name
@@ -33,7 +36,8 @@ class NotificationHandler {
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin
+        >()
         ?.createNotificationChannel(channel);
 
     return channel;
@@ -46,7 +50,9 @@ class NotificationHandler {
     required GlobalKey<NavigatorState> nav,
   }) {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      debugPrint('📩 Received foreground FCM message: ${message.notification?.title}');
+      debugPrint(
+        '📩 Received foreground FCM message: ${message.notification?.title}',
+      );
 
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
@@ -87,10 +93,10 @@ class NotificationHandler {
 
   /// For background notifications (can be used in background handler)
   static Future<void> showFcmOnBackGround(
-      RemoteMessage message,
-      AndroidNotificationChannel channel,
-      GlobalKey<NavigatorState> navKey,
-      ) async {
+    RemoteMessage message,
+    AndroidNotificationChannel channel,
+    GlobalKey<NavigatorState> navKey,
+  ) async {
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
     RemoteNotification? notification = message.notification;

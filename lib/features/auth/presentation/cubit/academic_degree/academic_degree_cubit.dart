@@ -11,11 +11,12 @@ import 'package:flutter/material.dart';
 part 'academic_degree_state.dart';
 
 class AcademicDegreeCubit extends Cubit<AcademicDegreeState> {
-  AcademicDegreeCubit(this.academicDegreeUseCase) : super(AcademicDegreeInitial());
+  AcademicDegreeCubit(this.academicDegreeUseCase)
+    : super(AcademicDegreeInitial());
   final AcademicDegreeUseCase academicDegreeUseCase;
-  bool? loading= false;
+  bool? loading = false;
   bool? error = false;
-  bool? success= false;
+  bool? success = false;
 
   String selected = "Enter Academic degree here";
   ExpansibleController? controller = ExpansibleController();
@@ -24,43 +25,59 @@ class AcademicDegreeCubit extends Cubit<AcademicDegreeState> {
 
   bool? isChecked;
 
-  Future<void>getAcademicDegrees()async{
+  Future<void> getAcademicDegrees() async {
     loading = true;
     error = false;
     success = false;
 
     emit(AcademicDegreeLoadingState());
-    try{
+    try {
       final failOrUser = await academicDegreeUseCase(NoParams());
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            error = true;
+            success = false;
+            msgKey.currentState!.showSnackBar(
+              SnackBar(
+                content: Text(
+                  fail.message,
+                  style: TextStyles.textStyleNormal12.copyWith(color: white),
+                  textScaler: TextScaler.linear(1),
+                ),
+              ),
+            );
+            emit(AcademicDegreeErrorState(msg: fail.message));
+          }
+        },
+        (response) {
           loading = false;
-          error = true;
-          success = false;
-          msgKey.currentState!.showSnackBar(SnackBar(content: Text(fail.message,
-            style: TextStyles.textStyleNormal12.copyWith(color: white),textScaler: TextScaler.linear(1),)));
-          emit(AcademicDegreeErrorState(msg: fail.message));
-        }
-
-      }, (response){
-        loading = false;
-        error = false;
-        success = true;
-        academicDegreeResponse = response;
-        emit(AcademicDegreeSuccessState(academicDegreeResponse: response));
-      });
-    }catch(e){
-      msgKey.currentState!.showSnackBar(SnackBar(content: Text(e.toString(),style: TextStyles
-          .textStyleNormal12.copyWith(color: white),textScaler: TextScaler.linear(1),)));
+          error = false;
+          success = true;
+          academicDegreeResponse = response;
+          emit(AcademicDegreeSuccessState(academicDegreeResponse: response));
+        },
+      );
+    } catch (e) {
+      msgKey.currentState!.showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString(),
+            style: TextStyles.textStyleNormal12.copyWith(color: white),
+            textScaler: TextScaler.linear(1),
+          ),
+        ),
+      );
     }
   }
-  Future<void> updateExpand()async{
-    controller!.isExpanded ?
-    controller!.collapse() :
-    controller!.expand();
+
+  Future<void> updateExpand() async {
+    controller!.isExpanded ? controller!.collapse() : controller!.expand();
     emit(UpdateSpecialistExpandableState());
   }
-  Future<void>setSelectedCheckBox({int? ind,bool? val})async{
+
+  Future<void> setSelectedCheckBox({int? ind, bool? val}) async {
     for (var element in academicDegreeResponse!.data!) {
       element.checked = false;
     }

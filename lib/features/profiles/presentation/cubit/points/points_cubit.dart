@@ -18,39 +18,54 @@ class PointsCubit extends Cubit<PointsState> {
   bool? error = false;
   PointsResponse? pointsResponse;
 
-  Future<void>getPoints()async{
+  Future<void> getPoints() async {
     loading = true;
     success = false;
     error = false;
     emit(PointsLoadingState());
-    try{
+    try {
       final failOrUser = await pointsUseCase(NoParams());
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            success = false;
+            error = true;
+            msgKey.currentState!.showSnackBar(
+              SnackBar(
+                behavior: SnackBarBehavior.floating,
+                content: Text(
+                  fail.message,
+                  style: TextStyles.textStyleNormal13.copyWith(color: white),
+                  textScaler: TextScaler.linear(1),
+                ),
+              ),
+            );
+            emit(PointsErrorState(message: fail.message));
+          }
+        },
+        (response) {
           loading = false;
-          success = false;
-          error = true;
-          msgKey.currentState!.showSnackBar(SnackBar(
-              behavior: SnackBarBehavior.floating,
-              content: Text(fail.message
-            ,style: TextStyles.textStyleNormal13.copyWith(color: white),textScaler: TextScaler.linear(1),)));
-          emit(PointsErrorState(message: fail.message));
-        }
-      }, (response){
-        loading = false;
-        success = true;
-        error = false;
-        pointsResponse = response;
-        emit(PointsSuccessState(pointsResponse: response));
-      });
-    }catch(e){
+          success = true;
+          error = false;
+          pointsResponse = response;
+          emit(PointsSuccessState(pointsResponse: response));
+        },
+      );
+    } catch (e) {
       loading = false;
       success = false;
       error = true;
-      msgKey.currentState!.showSnackBar(SnackBar(
+      msgKey.currentState!.showSnackBar(
+        SnackBar(
           behavior: SnackBarBehavior.floating,
-          content: Text(e.toString()
-        ,style: TextStyles.textStyleNormal13.copyWith(color: white),textScaler: TextScaler.linear(1),)));
+          content: Text(
+            e.toString(),
+            style: TextStyles.textStyleNormal13.copyWith(color: white),
+            textScaler: TextScaler.linear(1),
+          ),
+        ),
+      );
     }
   }
 }

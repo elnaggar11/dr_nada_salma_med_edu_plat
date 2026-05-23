@@ -12,24 +12,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class PointsScreen extends StatefulWidget {
-
+  const PointsScreen({super.key});
 
   @override
   State<PointsScreen> createState() => _PointsScreenState();
-  
 }
 
 class _PointsScreenState extends State<PointsScreen> {
-
   @override
   void initState() {
     context.read<PointsCubit>().getPoints();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(widget: SizedBox(),status: false,context: context,index: 0,title: "points"),
+      appBar: customAppBar(
+        widget: SizedBox(),
+        status: false,
+        context: context,
+        index: 0,
+        title: "points",
+      ),
       backgroundColor: white,
 
       body: Column(
@@ -37,25 +42,36 @@ class _PointsScreenState extends State<PointsScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Container(
-            margin: EdgeInsets.only(left: context.width/20,right: context.width/20),
-            child: Text(tr("reward_points"),style: TextStyles.textStyleBold20
-                .copyWith(color: primary,fontWeight: FontWeight.w600)
-              ,textScaler: TextScaler.linear(1),),
+            margin: EdgeInsets.only(
+              left: context.width / 20,
+              right: context.width / 20,
+            ),
+            child: Text(
+              tr("reward_points"),
+              style: TextStyles.textStyleBold20.copyWith(
+                color: primary,
+                fontWeight: FontWeight.w600,
+              ),
+              textScaler: TextScaler.linear(1),
+            ),
           ),
-          SizedBox(height: context.height/40,),
+          SizedBox(height: context.height / 40),
           Container(
-            margin: EdgeInsets.only(left: context.width/20,right: context.width/20),
-            height: context.height/4.3,
+            margin: EdgeInsets.only(
+              left: context.width / 20,
+              right: context.width / 20,
+            ),
+            height: context.height / 4.3,
             width: context.width,
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(20)),
               gradient: LinearGradient(
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
-                colors: [
-                  primary,
-                  orange,
-                ], stops: [0.0, 1.0],),),
+                colors: [primary, orange],
+                stops: [0.0, 1.0],
+              ),
+            ),
             child: Stack(
               alignment: Alignment.centerLeft,
               children: [
@@ -68,88 +84,161 @@ class _PointsScreenState extends State<PointsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                            alignment : Alignment.center,
-                            child: customSvg(name: coins)),
-                        SizedBox(height: context.height/60,),
-                        Text(tr("total_points"),style: TextStyles.textStyleBold18
-                            .copyWith(fontWeight: FontWeight.w600,color: white),
-                          textScaler: TextScaler.linear(1),),
-                        SizedBox(height: context.height/60,),
+                          alignment: Alignment.center,
+                          child: customSvg(name: coins),
+                        ),
+                        SizedBox(height: context.height / 60),
+                        Text(
+                          tr("total_points"),
+                          style: TextStyles.textStyleBold18.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: white,
+                          ),
+                          textScaler: TextScaler.linear(1),
+                        ),
+                        SizedBox(height: context.height / 60),
                         BlocBuilder<PointsCubit, PointsState>(
                           builder: (context, state) {
-                            return context.read<PointsCubit>().loading == true ? 
-                            SpinKitPulse(color: white,size: 10,) : 
-                            Text(context.read<PointsCubit>().pointsResponse == null ? "0" :
-                            context.read<PointsCubit>().pointsResponse!.data!.myPoints.toString()
-                              ,style: TextStyles.textStyleBold32
-                                  .copyWith(fontWeight: FontWeight.bold,color: white),
-                          textScaler: TextScaler.linear(1),);
-                            },),],),
-                  ],),
+                            return context.read<PointsCubit>().loading == true
+                                ? SpinKitPulse(color: white, size: 10)
+                                : Text(
+                                    context
+                                                .read<PointsCubit>()
+                                                .pointsResponse ==
+                                            null
+                                        ? "0"
+                                        : context
+                                              .read<PointsCubit>()
+                                              .pointsResponse!
+                                              .data!
+                                              .myPoints
+                                              .toString(),
+                                    style: TextStyles.textStyleBold32.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: white,
+                                    ),
+                                    textScaler: TextScaler.linear(1),
+                                  );
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
                 Container(
-                    alignment: Alignment.topLeft,
-                    child: customSvg(name: circle)),
+                  alignment: Alignment.topLeft,
+                  child: customSvg(name: circle),
+                ),
                 Container(
-                    alignment: Alignment.bottomLeft,
-                    child: customSvg(name: circle2)),
-              ],),),
-          SizedBox(height: context.height/20,),
+                  alignment: Alignment.bottomLeft,
+                  child: customSvg(name: circle2),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: context.height / 20),
           Container(
-            margin: EdgeInsets.only(left: context.width/18,right: context.width/18),
+            margin: EdgeInsets.only(
+              left: context.width / 18,
+              right: context.width / 18,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(tr("history_points"),style: TextStyles.textStyleNormal14
-                    .copyWith(fontWeight: FontWeight.w600,color: primary)
-                  ,textScaler: TextScaler.linear(1),),
+                Text(
+                  tr("history_points"),
+                  style: TextStyles.textStyleNormal14.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: primary,
+                  ),
+                  textScaler: TextScaler.linear(1),
+                ),
                 Spacer(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(tr("view_all_my_points"),style: TextStyles.textStyleBold12
-                        .copyWith(fontWeight: FontWeight.w600
-                        ,color: orange),textScaler: TextScaler.linear(1),),
-                    SizedBox(width: context.width/40,),
-                    customSvg(name: forward,color: orange)
-                  ],)],),),
-          SizedBox(height: context.height/30,),
-          Expanded(child:
-          BlocBuilder<PointsCubit, PointsState>(
-            builder: (context, state) {
-              return context.read<PointsCubit>().loading == true ?
-                  SpinKitPulse(color: primary,size: 70,) :
-              (context.read<PointsCubit>().pointsResponse == null  ||
-                  context.read<PointsCubit>().pointsResponse!.data!.courses!.isEmpty)?
-                  Container(
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                            alignment : Alignment.center,
-                            child: customSvg(name: coins,color: primary,
-                                height: context.width/6,
-                                width: context.width/6)),
-                        SizedBox(height: context.height/80,),
-                        Text(tr("no_history_found"),style: TextStyles
-                            .textStyleNormal15.copyWith(color: primary),textScaler: TextScaler.linear(1),)
-                      ],
+                    Text(
+                      tr("view_all_my_points"),
+                      style: TextStyles.textStyleBold12.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: orange,
+                      ),
+                      textScaler: TextScaler.linear(1),
                     ),
-                  ) :
-
-                ListView.builder(
-              itemCount: context.read<PointsCubit>().pointsResponse!.data!.courses!.length,
-              shrinkWrap: true,
-              padding: EdgeInsets.only(top: 0
-                  ,left: context.width/40,right: context.width/40),
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context,index)=>HistoryPointsItem(courses: context.read<PointsCubit>().pointsResponse!.data!.courses![index],));
-  },
-),)
+                    SizedBox(width: context.width / 40),
+                    customSvg(name: forward, color: orange),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: context.height / 30),
+          Expanded(
+            child: BlocBuilder<PointsCubit, PointsState>(
+              builder: (context, state) {
+                return context.read<PointsCubit>().loading == true
+                    ? SpinKitPulse(color: primary, size: 70)
+                    : (context.read<PointsCubit>().pointsResponse == null ||
+                          context
+                              .read<PointsCubit>()
+                              .pointsResponse!
+                              .data!
+                              .courses!
+                              .isEmpty)
+                    ? Container(
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              child: customSvg(
+                                name: coins,
+                                color: primary,
+                                height: context.width / 6,
+                                width: context.width / 6,
+                              ),
+                            ),
+                            SizedBox(height: context.height / 80),
+                            Text(
+                              tr("no_history_found"),
+                              style: TextStyles.textStyleNormal15.copyWith(
+                                color: primary,
+                              ),
+                              textScaler: TextScaler.linear(1),
+                            ),
+                          ],
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: context
+                            .read<PointsCubit>()
+                            .pointsResponse!
+                            .data!
+                            .courses!
+                            .length,
+                        shrinkWrap: true,
+                        padding: EdgeInsets.only(
+                          top: 0,
+                          left: context.width / 40,
+                          right: context.width / 40,
+                        ),
+                        scrollDirection: Axis.vertical,
+                        itemBuilder: (context, index) => HistoryPointsItem(
+                          courses: context
+                              .read<PointsCubit>()
+                              .pointsResponse!
+                              .data!
+                              .courses![index],
+                        ),
+                      );
+              },
+            ),
+          ),
         ],
       ),
     );

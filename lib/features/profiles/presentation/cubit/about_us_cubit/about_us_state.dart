@@ -7,7 +7,6 @@ final class AboutUsInitial extends AboutUsState {}
 
 class AboutUsLoadingState extends AboutUsState {}
 
-
 class AboutUsErrorState extends AboutUsState {
   final String message;
 

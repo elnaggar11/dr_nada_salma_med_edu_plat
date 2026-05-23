@@ -8,7 +8,6 @@ class AcademicInfoResponse {
   AcademicInfoResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-
   }
 
   Map<String, dynamic> toJson() {

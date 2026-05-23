@@ -74,14 +74,11 @@ const String carrier = "assets/images/carrier.svg";
 
 const String arrowRight = "assets/images/arrowright.svg";
 
-
 const String clock = "assets/images/clock.svg";
-
 
 const String completed = "assets/images/completed.svg";
 
 const String remove = "assets/images/remove.svg";
-
 
 const String forward1 = "assets/images/forward1.svg";
 
@@ -117,7 +114,7 @@ const String clear = "assets/images/clear.svg";
 
 const String upload = "assets/images/upload.svg";
 
-const String upload2  = "assets/images/upload2.svg";
+const String upload2 = "assets/images/upload2.svg";
 
 const String logout = "assets/images/logout.svg";
 

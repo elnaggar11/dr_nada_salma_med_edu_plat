@@ -5,14 +5,16 @@ import 'package:dr_nada_salma_med_edu_plat/features/favourite/domain/entities/ad
 import 'package:dr_nada_salma_med_edu_plat/features/favourite/domain/entities/favourite_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/favourite/domain/favourite_repositories.dart';
 
-class AddToFavouriteUseCase implements UseCase<AddToFavouriteResponse,FavouriteParams>{
+class AddToFavouriteUseCase
+    implements UseCase<AddToFavouriteResponse, FavouriteParams> {
   final FavouriteRepositories repository;
 
   AddToFavouriteUseCase(this.repository);
 
   @override
-  Future<Either<Failure, AddToFavouriteResponse>> call(FavouriteParams params) async{
+  Future<Either<Failure, AddToFavouriteResponse>> call(
+    FavouriteParams params,
+  ) async {
     return await repository.addToFavourite(params: params);
   }
-
 }

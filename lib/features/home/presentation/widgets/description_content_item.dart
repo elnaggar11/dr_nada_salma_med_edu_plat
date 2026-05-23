@@ -6,17 +6,23 @@ import 'package:flutter/cupertino.dart';
 class DescriptionContentItem extends StatelessWidget {
   final String content;
 
-  const DescriptionContentItem({required this.content});
+  const DescriptionContentItem({super.key, required this.content});
 
   @override
   Widget build(BuildContext context) {
-   return Container(
-      margin: EdgeInsets.only(left: context.width/20,right: context.width/20),
-      child: Text(content
-        ,style: TextStyles.textStyleNormal12
-            .copyWith(color: primary,fontWeight: FontWeight.w500),
-        textScaler: TextScaler.linear(1),),
+    return Container(
+      margin: EdgeInsets.only(
+        left: context.width / 20,
+        right: context.width / 20,
+      ),
+      child: Text(
+        content,
+        style: TextStyles.textStyleNormal12.copyWith(
+          color: primary,
+          fontWeight: FontWeight.w500,
+        ),
+        textScaler: TextScaler.linear(1),
+      ),
     );
   }
-
 }

@@ -18,34 +18,42 @@ class TermsCubit extends Cubit<TermsState> {
   bool? success = false;
   TermsConditionsResponse? termsConditionsResponse;
 
-  Future<void>getTermsConditions()async{
+  Future<void> getTermsConditions() async {
     loading = true;
     error = false;
     success = false;
     emit(TermsLoadingState());
-    try{
+    try {
       final failOrUser = await termsConditionsUseCase(NoParams());
 
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            error = true;
+            success = false;
+            msgKey.currentState!.showSnackBar(
+              SnackBar(
+                behavior: SnackBarBehavior.floating,
+                content: Text(
+                  fail.message,
+                  style: TextStyles.textStyleNormal13.copyWith(color: white),
+                  textScaler: TextScaler.linear(1),
+                ),
+              ),
+            );
+            emit(TermsErrorState(message: fail.message));
+          }
+        },
+        (response) {
           loading = false;
-          error = true;
-          success = false;
-          msgKey.currentState!.showSnackBar(SnackBar(
-              behavior: SnackBarBehavior.floating,
-              content: Text(fail.message
-            ,style: TextStyles.textStyleNormal13.copyWith(color: white),textScaler: TextScaler.linear(1),)));
-          emit(TermsErrorState(message: fail.message));
-        }
-      }, (response){
-        loading = false;
-        error = false;
-        success = true;
-        termsConditionsResponse = response;
-        emit(TermsSuccessState(termsConditionsResponse: response));
-      });
-
-    }catch(e){
+          error = false;
+          success = true;
+          termsConditionsResponse = response;
+          emit(TermsSuccessState(termsConditionsResponse: response));
+        },
+      );
+    } catch (e) {
       loading = false;
       error = true;
       success = false;

@@ -12,6 +12,7 @@ class NotificationsErrorState extends NotificationsState {
 
   NotificationsErrorState({required this.message});
 }
+
 class NotificationsSuccessState extends NotificationsState {
   final NotificationsResponse notificationsResponse;
 

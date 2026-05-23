@@ -11,39 +11,53 @@ import 'package:flutter/material.dart';
 part 'category_with_blog_state.dart';
 
 class CategoryWithBlogCubit extends Cubit<CategoryWithBlogState> {
-  CategoryWithBlogCubit(this.categoriesWithBlogUseCase) : super(CategoryWithBlocInitial());
+  CategoryWithBlogCubit(this.categoriesWithBlogUseCase)
+    : super(CategoryWithBlocInitial());
   final CategoriesWithBlogUseCase categoriesWithBlogUseCase;
   bool? loading = false;
   bool? error = false;
   bool? success = false;
   CategoriesWithBlogResponse? categoriesWithBlogResponse;
 
-  Future<void>getCategoriesWithBlog()async{
+  Future<void> getCategoriesWithBlog() async {
     loading = true;
     error = false;
     success = false;
     emit(CategoriesWithBlogLoadingState());
-    try{
+    try {
       final failOrUser = await categoriesWithBlogUseCase(NoParams());
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            error = true;
+            success = false;
+            msgKey.currentState!.showSnackBar(
+              SnackBar(
+                content: Text(
+                  fail.message,
+                  style: TextStyles.textStyleNormal13.copyWith(color: white),
+                  textScaler: TextScaler.linear(1),
+                ),
+              ),
+            );
+            emit(CategoriesWithBlogErrorState(message: fail.message));
+          }
+        },
+        (response) {
+          categoriesWithBlogResponse = response;
           loading = false;
-          error = true;
-          success = false;
-          msgKey.currentState!.showSnackBar(SnackBar(content: Text(fail.message
-            ,style: TextStyles.textStyleNormal13.copyWith(color: white)
-            ,textScaler: TextScaler.linear(1),)));
-          emit(CategoriesWithBlogErrorState(message: fail.message));
-        }
-      }, (response){
-        categoriesWithBlogResponse = response;
-        loading = false;
-        error = false;
-        success = true;
-     
-        emit(CategoriesWithBlogSuccessState(categoriesWithBlogResponse: response));
-      });
-    }catch(e){
+          error = false;
+          success = true;
+
+          emit(
+            CategoriesWithBlogSuccessState(
+              categoriesWithBlogResponse: response,
+            ),
+          );
+        },
+      );
+    } catch (e) {
       loading = false;
       error = true;
       success = false;

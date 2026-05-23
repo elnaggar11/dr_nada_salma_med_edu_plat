@@ -36,14 +36,15 @@ class Data {
   dynamic categoryName;
   dynamic issuedAt;
 
-  Data(
-      {this.id,
-        this.title,
-        this.slug,
-        this.semiDescription,
-        this.longDescription,
-        this.categoryName,
-        this.issuedAt});
+  Data({
+    this.id,
+    this.title,
+    this.slug,
+    this.semiDescription,
+    this.longDescription,
+    this.categoryName,
+    this.issuedAt,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];

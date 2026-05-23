@@ -18,38 +18,52 @@ class CertificatesCubit extends Cubit<CertificatesState> {
   bool? success = false;
   CertificateResponse? certificateResponse;
 
-  Future<void>getCertificates()async{
+  Future<void> getCertificates() async {
     loading = true;
     error = false;
     success = false;
     emit(CertificatesLoadingState());
-    try{
+    try {
       final failOrUser = await certificateUseCase(NoParams());
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            error = true;
+            success = false;
+            msgKey.currentState!.showSnackBar(
+              SnackBar(
+                content: Text(
+                  fail.message,
+                  style: TextStyles.textStyleNormal13.copyWith(color: white),
+                  textScaler: TextScaler.linear(1),
+                ),
+              ),
+            );
+            emit(CertificatesErrorState(msg: fail.message));
+          }
+        },
+        (response) {
           loading = false;
-          error = true;
-          success = false;
-          msgKey.currentState!.showSnackBar(SnackBar(content: Text(fail.message,
-            style: TextStyles.textStyleNormal13.copyWith(color: white)
-            ,textScaler: TextScaler.linear(1),)));
-          emit(CertificatesErrorState(msg: fail.message));
-        }
-      }, (response){
-        loading = false;
-        error = false;
-        success = true;
-        certificateResponse = response;
-        emit(CertificatesSuccessState(certificateResponse: response));
-      });
-    }catch(e){
-      msgKey.currentState!.showSnackBar(SnackBar(content: Text(e.toString(),
-        style: TextStyles.textStyleNormal13.copyWith(color: white)
-        ,textScaler: TextScaler.linear(1),)));
+          error = false;
+          success = true;
+          certificateResponse = response;
+          emit(CertificatesSuccessState(certificateResponse: response));
+        },
+      );
+    } catch (e) {
+      msgKey.currentState!.showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString(),
+            style: TextStyles.textStyleNormal13.copyWith(color: white),
+            textScaler: TextScaler.linear(1),
+          ),
+        ),
+      );
       loading = false;
       error = true;
       success = false;
-
     }
   }
 }

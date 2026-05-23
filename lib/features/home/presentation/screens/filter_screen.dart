@@ -18,46 +18,54 @@ class FilterScreen extends StatefulWidget {
   const FilterScreen({super.key, required this.title});
   final String title;
 
-
-
   @override
   State<FilterScreen> createState() => _FilterScreenState();
-
 }
 
 class _FilterScreenState extends State<FilterScreen> {
-
   @override
   void initState() {
     context.read<CategoriesCubit>().getCategories();
 
-
-
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: white,
-      appBar: customAppBar(title: widget.title,widget: InkWell(
-        splashColor: Colors.transparent,
-        highlightColor: Colors.transparent,
-        focusColor: Colors.transparent,
-        onTap: (){},
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
+      appBar: customAppBar(
+        title: widget.title,
+        widget: InkWell(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          focusColor: Colors.transparent,
+          onTap: () {},
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
                 alignment: Alignment.center,
-                child: customSvg(name: delete)),
-            SizedBox(width: context.width/30,),
-            Text(tr("clear_filter"),style:
-            TextStyles.textStyleNormal12.copyWith
-              (fontWeight: FontWeight.w500,color: red)
-              ,textScaler: TextScaler.linear(1),)],),),
-          status: true,context: context,appBarInd: 0,),
+                child: customSvg(name: delete),
+              ),
+              SizedBox(width: context.width / 30),
+              Text(
+                tr("clear_filter"),
+                style: TextStyles.textStyleNormal12.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: red,
+                ),
+                textScaler: TextScaler.linear(1),
+              ),
+            ],
+          ),
+        ),
+        status: true,
+        context: context,
+        appBarInd: 0,
+      ),
 
       body: SizedBox(
         width: double.infinity,
@@ -67,33 +75,51 @@ class _FilterScreenState extends State<FilterScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: context.height/80,),
+              SizedBox(height: context.height / 80),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(width: context.width/25,),
-                  Text(tr("courses"),style: TextStyles.textStyleBold18.copyWith(color: primary)
-                    ,textScaler: TextScaler.linear(1),),
+                  SizedBox(width: context.width / 25),
+                  Text(
+                    tr("courses"),
+                    style: TextStyles.textStyleBold18.copyWith(color: primary),
+                    textScaler: TextScaler.linear(1),
+                  ),
                   Spacer(),
                   Container(
-                      alignment: Alignment.center,
-                      child: customSvg(name: dropdown)),
-                  SizedBox(width: context.width/20,),],),
-              SizedBox(height: context.height/80,),
+                    alignment: Alignment.center,
+                    child: customSvg(name: dropdown),
+                  ),
+                  SizedBox(width: context.width / 20),
+                ],
+              ),
+              SizedBox(height: context.height / 80),
               BlocBuilder<CategoriesCubit, CategoriesState>(
                 builder: (context, state) {
-                  return context.read<CategoriesCubit>().loading == true ?
-                       SpinKitPulse(color: primary,size: 50,) :
-                    ListView.builder(
-                    shrinkWrap: true,
-                    itemCount:  context.read<CategoriesCubit>().categoriesResponse!.data!.length,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return FilterItem(data: context.read<CategoriesCubit>().categoriesResponse!.data![index]
-                        , index: index,type: "rate",);
-                    },
-                  );},),
+                  return context.read<CategoriesCubit>().loading == true
+                      ? SpinKitPulse(color: primary, size: 50)
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: context
+                              .read<CategoriesCubit>()
+                              .categoriesResponse!
+                              .data!
+                              .length,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return FilterItem(
+                              data: context
+                                  .read<CategoriesCubit>()
+                                  .categoriesResponse!
+                                  .data![index],
+                              index: index,
+                              type: "rate",
+                            );
+                          },
+                        );
+                },
+              ),
               //  SizedBox(height: context.height/40,),
               /*   Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -133,22 +159,36 @@ class _FilterScreenState extends State<FilterScreen> {
                         , index: index,type: "rate",);
                     },
                   );},),*/
-              SizedBox(height: context.height/30,),
+              SizedBox(height: context.height / 30),
               BlocBuilder<CategoriesCubit, CategoriesState>(
                 builder: (context, state) {
-                  return FadeColorButton(btnTitle: tr("apply"),buttonColor: primary,isPressed: false
-                ,onButtonPressed: (){
-                    CoursesParams params = CoursesParams(categoryId:
-                    context.read<CategoriesCubit>().categoryId.toString()
-                        ,courseName: "",topRated: "0");
-                  widget.title == "Filter Private lessons" ?
-                  context.pushNamed(name: privateLessonsSearchResultSc,args: params) :
-                  context.pushNamed(name: bestMedicalSearchResultSc,args: params);
-                },);
-  },
-),
-              SizedBox(height: context.height/20,)
-
+                  return FadeColorButton(
+                    btnTitle: tr("apply"),
+                    buttonColor: primary,
+                    isPressed: false,
+                    onButtonPressed: () {
+                      CoursesParams params = CoursesParams(
+                        categoryId: context
+                            .read<CategoriesCubit>()
+                            .categoryId
+                            .toString(),
+                        courseName: "",
+                        topRated: "0",
+                      );
+                      widget.title == "Filter Private lessons"
+                          ? context.pushNamed(
+                              name: privateLessonsSearchResultSc,
+                              args: params,
+                            )
+                          : context.pushNamed(
+                              name: bestMedicalSearchResultSc,
+                              args: params,
+                            );
+                    },
+                  );
+                },
+              ),
+              SizedBox(height: context.height / 20),
             ],
           ),
         ),

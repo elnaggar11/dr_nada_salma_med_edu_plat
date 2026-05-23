@@ -3,13 +3,9 @@ class LoginParams {
   String? password;
   String? fcmToken;
 
-  LoginParams({this.email, this.password,this.fcmToken});
+  LoginParams({this.email, this.password, this.fcmToken});
 
-  Map<String,dynamic>toMap(){
-    return {
-      "email" : email,
-      "password" : password,
-      "fcm_token" : fcmToken
-    };
+  Map<String, dynamic> toMap() {
+    return {"email": email, "password": password, "fcm_token": fcmToken};
   }
 }

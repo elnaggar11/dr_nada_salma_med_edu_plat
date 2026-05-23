@@ -23,6 +23,7 @@ import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/teacher
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/teacher_registration/teacher_application_response.dart';
 
 abstract class AuthRepositories {
+<<<<<<< HEAD
   Future<Either<Failure,RegisterResponse>>register({RegisterParams params});
   Future<Either<Failure,SpecialistResponse>>getSpecialists();
   Future<Either<Failure,AcademicDegreeResponse>>getAcademicDegrees();
@@ -37,3 +38,26 @@ abstract class AuthRepositories {
   Future<Either<Failure,SubjectResponse>>getSubjects();
   Future<Either<Failure,TeacherApplicationResponse>>submitTeacherApplication({TeacherApplicationParams params});
 }
+=======
+  Future<Either<Failure, RegisterResponse>> register({RegisterParams params});
+  Future<Either<Failure, SpecialistResponse>> getSpecialists();
+  Future<Either<Failure, AcademicDegreeResponse>> getAcademicDegrees();
+  Future<Either<Failure, AcademicInfoResponse>> setAcademicInfo({
+    AcademicInfoParams params,
+  });
+  Future<Either<Failure, VerifyOtpResponse>> verifyOtp({
+    VerifyOtpParams params,
+  });
+  Future<Either<Failure, LoginResponse>> login({LoginParams params});
+  Future<Either<Failure, ResetPasswordResponse>> reset({
+    ResetPasswordParams params,
+  });
+  Future<Either<Failure, ResendOtpResponse>> resendOtp({
+    ResendOtpParams params,
+  });
+  Future<Either<Failure, ForgotPasswordResponse>> forgotPassword({
+    ForgotPasswordParams params,
+  });
+  Future<Either<Failure, CheckOtpResponse>> checkOtp({CheckOtpParams params});
+}
+>>>>>>> 25308fc87a2b1cb6c15d8db7da4ba6113add6532

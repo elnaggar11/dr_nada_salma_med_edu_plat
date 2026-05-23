@@ -17,39 +17,57 @@ class ResendOtpCubit extends Cubit<ResendOtpState> {
   bool? error = false;
   bool? success = false;
 
-  Future<void>resendOtp({ResendOtpParams? params})async {
+  Future<void> resendOtp({ResendOtpParams? params}) async {
     loading = true;
     error = false;
     success = false;
     emit(ResendOtpLoadingState());
     try {
       final failOrUser = await resendOtpUseCase(params!);
-      failOrUser.fold((fail) {
-        if (fail is ServerFailure) {
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            error = true;
+            success = false;
+            msgKey.currentState!.showSnackBar(
+              SnackBar(
+                content: Text(
+                  fail.message,
+                  style: TextStyles.textStyleNormal13.copyWith(color: white),
+                  textScaler: TextScaler.linear(1),
+                ),
+              ),
+            );
+            emit(ResendOtpErrorState(message: fail.message));
+          }
+        },
+        (response) {
           loading = false;
-          error = true;
-          success = false;
-          msgKey.currentState!.showSnackBar(SnackBar(content:
-          Text(fail.message,
-            style: TextStyles.textStyleNormal13.copyWith(color: white),
-            textScaler: TextScaler.linear(1),)));
-          emit(ResendOtpErrorState(message: fail.message));
-        }
-      }, (response) {
-        loading = false;
-        error = false;
-        success = true;
-        msgKey.currentState!.showSnackBar(SnackBar(content:
-        Text(response.message!,
-          style: TextStyles.textStyleNormal13.copyWith(color: white),
-          textScaler: TextScaler.linear(1),)));
-        emit(ResendOtpSuccessState(response: response));
-      });
+          error = false;
+          success = true;
+          msgKey.currentState!.showSnackBar(
+            SnackBar(
+              content: Text(
+                response.message!,
+                style: TextStyles.textStyleNormal13.copyWith(color: white),
+                textScaler: TextScaler.linear(1),
+              ),
+            ),
+          );
+          emit(ResendOtpSuccessState(response: response));
+        },
+      );
     } catch (e) {
-      msgKey.currentState!.showSnackBar(SnackBar(content:
-      Text(e.toString(),
-        style: TextStyles.textStyleNormal13.copyWith(color: white),
-        textScaler: TextScaler.linear(1),)));
+      msgKey.currentState!.showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString(),
+            style: TextStyles.textStyleNormal13.copyWith(color: white),
+            textScaler: TextScaler.linear(1),
+          ),
+        ),
+      );
       loading = false;
       error = true;
       success = false;

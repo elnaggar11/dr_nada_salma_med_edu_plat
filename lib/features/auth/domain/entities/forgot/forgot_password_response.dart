@@ -8,7 +8,6 @@ class ForgotPasswordResponse {
   ForgotPasswordResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-
   }
 
   Map<String, dynamic> toJson() {

@@ -13,9 +13,9 @@ part 'specialists_state.dart';
 class SpecialistsCubit extends Cubit<SpecialistsState> {
   SpecialistsCubit(this.specialistUseCase) : super(SpecialistsInitial());
   final SpecialistUseCase specialistUseCase;
-  bool? loading= false;
+  bool? loading = false;
   bool? error = false;
-  bool? success= false;
+  bool? success = false;
 
   ExpansibleController? controller = ExpansibleController();
 
@@ -25,49 +25,64 @@ class SpecialistsCubit extends Cubit<SpecialistsState> {
 
   bool? isChecked;
 
-
-  Future<void>getSpecialists()async{
+  Future<void> getSpecialists() async {
     loading = true;
     error = false;
     success = false;
     emit(SpecialistsLoadingState());
-    try{
+    try {
       final failOrUser = await specialistUseCase(NoParams());
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            error = true;
+            success = false;
+            msgKey.currentState!.showSnackBar(
+              SnackBar(
+                content: Text(
+                  fail.message,
+                  style: TextStyles.textStyleNormal12.copyWith(color: white),
+                  textScaler: TextScaler.linear(1),
+                ),
+              ),
+            );
+            emit(SpecialistsErrorState(msg: fail.message));
+          }
+        },
+        (response) {
           loading = false;
-          error = true;
-          success = false;
-          msgKey.currentState!.showSnackBar(SnackBar(content: Text(fail.message,
-            style: TextStyles.textStyleNormal12.copyWith(color: white),textScaler: TextScaler.linear(1),)));
-          emit(SpecialistsErrorState(msg: fail.message));
-        }
-
-      }, (response){
-        loading = false;
-        error = false;
-        success = true;
-        specialistResponse = response;
-        emit(SpecialistsSuccessState(specialistResponse: response));
-      });
-    }catch(e){
-      msgKey.currentState!.showSnackBar(SnackBar(content: Text(e.toString(),style: TextStyles
-          .textStyleNormal12.copyWith(color: white),textScaler: TextScaler.linear(1),)));
+          error = false;
+          success = true;
+          specialistResponse = response;
+          emit(SpecialistsSuccessState(specialistResponse: response));
+        },
+      );
+    } catch (e) {
+      msgKey.currentState!.showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString(),
+            style: TextStyles.textStyleNormal12.copyWith(color: white),
+            textScaler: TextScaler.linear(1),
+          ),
+        ),
+      );
     }
   }
-  Future<void> updateExpand()async{
-    controller!.isExpanded ?
-    controller!.collapse() :
-    controller!.expand();
+
+  Future<void> updateExpand() async {
+    controller!.isExpanded ? controller!.collapse() : controller!.expand();
     emit(UpdateSpecialistExpandableState());
   }
-  Future<void>setSelectedCheckBox({int? ind,bool? val})async{
+
+  Future<void> setSelectedCheckBox({int? ind, bool? val}) async {
     for (var element in specialistResponse!.data!) {
       element.isChecked = false;
     }
     specialistResponse!.data![ind!].isChecked = val;
-    selected = "${specialistResponse!.data![ind!].name}";
-    specialistId = specialistResponse!.data![ind!].id;
+    selected = "${specialistResponse!.data![ind].name}";
+    specialistId = specialistResponse!.data![ind].id;
     isChecked = val;
     emit(UpdateSpecialistCheckBox());
   }

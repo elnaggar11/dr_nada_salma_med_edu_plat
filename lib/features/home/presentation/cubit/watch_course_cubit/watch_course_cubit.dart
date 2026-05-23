@@ -15,40 +15,42 @@ class WatchCourseCubit extends Cubit<WatchCourseState> {
   bool error = false;
   bool success = false;
 
-  Future<void>watchCourse({WatchCourseParams? params})async{
+  Future<void> watchCourse({WatchCourseParams? params}) async {
     loading = true;
     error = false;
     success = false;
     emit(WatchCourseLoading());
-    try{
+    try {
       final failOrUser = await watchCourseUseCase(params!);
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
-          loading = false;
-          error = true;
-          success = false;
-       /*   msgKey.currentState!.showSnackBar(SnackBar(
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            error = true;
+            success = false;
+            /*   msgKey.currentState!.showSnackBar(SnackBar(
               behavior: SnackBarBehavior.floating,
               content: Text(fail.message
             ,style: TextStyles.textStyleNormal13.copyWith(color: white),textScaler: TextScaler.linear(1),)));*/
-          emit(WatchCourseError(message: fail.message));
-        }
-      }, (response){
-        loading = false;
-        error = false;
-        success = true;
-     /*   msgKey.currentState!.showSnackBar(SnackBar(
+            emit(WatchCourseError(message: fail.message));
+          }
+        },
+        (response) {
+          loading = false;
+          error = false;
+          success = true;
+          /*   msgKey.currentState!.showSnackBar(SnackBar(
             behavior: SnackBarBehavior.floating,
             content: Text(response.message!
               ,style: TextStyles.textStyleNormal13.copyWith(color: white),textScaler: TextScaler.linear(1),)));*/
-        emit(WatchCourseSuccess(watchCourseResponse: response));
-      });
-    }catch(e){
+          emit(WatchCourseSuccess(watchCourseResponse: response));
+        },
+      );
+    } catch (e) {
       loading = false;
       error = true;
       success = false;
       emit(WatchCourseError(message: e.toString()));
     }
   }
-
 }

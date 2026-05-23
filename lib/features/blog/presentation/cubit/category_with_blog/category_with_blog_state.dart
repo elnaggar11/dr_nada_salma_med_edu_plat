@@ -5,15 +5,14 @@ sealed class CategoryWithBlogState {}
 
 final class CategoryWithBlocInitial extends CategoryWithBlogState {}
 
-
-class CategoriesWithBlogLoadingState extends CategoryWithBlogState {
-}
+class CategoriesWithBlogLoadingState extends CategoryWithBlogState {}
 
 class CategoriesWithBlogErrorState extends CategoryWithBlogState {
   final String message;
 
   CategoriesWithBlogErrorState({required this.message});
 }
+
 class CategoriesWithBlogSuccessState extends CategoryWithBlogState {
   final CategoriesWithBlogResponse categoriesWithBlogResponse;
 

@@ -5,15 +5,16 @@ import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/courses
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/public_courses_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/repositories/home_repositories.dart';
 
-class PrivateLessonsUseCase extends UseCase<PublicCoursesResponse,CoursesParams>{
+class PrivateLessonsUseCase
+    extends UseCase<PublicCoursesResponse, CoursesParams> {
   final HomeRepositories homeRepositories;
-
 
   PrivateLessonsUseCase(this.homeRepositories);
 
   @override
-  Future<Either<Failure, PublicCoursesResponse>> call(CoursesParams params) async{
-   return await homeRepositories.getPrivateLessons(params: params);
+  Future<Either<Failure, PublicCoursesResponse>> call(
+    CoursesParams params,
+  ) async {
+    return await homeRepositories.getPrivateLessons(params: params);
   }
-
 }

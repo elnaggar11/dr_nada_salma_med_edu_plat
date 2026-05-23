@@ -16,30 +16,33 @@ class HeroesCubit extends Cubit<HeroesState> {
   bool? success = false;
   HeroResponse? heroResponse;
 
-  Future<void>getHeroes()async{
+  Future<void> getHeroes() async {
     loading = true;
     error = false;
-    success  = false;
+    success = false;
     emit(HeroesLoadingState());
-    try{
+    try {
       final failOrUser = await heroesUseCase(NoParams());
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
-          loading = false;
-          error = true;
-          success = false;
-         /* msgKey.currentState!.showSnackBar(SnackBar(content: Text(fail.message
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            error = true;
+            success = false;
+            /* msgKey.currentState!.showSnackBar(SnackBar(content: Text(fail.message
             ,style: TextStyles.textStyleNormal13.copyWith(color: white),textScaler: TextScaler.linear(1),)));*/
-          emit(HeroesErrorState(message: fail.message));
-        }
-      }, (response){
-        loading = false;
-        error = false;
-        success = true;
-        heroResponse = response;
-        emit(HeroesSuccessState(heroResponse: response));
-      });
-    }catch(e){
+            emit(HeroesErrorState(message: fail.message));
+          }
+        },
+        (response) {
+          loading = false;
+          error = false;
+          success = true;
+          heroResponse = response;
+          emit(HeroesSuccessState(heroResponse: response));
+        },
+      );
+    } catch (e) {
       loading = false;
       error = true;
       success = false;

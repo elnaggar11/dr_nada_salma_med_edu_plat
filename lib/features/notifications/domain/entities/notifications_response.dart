@@ -4,8 +4,12 @@ class NotificationsResponse {
   Data? data;
   Pagination? pagination;
 
-  NotificationsResponse(
-      {this.status, this.message, this.data, this.pagination});
+  NotificationsResponse({
+    this.status,
+    this.message,
+    this.data,
+    this.pagination,
+  });
 
   NotificationsResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -45,20 +49,21 @@ class Data {
   int? to;
   int? total;
 
-  Data(
-      {this.currentPage,
-        this.data,
-        this.firstPageUrl,
-        this.from,
-        this.lastPage,
-        this.lastPageUrl,
-        this.links,
-        this.nextPageUrl,
-        this.path,
-        this.perPage,
-        this.prevPageUrl,
-        this.to,
-        this.total});
+  Data({
+    this.currentPage,
+    this.data,
+    this.firstPageUrl,
+    this.from,
+    this.lastPage,
+    this.lastPageUrl,
+    this.links,
+    this.nextPageUrl,
+    this.path,
+    this.perPage,
+    this.prevPageUrl,
+    this.to,
+    this.total,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     currentPage = json['current_page'];
@@ -75,7 +80,7 @@ class Data {
     if (json['links'] != null) {
       links = <Links>[];
       json['links'].forEach((v) {
-        links!.add(new Links.fromJson(v));
+        links!.add(Links.fromJson(v));
       });
     }
     nextPageUrl = json['next_page_url'];
@@ -121,7 +126,9 @@ class Datum {
   Datum.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     type = json['type'];
-    data = json['data'] != null ? NotificationData.fromJson(json['data']) : null;
+    data = json['data'] != null
+        ? NotificationData.fromJson(json['data'])
+        : null;
     readAt = json['read_at'];
     createdAt = json['created_at'];
   }

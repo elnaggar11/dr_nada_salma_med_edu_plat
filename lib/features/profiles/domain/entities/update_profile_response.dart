@@ -8,7 +8,7 @@ class UpdateProfileResponse {
   UpdateProfileResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -33,16 +33,17 @@ class Data {
   List<Specialties>? specialties;
   List<AcademicDegrees>? academicDegrees;
 
-  Data(
-      {this.id,
-        this.fullName,
-        this.phoneNumber,
-        this.email,
-        this.totalPoints,
-        this.totalStars,
-        this.image,
-        this.specialties,
-        this.academicDegrees});
+  Data({
+    this.id,
+    this.fullName,
+    this.phoneNumber,
+    this.email,
+    this.totalPoints,
+    this.totalStars,
+    this.image,
+    this.specialties,
+    this.academicDegrees,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -55,13 +56,13 @@ class Data {
     if (json['specialties'] != null) {
       specialties = <Specialties>[];
       json['specialties'].forEach((v) {
-        specialties!.add(new Specialties.fromJson(v));
+        specialties!.add(Specialties.fromJson(v));
       });
     }
     if (json['academic_degrees'] != null) {
       academicDegrees = <AcademicDegrees>[];
       json['academic_degrees'].forEach((v) {
-        academicDegrees!.add(new AcademicDegrees.fromJson(v));
+        academicDegrees!.add(AcademicDegrees.fromJson(v));
       });
     }
   }
@@ -79,8 +80,9 @@ class Data {
       data['specialties'] = specialties!.map((v) => v.toJson()).toList();
     }
     if (academicDegrees != null) {
-      data['academic_degrees'] =
-          academicDegrees!.map((v) => v.toJson()).toList();
+      data['academic_degrees'] = academicDegrees!
+          .map((v) => v.toJson())
+          .toList();
     }
     return data;
   }
@@ -104,7 +106,8 @@ class Specialties {
     return data;
   }
 }
-class AcademicDegrees{
+
+class AcademicDegrees {
   int? id;
   String? name;
 

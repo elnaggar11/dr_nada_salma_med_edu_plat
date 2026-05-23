@@ -21,42 +21,48 @@ class CoursesStatusCubit extends Cubit<CoursesStatusState> {
 
   TabController? tabController;
 
-
-  Future<void>getCoursesStatus({CoursesStatusParams? params})async{
+  Future<void> getCoursesStatus({CoursesStatusParams? params}) async {
     loading = true;
     error = false;
     success = false;
     emit(CoursesStatusLoadingState());
-    try{
+    try {
       final failOrUser = await coursesStatusUseCase(params!);
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
-
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            error = true;
+            success = false;
+            msgKey.currentState!.showSnackBar(
+              SnackBar(
+                behavior: SnackBarBehavior.floating,
+                content: Text(
+                  fail.message,
+                  style: TextStyles.textStyleNormal13.copyWith(color: white),
+                  textScaler: TextScaler.linear(1),
+                ),
+              ),
+            );
+            emit(CoursesStatusErrorState(message: fail.message));
+          }
+        },
+        (response) {
           loading = false;
-          error = true;
-          success = false;
-          msgKey.currentState!.showSnackBar(SnackBar(
-              behavior: SnackBarBehavior.floating,
-              content: Text(fail.message
-            ,style: TextStyles.textStyleNormal13.copyWith(color: white)
-            ,textScaler: TextScaler.linear(1),)));
-          emit(CoursesStatusErrorState(message: fail.message));
-        }
-      }, (response){
-        loading = false;
-        error = false;
-        success = true;
-        coursesStatusResponse = response;
-        emit(CoursesStatusSuccessState(coursesStatusResponse: response));
-      });
-
-    }catch(e){
+          error = false;
+          success = true;
+          coursesStatusResponse = response;
+          emit(CoursesStatusSuccessState(coursesStatusResponse: response));
+        },
+      );
+    } catch (e) {
       loading = false;
       error = true;
       success = false;
     }
   }
-  Future<void>updateTabState({String? type})async{
+
+  Future<void> updateTabState({String? type}) async {
     courseStatus = type;
     emit(UpdateCoursesTabState());
   }

@@ -14,7 +14,8 @@ import 'package:flutter/material.dart';
 part 'forgot_password_state.dart';
 
 class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
-  ForgotPasswordCubit(this.forgotPasswordUseCase) : super(ForgotPasswordInitial());
+  ForgotPasswordCubit(this.forgotPasswordUseCase)
+    : super(ForgotPasswordInitial());
   final ForgotPasswordUseCase forgotPasswordUseCase;
   bool? loading = false;
   bool? error = false;
@@ -22,46 +23,75 @@ class ForgotPasswordCubit extends Cubit<ForgotPasswordState> {
   Color buttonColor = orange;
   final TextEditingController mailController = TextEditingController();
 
-
-  Future<void>forgot({ForgotPasswordParams? params})async{
+  Future<void> forgot({ForgotPasswordParams? params}) async {
     loading = true;
     error = false;
     success = false;
     buttonColor = loading! ? primary : orangeBold;
     emit(ForgotPasswordLoadingState());
-    try{
+    try {
       final failOrUser = await forgotPasswordUseCase(params!);
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            error = true;
+            success = false;
+            buttonColor = loading! ? primary : orangeBold;
+            msgKey.currentState!.showSnackBar(
+              SnackBar(
+                content: Text(
+                  fail.message,
+                  style: TextStyles.textStyleNormal13.copyWith(color: white),
+                  textScaler: TextScaler.linear(1),
+                ),
+              ),
+            );
+            emit(ForgotPasswordErrorState(message: fail.message));
+          }
+        },
+        (response) {
           loading = false;
-          error = true;
-          success = false;
+          error = false;
+          success = true;
           buttonColor = loading! ? primary : orangeBold;
-          msgKey.currentState!.showSnackBar(SnackBar(content: Text(fail.message
-            ,style: TextStyles.textStyleNormal13.copyWith(color: white),textScaler: TextScaler.linear(1),)));
-          emit(ForgotPasswordErrorState(message: fail.message));
-        }
-      }, (response){
-        loading = false;
-        error = false;
-        success = true;
-        buttonColor = loading! ? primary : orangeBold;
-        msgKey.currentState!.showSnackBar(SnackBar(
-            behavior: SnackBarBehavior.floating,
-            content: Text(response.message!
-          ,style: TextStyles.textStyleNormal13.copyWith(color: white),textScaler: TextScaler.linear(1),)));
+          msgKey.currentState!.showSnackBar(
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
+              content: Text(
+                response.message!,
+                style: TextStyles.textStyleNormal13.copyWith(color: white),
+                textScaler: TextScaler.linear(1),
+              ),
+            ),
+          );
 
-        VerifyOtpParams params1 = VerifyOtpParams(email: params.email,otp: "",type: "reset");
-        navKey.currentContext!.pushReplacementNamed(name: verificationSc,args: params1);
-        emit(ForgotPasswordSuccessState(forgotPasswordResponse: response));
-      });
-    }catch(e){
+          VerifyOtpParams params1 = VerifyOtpParams(
+            email: params.email,
+            otp: "",
+            type: "reset",
+          );
+          navKey.currentContext!.pushReplacementNamed(
+            name: verificationSc,
+            args: params1,
+          );
+          emit(ForgotPasswordSuccessState(forgotPasswordResponse: response));
+        },
+      );
+    } catch (e) {
       loading = false;
       error = false;
       success = true;
       buttonColor = loading! ? primary : orangeBold;
-      msgKey.currentState!.showSnackBar(SnackBar(content: Text(e.toString()
-        ,style: TextStyles.textStyleNormal13.copyWith(color: white),textScaler: TextScaler.linear(1),)));
+      msgKey.currentState!.showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString(),
+            style: TextStyles.textStyleNormal13.copyWith(color: white),
+            textScaler: TextScaler.linear(1),
+          ),
+        ),
+      );
     }
   }
 }

@@ -43,26 +43,27 @@ class Data {
   List<Reviews>? reviews;
   ButtonActions? buttonActions;
 
-  Data(
-      {this.id,
-        this.title,
-        this.slug,
-        this.totalHours,
-        this.semiDescription,
-        this.longDescription,
-        this.price,
-        this.priceAfterDiscount,
-        this.image,
-        this.points,
-        this.reviewsCount,
-        this.categoryName,
-        this.averageRating,
-        this.favorited,
-        this.canWatchCourse,
-        this.features,
-        this.contents,
-        this.reviews,
-        this.buttonActions});
+  Data({
+    this.id,
+    this.title,
+    this.slug,
+    this.totalHours,
+    this.semiDescription,
+    this.longDescription,
+    this.price,
+    this.priceAfterDiscount,
+    this.image,
+    this.points,
+    this.reviewsCount,
+    this.categoryName,
+    this.averageRating,
+    this.favorited,
+    this.canWatchCourse,
+    this.features,
+    this.contents,
+    this.reviews,
+    this.buttonActions,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -161,13 +162,14 @@ class Contents {
   String? totalTime;
   List<Lectures>? lectures;
 
-  Contents(
-      {this.id,
-        this.courseId,
-        this.title,
-        this.totalNumLecture,
-        this.totalTime,
-        this.lectures});
+  Contents({
+    this.id,
+    this.courseId,
+    this.title,
+    this.totalNumLecture,
+    this.totalTime,
+    this.lectures,
+  });
 
   Contents.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -230,13 +232,14 @@ class Reviews {
   dynamic rating;
   dynamic createdAt;
 
-  Reviews(
-      {this.id,
-        this.user,
-        this.courseName,
-        this.content,
-        this.rating,
-        this.createdAt});
+  Reviews({
+    this.id,
+    this.user,
+    this.courseName,
+    this.content,
+    this.rating,
+    this.createdAt,
+  });
 
   Reviews.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -289,8 +292,12 @@ class ButtonActions {
   bool? viewCourse;
   bool? reviewCourse;
 
-  ButtonActions(
-      {this.enrollNow, this.addToCart, this.viewCourse, this.reviewCourse});
+  ButtonActions({
+    this.enrollNow,
+    this.addToCart,
+    this.viewCourse,
+    this.reviewCourse,
+  });
 
   ButtonActions.fromJson(Map<String, dynamic> json) {
     enrollNow = json['enroll_now'];

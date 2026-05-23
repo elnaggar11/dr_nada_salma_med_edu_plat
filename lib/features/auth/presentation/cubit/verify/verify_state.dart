@@ -5,9 +5,7 @@ sealed class VerifyState {}
 
 final class VerifyInitial extends VerifyState {}
 
-
 class UpdateVerifyState extends VerifyState {}
-
 
 class VerifyOtpLoadingState extends VerifyState {}
 

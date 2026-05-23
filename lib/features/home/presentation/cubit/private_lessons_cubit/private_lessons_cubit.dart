@@ -9,43 +9,47 @@ import 'package:meta/meta.dart';
 part 'private_lessons_state.dart';
 
 class PrivateLessonsCubit extends Cubit<PrivateLessonsState> {
-  PrivateLessonsCubit(this.privateLessonsUseCase) : super(PrivateLessonsInitial());
+  PrivateLessonsCubit(this.privateLessonsUseCase)
+    : super(PrivateLessonsInitial());
   final PrivateLessonsUseCase privateLessonsUseCase;
   bool? loading = false;
   bool? success = false;
-  bool? error  = false;
+  bool? error = false;
   PublicCoursesResponse? publicCoursesResponse;
 
-  Future<void>getPrivateLessons({CoursesParams? params})async{
+  Future<void> getPrivateLessons({CoursesParams? params}) async {
     loading = true;
     success = false;
     error = false;
     emit(PrivateLessonsLoadingState());
-    try{
+    try {
       final failOrUser = await privateLessonsUseCase(params!);
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
-          loading = false;
-          success = false;
-          error = true;
-      /*    msgKey.currentState!.showSnackBar(SnackBar(content: Text(fail.message,style:
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            success = false;
+            error = true;
+            /*    msgKey.currentState!.showSnackBar(SnackBar(content: Text(fail.message,style:
           TextStyles.textStyleNormal13.copyWith(color: white),textScaler: TextScaler.linear(1),)));*/
-          emit(PrivateLessonsErrorState(message: fail.message));
-        }
-      }, (response){
-        loading = false;
-        success = true;
-        error = false;
-        publicCoursesResponse = response;
-        emit(PrivateLessonsSuccessState(publicCoursesResponse: response));
-      });
-
-    }catch(e){
+            emit(PrivateLessonsErrorState(message: fail.message));
+          }
+        },
+        (response) {
+          loading = false;
+          success = true;
+          error = false;
+          publicCoursesResponse = response;
+          emit(PrivateLessonsSuccessState(publicCoursesResponse: response));
+        },
+      );
+    } catch (e) {
       loading = false;
       success = false;
       error = true;
     }
   }
+
   Future<List<Data>> getPaginatedCourses({
     required int page,
     required int limit,
@@ -57,21 +61,23 @@ class PrivateLessonsCubit extends Cubit<PrivateLessonsState> {
 
       final result = await privateLessonsUseCase(updatedParams);
 
-      return result.fold((fail) {
-        if(fail is ServerFailure){
-          emit(PrivateLessonsErrorState(message: fail.message));
-        }
+      return result.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            emit(PrivateLessonsErrorState(message: fail.message));
+          }
 
-        return [];
-      }, (response) {
-        publicCoursesResponse = response;
-        emit(PrivateLessonsSuccessState(publicCoursesResponse: response));
-        return response.data ?? [];
-      });
+          return [];
+        },
+        (response) {
+          publicCoursesResponse = response;
+          emit(PrivateLessonsSuccessState(publicCoursesResponse: response));
+          return response.data ?? [];
+        },
+      );
     } catch (e) {
       emit(PrivateLessonsErrorState(message: e.toString()));
       return [];
     }
   }
-
 }

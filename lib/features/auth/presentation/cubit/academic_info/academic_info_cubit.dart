@@ -21,55 +21,77 @@ class AcademicInfoCubit extends Cubit<AcademicInfoState> {
 
   Color? buttonColor = primary;
 
-
-  Future<void>setAcademicInfo({AcademicInfoParams? params})async{
+  Future<void> setAcademicInfo({AcademicInfoParams? params}) async {
     loading = true;
     error = false;
     success = false;
 
     buttonColor = loading! ? orangeBold : primary;
     emit(AcademicInfoLoadingState());
-    try{
+    try {
       final failOrUser = await academicInfoUseCase(params!);
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            error = true;
+            success = false;
+
+            buttonColor = loading! ? orangeBold : primary;
+
+            msgKey.currentState!.showSnackBar(
+              SnackBar(
+                content: Text(
+                  fail.message,
+                  style: TextStyles.textStyleNormal12.copyWith(color: white),
+                  textScaler: TextScaler.linear(1),
+                ),
+              ),
+            );
+
+            emit(AcademicInfoErrorState(message: fail.message));
+          }
+        },
+        (response) {
           loading = false;
-          error = true;
-          success = false;
+          error = false;
+          success = true;
 
           buttonColor = loading! ? orangeBold : primary;
 
-          msgKey.currentState!.showSnackBar(SnackBar(content: Text(fail.message,
-            style: TextStyles.textStyleNormal12.copyWith(color: white)
-            ,textScaler: TextScaler.linear(1),)));
+          msgKey.currentState!.showSnackBar(
+            SnackBar(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(50)),
+              ),
+              behavior: SnackBarBehavior.floating,
+              content: Text(
+                response.message!,
+                style: TextStyles.textStyleNormal13.copyWith(color: white),
+                textScaler: TextScaler.linear(1),
+              ),
+            ),
+          );
 
-          emit(AcademicInfoErrorState(message: fail.message));
-        }
-      },(response){
-        loading = false;
-        error = false;
-        success = true;
+          navKey.currentContext!.pushNamed(name: termsSc, args: params);
 
-        buttonColor = loading! ? orangeBold : primary;
-
-        msgKey.currentState!.showSnackBar(SnackBar(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(50))),
-            behavior: SnackBarBehavior.floating,
-            content:
-        Text(response.message!,style: TextStyles.textStyleNormal13.copyWith(color: white)
-          ,textScaler: TextScaler.linear(1),)));
-
-        navKey.currentContext!.pushNamed(name: termsSc,args: params);
-
-        emit(AcademicInfoSuccessState(academicInfoResponse: response));
-      });
-    }catch(e){
+          emit(AcademicInfoSuccessState(academicInfoResponse: response));
+        },
+      );
+    } catch (e) {
       loading = false;
       error = true;
       success = false;
       buttonColor = loading! ? orangeBold : primary;
-      msgKey.currentState!.showSnackBar(SnackBar(content: Text(e.toString(),
-        style: TextStyles.textStyleNormal12.copyWith(color: white),textScaler: TextScaler.linear(1),)));
+      msgKey.currentState!.showSnackBar(
+        SnackBar(
+          content: Text(
+            e.toString(),
+            style: TextStyles.textStyleNormal12.copyWith(color: white),
+            textScaler: TextScaler.linear(1),
+          ),
+        ),
+      );
     }
   }
 }

@@ -1,4 +1,3 @@
-
 import 'package:dr_nada_salma_med_edu_plat/core/utils/api_base_helper.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/auth_inj.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/blog/blog_inj.dart';
@@ -15,12 +14,11 @@ late final SharedPreferences sharedPreferences;
 final sl = GetIt.instance;
 final helper = ApiBaseHelper();
 
-Future<void>init()async{
+Future<void> init() async {
   sharedPreferences = await SharedPreferences.getInstance();
   helper.dioInit();
-  sl.registerLazySingleton(()=> helper);
-  sl.registerLazySingleton(()=> sharedPreferences);
-
+  sl.registerLazySingleton(() => helper);
+  sl.registerLazySingleton(() => sharedPreferences);
 
   await authInj(sl);
   await coursesInj(sl);

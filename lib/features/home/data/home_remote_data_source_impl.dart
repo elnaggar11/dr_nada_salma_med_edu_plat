@@ -17,13 +17,16 @@ const coursesDetailsApi = "/courses/";
 const watchCourseApi = "/lectures/watch";
 
 abstract class HomeRemoteDataSource {
-  Future<SuccessStoriesResponse>getSuccessStories();
-  Future<HeroResponse>getHeroes();
-  Future<PublicCoursesResponse>getCourses({CoursesParams params});
-  Future<PublicCoursesResponse>getPrivateLessons({CoursesParams params});
-  Future<CoursesDetailsResponse>getCoursesDetails({CoursesDetailsParams? params});
-  Future<WatchCourseResponse>watchCourse({WatchCourseParams params});
+  Future<SuccessStoriesResponse> getSuccessStories();
+  Future<HeroResponse> getHeroes();
+  Future<PublicCoursesResponse> getCourses({CoursesParams params});
+  Future<PublicCoursesResponse> getPrivateLessons({CoursesParams params});
+  Future<CoursesDetailsResponse> getCoursesDetails({
+    CoursesDetailsParams? params,
+  });
+  Future<WatchCourseResponse> watchCourse({WatchCourseParams params});
 }
+
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   final ApiBaseHelper helper;
 
@@ -44,7 +47,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   }
 
   @override
-  Future<HeroResponse> getHeroes() async{
+  Future<HeroResponse> getHeroes() async {
     try {
       final response = await helper.get(url: heroesApi);
       return HeroResponse.fromJson(response);
@@ -58,12 +61,14 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   }
 
   @override
-  Future<PublicCoursesResponse> getCourses({CoursesParams? params}) async{
+  Future<PublicCoursesResponse> getCourses({CoursesParams? params}) async {
     try {
-      final response = params!.type == "filter" ?
-          await helper.get(url: '$coursesApi?page=${params.page}?category_id=${params.categoryId}&course_name=${params.courseName}&top_rated=${params.topRated}',):
-
-      await helper.get(url: '$coursesApi?page=${params.page}',);
+      final response = params!.type == "filter"
+          ? await helper.get(
+              url:
+                  '$coursesApi?page=${params.page}?category_id=${params.categoryId}&course_name=${params.courseName}&top_rated=${params.topRated}',
+            )
+          : await helper.get(url: '$coursesApi?page=${params.page}');
       print(response.toString());
       return PublicCoursesResponse.fromJson(response);
     } on ServerException catch (e) {
@@ -76,9 +81,13 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   }
 
   @override
-  Future<CoursesDetailsResponse> getCoursesDetails({CoursesDetailsParams? params}) async{
+  Future<CoursesDetailsResponse> getCoursesDetails({
+    CoursesDetailsParams? params,
+  }) async {
     try {
-      final response = await helper.get(url: '$coursesDetailsApi${params!.slug!}',);
+      final response = await helper.get(
+        url: '$coursesDetailsApi${params!.slug!}',
+      );
       return CoursesDetailsResponse.fromJson(response);
     } on ServerException catch (e) {
       throw ServerException(message: e.message);
@@ -90,11 +99,16 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   }
 
   @override
-  Future<PublicCoursesResponse> getPrivateLessons({CoursesParams? params}) async{
+  Future<PublicCoursesResponse> getPrivateLessons({
+    CoursesParams? params,
+  }) async {
     try {
-      final response = params!.type == "filter" ?
-      await helper.get(url: '$privateLessonsApi?category_id=${params!.categoryId}&${params.courseName}&top_rated=${params.topRated}',) :
-      await helper.get(url: privateLessonsApi,);
+      final response = params!.type == "filter"
+          ? await helper.get(
+              url:
+                  '$privateLessonsApi?category_id=${params.categoryId}&${params.courseName}&top_rated=${params.topRated}',
+            )
+          : await helper.get(url: privateLessonsApi);
       return PublicCoursesResponse.fromJson(response);
     } on ServerException catch (e) {
       throw ServerException(message: e.message);
@@ -106,9 +120,12 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   }
 
   @override
-  Future<WatchCourseResponse> watchCourse({WatchCourseParams? params}) async{
+  Future<WatchCourseResponse> watchCourse({WatchCourseParams? params}) async {
     try {
-      final response = await helper.get(url: '$watchCourseApi?lecture_id=${params!.lectureId}&course_id=${params.courseId}',);
+      final response = await helper.get(
+        url:
+            '$watchCourseApi?lecture_id=${params!.lectureId}&course_id=${params.courseId}',
+      );
       return WatchCourseResponse.fromJson(response);
     } on ServerException catch (e) {
       throw ServerException(message: e.message);
@@ -118,5 +135,4 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       throw UnprocessableContentException(message: e.message);
     }
   }
-
 }

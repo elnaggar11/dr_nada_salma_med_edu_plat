@@ -19,14 +19,17 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 class FavouriteItem extends StatelessWidget {
   final Data data;
 
-  const FavouriteItem({required this.data});
+  const FavouriteItem({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: (){
-        CoursesDetailsParams params = CoursesDetailsParams(slug: data.course!.slug,status: "");
-        context.pushNamed(name: courseDetailsSc,args: params);
+      onTap: () {
+        CoursesDetailsParams params = CoursesDetailsParams(
+          slug: data.course!.slug,
+          status: "",
+        );
+        context.pushNamed(name: courseDetailsSc, args: params);
       },
       child: Container(
         color: Colors.transparent,
@@ -38,60 +41,110 @@ class FavouriteItem extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(20)),
-                  child: NetWorkImageHandler(image: data.course!.image, width: context.width/2.3,
-                      height: context.width/2.7),),
-                BlocProvider(create: (_)=>sl<FavouriteCubit>(),
-                  child: FavouriteButton(isFavourite: data.course!.favorited!
-                      , courseId: data.course!.id.toString()!),)],),
-            SizedBox(width: context.width/50,),
+                  child: NetWorkImageHandler(
+                    image: data.course!.image,
+                    width: context.width / 2.3,
+                    height: context.width / 2.7,
+                  ),
+                ),
+                BlocProvider(
+                  create: (_) => sl<FavouriteCubit>(),
+                  child: FavouriteButton(
+                    isFavourite: data.course!.favorited!,
+                    courseId: data.course!.id.toString(),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(width: context.width / 50),
             Flexible(
               fit: FlexFit.loose,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Row(children: [
-                    Text("",style: TextStyles.textStyleBold10
-                        .copyWith(fontWeight: FontWeight.w600
-                        ,color: primary)
-                      ,textScaler: TextScaler.linear(1),),
-                    SizedBox(width: context.width/20,),
-                    Text("+${data.course!.points} ${tr("points")}",style: TextStyles.textStyleBold10
-                        .copyWith(fontWeight: FontWeight.w600,color: primary)
-                      ,textScaler: TextScaler.linear(1),),],),
+                  Row(
+                    children: [
+                      Text(
+                        "",
+                        style: TextStyles.textStyleBold10.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: primary,
+                        ),
+                        textScaler: TextScaler.linear(1),
+                      ),
+                      SizedBox(width: context.width / 20),
+                      Text(
+                        "+${data.course!.points} ${tr("points")}",
+                        style: TextStyles.textStyleBold10.copyWith(
+                          fontWeight: FontWeight.w600,
+                          color: primary,
+                        ),
+                        textScaler: TextScaler.linear(1),
+                      ),
+                    ],
+                  ),
 
+                  SizedBox(height: context.height / 200),
 
-                  SizedBox(height: context.height/200,),
-
-                  Text("${data.course!.title}",style: TextStyles.textStyleBold16.copyWith
-                    (fontWeight: FontWeight.w800,color: orangeBold)
-                    ,textScaler: TextScaler.linear(1),overflow: TextOverflow.ellipsis,),
-                  SizedBox(height: context.height/140,),
-                  Text("– ${""}",style: TextStyles.textStyleBold16.copyWith
-                    (fontWeight: FontWeight.w800,color: orangeBold)
-                    ,textScaler: TextScaler.linear(1),),
-                  SizedBox(height: context.height/80,),
+                  Text(
+                    "${data.course!.title}",
+                    style: TextStyles.textStyleBold16.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: orangeBold,
+                    ),
+                    textScaler: TextScaler.linear(1),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: context.height / 140),
+                  Text(
+                    "– ${""}",
+                    style: TextStyles.textStyleBold16.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: orangeBold,
+                    ),
+                    textScaler: TextScaler.linear(1),
+                  ),
+                  SizedBox(height: context.height / 80),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("${data.course!.averageRating}",style: TextStyles.textStyleBold12.copyWith(fontFamily: poppins
-                          ,fontWeight: FontWeight.w600,color: primary),textScaler: TextScaler.linear(1),),
-                      SizedBox(width: context.width/60,),
+                      Text(
+                        "${data.course!.averageRating}",
+                        style: TextStyles.textStyleBold12.copyWith(
+                          fontFamily: poppins,
+                          fontWeight: FontWeight.w600,
+                          color: primary,
+                        ),
+                        textScaler: TextScaler.linear(1),
+                      ),
+                      SizedBox(width: context.width / 60),
                       RatingBarIndicator(
-                          rating: double.parse(data.course!.averageRating.toString()),
-                          itemSize: 15,
-                          itemCount: 5,
-                          itemBuilder: (context,index)=>customSvg(name: star
-                              ,color: gold)),
-                      SizedBox(width: context.width/50,),
+                        rating: double.parse(
+                          data.course!.averageRating.toString(),
+                        ),
+                        itemSize: 15,
+                        itemCount: 5,
+                        itemBuilder: (context, index) =>
+                            customSvg(name: star, color: gold),
+                      ),
+                      SizedBox(width: context.width / 50),
                       Flexible(
-                        child: Text("(${data.course!.reviewsCount})",style: TextStyles.textStyleNormal12.copyWith
-                          (color: grey1,fontWeight: FontWeight.w300)
-                          ,overflow: TextOverflow.ellipsis,textScaler: TextScaler.linear(1),),
-                      )],),
-                  SizedBox(height: context.height/80,),
-                /*  Row(
+                        child: Text(
+                          "(${data.course!.reviewsCount})",
+                          style: TextStyles.textStyleNormal12.copyWith(
+                            color: grey1,
+                            fontWeight: FontWeight.w300,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          textScaler: TextScaler.linear(1),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: context.height / 80),
+                  /*  Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -115,5 +168,4 @@ class FavouriteItem extends StatelessWidget {
       ),
     );
   }
-
 }

@@ -7,37 +7,40 @@ import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/cour
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/courses_status_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/repositories/courses_repositories.dart';
 
-class CoursesRepositoryImpl implements CoursesRepositories  {
+class CoursesRepositoryImpl implements CoursesRepositories {
   final CoursesRemoteDataSource coursesRemoteDataSource;
 
   CoursesRepositoryImpl(this.coursesRemoteDataSource);
 
   @override
-  Future<Either<Failure, CategoriesResponse>> getCategories() async{
-    try{
+  Future<Either<Failure, CategoriesResponse>> getCategories() async {
+    try {
       final response = await coursesRemoteDataSource.getCategories();
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
 
   @override
-  Future<Either<Failure, CoursesStatusResponse>> getCoursesStatus({CoursesStatusParams? params}) async{
-    try{
-      final response = await coursesRemoteDataSource.getCoursesStatus(params: params);
+  Future<Either<Failure, CoursesStatusResponse>> getCoursesStatus({
+    CoursesStatusParams? params,
+  }) async {
+    try {
+      final response = await coursesRemoteDataSource.getCoursesStatus(
+        params: params,
+      );
       return Right(response);
-    }on ServerException catch(e){
+    } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnAuthorizedException catch(e){
+    } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
-    }on UnprocessableContentException catch(e){
+    } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
-
 }

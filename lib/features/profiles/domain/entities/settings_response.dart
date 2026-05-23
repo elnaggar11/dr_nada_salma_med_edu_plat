@@ -11,7 +11,7 @@ class SettingsResponse {
     if (json['data'] != null) {
       data = <Data>[];
       json['data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
   }
@@ -30,24 +30,25 @@ class SettingsResponse {
 class Data {
   int? id;
   dynamic siteName;
-  dynamic  siteLogo;
-  dynamic  siteFavicon;
-  dynamic  siteDescription;
-  dynamic  siteAddress;
-  dynamic  phoneContact;
-  dynamic  tax;
-  dynamic  serviceFees;
+  dynamic siteLogo;
+  dynamic siteFavicon;
+  dynamic siteDescription;
+  dynamic siteAddress;
+  dynamic phoneContact;
+  dynamic tax;
+  dynamic serviceFees;
 
-  Data(
-      {this.id,
-        this.siteName,
-        this.siteLogo,
-        this.siteFavicon,
-        this.siteDescription,
-        this.siteAddress,
-        this.phoneContact,
-        this.tax,
-        this.serviceFees});
+  Data({
+    this.id,
+    this.siteName,
+    this.siteLogo,
+    this.siteFavicon,
+    this.siteDescription,
+    this.siteAddress,
+    this.phoneContact,
+    this.tax,
+    this.serviceFees,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];

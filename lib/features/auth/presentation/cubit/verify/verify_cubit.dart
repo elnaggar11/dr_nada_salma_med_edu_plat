@@ -17,7 +17,8 @@ part 'verify_state.dart';
 
 class VerifyCubit extends Cubit<VerifyState> {
   VerifyCubit(this.verifyOtpUseCase) : super(VerifyInitial());
-  final TextEditingController verificationCodeController = TextEditingController();
+  final TextEditingController verificationCodeController =
+      TextEditingController();
 
   bool? isPressed = false;
   Color? buttonColor = orange;
@@ -32,81 +33,105 @@ class VerifyCubit extends Cubit<VerifyState> {
   int start = 120;
   String? fcmToken;
 
-
-  Future<void>verifyOtp({VerifyOtpParams? params})async{
+  Future<void> verifyOtp({VerifyOtpParams? params}) async {
     loading = true;
     success = false;
     error = false;
     buttonColor = loading! ? primary : orange;
     emit(VerifyOtpLoadingState());
-    try{
+    try {
       final failOrUser = await verifyOtpUseCase(params!);
-      failOrUser.fold((fail){
-        if(fail is ServerFailure){
+      failOrUser.fold(
+        (fail) {
+          if (fail is ServerFailure) {
+            loading = false;
+            success = false;
+            error = true;
+            buttonColor = loading! ? primary : orange;
+            msgKey.currentState!.showSnackBar(
+              SnackBar(
+                behavior: SnackBarBehavior.floating,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(40)),
+                ),
+                content: Text(
+                  fail.message,
+                  style: TextStyles.textStyleNormal13.copyWith(color: white),
+                  textScaler: TextScaler.linear(1),
+                ),
+              ),
+            );
+            emit(VerifyErrorState(message: fail.message));
+          }
+        },
+        (response) {
           loading = false;
-          success = false;
-          error = true;
+          success = true;
+          error = false;
+
           buttonColor = loading! ? primary : orange;
-          msgKey.currentState!.showSnackBar(SnackBar(
+          msgKey.currentState!.showSnackBar(
+            SnackBar(
               behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
-              content: Text(fail.message,style:
-          TextStyles.textStyleNormal13.copyWith(color: white),textScaler: TextScaler.linear(1),)));
-          emit(VerifyErrorState(message: fail.message));
-        }
-      }, (response){
-        loading = false;
-        success = true;
-        error = false;
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(40)),
+              ),
+              content: Text(
+                response.message!,
+                style: TextStyles.textStyleNormal13.copyWith(color: white),
+                textScaler: TextScaler.linear(1),
+              ),
+            ),
+          );
+          verifyOtpResponse = response;
 
-        buttonColor = loading! ? primary : orange;
-        msgKey.currentState!.showSnackBar(SnackBar(
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
-            content: Text(response.message!
-          ,style: TextStyles.textStyleNormal13.copyWith(color: white),
-          textScaler: TextScaler.linear(1),)));
-        verifyOtpResponse = response;
+          navKey.currentContext!.pushNamed(name: bottomBarSc, args: params);
 
-          navKey.currentContext!.pushNamed(name: bottomBarSc,args: params);
-
-        emit(VerifyOtpSuccessState(verifyOtpResponse: response));
-      });
-    }catch(e){
+          emit(VerifyOtpSuccessState(verifyOtpResponse: response));
+        },
+      );
+    } catch (e) {
       loading = false;
       success = false;
       error = true;
-      msgKey.currentState!.showSnackBar(SnackBar(
+      msgKey.currentState!.showSnackBar(
+        SnackBar(
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
-          content: Text(e.toString(),style:
-      TextStyles.textStyleNormal13.copyWith(color: white),textScaler: TextScaler.linear(1),)));
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(40)),
+          ),
+          content: Text(
+            e.toString(),
+            style: TextStyles.textStyleNormal13.copyWith(color: white),
+            textScaler: TextScaler.linear(1),
+          ),
+        ),
+      );
       emit(VerifyErrorState(message: e.toString()));
     }
   }
+
   void startTimer() {
     const oneSec = Duration(seconds: 1);
-     timer = Timer.periodic(
-      oneSec,
-          (Timer timer) {
-        if (start == 0) {
-
-            timer.cancel();
-            emit(UpdateTimerState());
-        } else {
-            start--;
-            emit(UpdateTimerState());
-        }
-      },
-    );
+    timer = Timer.periodic(oneSec, (Timer timer) {
+      if (start == 0) {
+        timer.cancel();
+        emit(UpdateTimerState());
+      } else {
+        start--;
+        emit(UpdateTimerState());
+      }
+    });
   }
+
   String get timerText {
     int minutes = start ~/ 60;
     int seconds = start % 60;
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
-  Future<void>getFcmToken()async{
+
+  Future<void> getFcmToken() async {
     fcmToken = await FirebaseMessaging.instance.getToken();
-    print('fcm Token :'+fcmToken.toString());
+    print('fcm Token :$fcmToken');
   }
 }

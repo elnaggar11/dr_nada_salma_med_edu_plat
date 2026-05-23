@@ -5,7 +5,6 @@ sealed class BottomBarState {}
 
 final class BottomBarInitial extends BottomBarState {}
 
-
 class BottomBarUpdateState extends BottomBarState {}
 
 class BottomBarUpdateState2 extends BottomBarState {}

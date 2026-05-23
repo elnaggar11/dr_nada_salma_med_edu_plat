@@ -5,7 +5,6 @@ sealed class AcademicDegreeState {}
 
 final class AcademicDegreeInitial extends AcademicDegreeState {}
 
-
 class AcademicDegreeSuccessState extends AcademicDegreeState {
   final AcademicDegreeResponse academicDegreeResponse;
 
@@ -18,9 +17,7 @@ class AcademicDegreeErrorState extends AcademicDegreeState {
   AcademicDegreeErrorState({required this.msg});
 }
 
-
 class AcademicDegreeLoadingState extends AcademicDegreeState {}
-
 
 class UpdateAcademicDegreesCheckBox extends AcademicDegreeState {}
 

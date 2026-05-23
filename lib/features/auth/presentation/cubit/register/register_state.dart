@@ -5,9 +5,7 @@ sealed class RegisterState {}
 
 final class RegisterInitial extends RegisterState {}
 
-
 class UpdateRegisterState extends RegisterState {}
-
 
 class UpdateCheckBoxState extends RegisterState {}
 
@@ -22,6 +20,7 @@ class RegisterErrorState extends RegisterState {
 
   RegisterErrorState({required this.msg});
 }
+
 class RegisterSuccessState extends RegisterState {
   final RegisterResponse response;
 

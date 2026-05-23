@@ -7,12 +7,12 @@ final class CoursesDetailsInitial extends CoursesDetailsState {}
 
 class CoursesDetailsLoadingState extends CoursesDetailsState {}
 
-
 class CoursesDetailsErrorState extends CoursesDetailsState {
   final String message;
 
   CoursesDetailsErrorState({required this.message});
 }
+
 class CoursesDetailsSuccessState extends CoursesDetailsState {
   final CoursesDetailsResponse coursesDetailsResponse;
 

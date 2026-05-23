@@ -20,25 +20,29 @@ import 'package:dr_nada_salma_med_edu_plat/features/profiles/presentation/cubit/
 import 'package:dr_nada_salma_med_edu_plat/features/profiles/presentation/cubit/terms_cubit/terms_cubit.dart';
 import 'package:get_it/get_it.dart';
 
-Future<void>initProfileInj(GetIt s)async{
-  s.registerFactory(()=> ProfileCubit(s(),s(),s(),s(),s()));
-  s.registerFactory(()=> PointsCubit(s()));
-  s.registerFactory(()=> AboutUsCubit(s()));
-  s.registerFactory(()=>LanguageCubit());
-  s.registerFactory(()=>TermsCubit(s()));
-  s.registerFactory(()=> CertificatesCubit(s()));
-  s.registerFactory(()=> FrequentlyAskedCubit(s()));
+Future<void> initProfileInj(GetIt s) async {
+  s.registerFactory(() => ProfileCubit(s(), s(), s(), s(), s()));
+  s.registerFactory(() => PointsCubit(s()));
+  s.registerFactory(() => AboutUsCubit(s()));
+  s.registerFactory(() => LanguageCubit());
+  s.registerFactory(() => TermsCubit(s()));
+  s.registerFactory(() => CertificatesCubit(s()));
+  s.registerFactory(() => FrequentlyAskedCubit(s()));
 
-  s.registerLazySingleton(()=> UpdateProfileUseCase(s()));
-  s.registerLazySingleton(()=> LogOutUseCase(s()));
-  s.registerLazySingleton<ProfileRemoteDataSource>(()=> ProfileRemoteDataSourceImpl(s()));
-  s.registerLazySingleton<ProfileRepositories>(()=> ProfileRepositoryImpl(s()));
-  s.registerLazySingleton(()=> SettingsUseCase(s()));
-  s.registerLazySingleton(()=> ProfileUseCase(s()));
-  s.registerLazySingleton(()=> PointsUseCase(s()));
-  s.registerLazySingleton(()=> FaqsUseCase(s()));
-  s.registerLazySingleton(()=> CertificateUseCase(s()));
-  s.registerLazySingleton(()=>AboutUsUseCase(s()));
-  s.registerLazySingleton(()=> TermsConditionsUseCase(s()));
-  s.registerLazySingleton(()=> DeleteAccountUseCase(s()));
+  s.registerLazySingleton(() => UpdateProfileUseCase(s()));
+  s.registerLazySingleton(() => LogOutUseCase(s()));
+  s.registerLazySingleton<ProfileRemoteDataSource>(
+    () => ProfileRemoteDataSourceImpl(s()),
+  );
+  s.registerLazySingleton<ProfileRepositories>(
+    () => ProfileRepositoryImpl(s()),
+  );
+  s.registerLazySingleton(() => SettingsUseCase(s()));
+  s.registerLazySingleton(() => ProfileUseCase(s()));
+  s.registerLazySingleton(() => PointsUseCase(s()));
+  s.registerLazySingleton(() => FaqsUseCase(s()));
+  s.registerLazySingleton(() => CertificateUseCase(s()));
+  s.registerLazySingleton(() => AboutUsUseCase(s()));
+  s.registerLazySingleton(() => TermsConditionsUseCase(s()));
+  s.registerLazySingleton(() => DeleteAccountUseCase(s()));
 }

@@ -30,13 +30,14 @@ class Data {
   dynamic image;
   dynamic accessToken;
 
-  Data(
-      {this.id,
-        this.fullName,
-        this.phoneNumber,
-        this.email,
-        this.image,
-        this.accessToken});
+  Data({
+    this.id,
+    this.fullName,
+    this.phoneNumber,
+    this.email,
+    this.image,
+    this.accessToken,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
