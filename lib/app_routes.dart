@@ -33,7 +33,7 @@ import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/c
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/teacher_detail/teacher_detail_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/screens/teacher_detail_view.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/my_courses.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/private_lessons_screen.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/screens/private_lessons_screen.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/favourite/presentation/cubit/favourite_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/favourite/presentation/screens/favourite_screen.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/courses_params.dart';
@@ -442,16 +442,32 @@ class AppRoutes {
           settings: settings,
         );
       case teachersListSc:
-        return MaterialPageRoute(
-          builder: (_) =>
-              TeachersListScreen(categoryName: settings.arguments as String),
-          settings: settings,
-        );
+        final args = settings.arguments;
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+            builder: (_) => TeachersListScreen(
+              categoryName: args["category_name"] as String,
+              subjectId: args["subject_id"] as int,
+            ),
+            settings: settings,
+          );
+        } else {
+          return MaterialPageRoute(
+            builder: (_) => TeachersListScreen(
+              categoryName: args as String,
+            ),
+            settings: settings,
+          );
+        }
       case teacherDetailSc:
+        final args = settings.arguments as Map<String, dynamic>;
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
             create: (context) => sl<TeacherDetailCubit>(),
-            child: TeacherDetailView(slug: settings.arguments as String),
+            child: TeacherDetailView(
+              teacherId: args['teacher_id'] as int,
+              subjectId: args['subject_id'] as int,
+            ),
           ),
           settings: settings,
         );

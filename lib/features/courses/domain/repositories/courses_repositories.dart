@@ -3,6 +3,8 @@ import 'package:dr_nada_salma_med_edu_plat/core/errors/failure.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/categories_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/courses_status_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/courses_status_params.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/teachers_response.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/subject_details_response.dart';
 
 abstract class CoursesRepositories {
   Future<Either<Failure, CategoriesResponse>> getCategories();
@@ -10,6 +12,13 @@ abstract class CoursesRepositories {
     CoursesStatusParams? params,
   });
   Future<Either<Failure, Map<String, dynamic>>> getTeacherDetail({
-    required String slug,
+    required int teacherId,
+    required int subjectId,
+  });
+  Future<Either<Failure, TeachersResponse>> getTeachers({
+    required Map<String, dynamic> query,
+  });
+  Future<Either<Failure, SubjectDetailsResponse>> getSubjectDetails({
+    required int subjectId,
   });
 }

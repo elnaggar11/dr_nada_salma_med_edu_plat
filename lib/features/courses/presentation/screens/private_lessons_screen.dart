@@ -123,12 +123,17 @@ class _PrivateLessonsScreenState extends State<PrivateLessonsScreen>
                                   title: "كورس المهارات الجراحية المتقدمة",
                                   description:
                                       "هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها التطبيق.",
-                                  image: "https://via.placeholder.com/400x200",
+                                  image:
+                                      "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=300&auto=format&fit=crop",
+
                                   tags: ["جراحة", "طوارئ", "عناية مركزة"],
                                   onDetailsPressed: () {
                                     context.pushNamed(
                                       name: teachersListSc,
-                                      args: "جراحة",
+                                      args: {
+                                        "subject_id": 3,
+                                        "category_name": "جراحة",
+                                      },
                                     );
                                   },
                                 );
@@ -143,7 +148,10 @@ class _PrivateLessonsScreenState extends State<PrivateLessonsScreen>
                                 onDetailsPressed: () {
                                   context.pushNamed(
                                     name: teachersListSc,
-                                    args: data.categoryName ?? tr("medicine"),
+                                    args: {
+                                      "subject_id": data.id,
+                                      "category_name": data.categoryName,
+                                    },
                                   );
                                 },
                               );
@@ -180,7 +188,11 @@ class _PrivateLessonsScreenState extends State<PrivateLessonsScreen>
                                 onDetailsPressed: () {
                                   context.pushNamed(
                                     name: teachersListSc,
-                                    args: data.categoryName ?? tr("medicine"),
+                                    args: {
+                                      "subject_id": data.id ?? 3,
+                                      "category_name":
+                                          data.categoryName ?? tr("medicine"),
+                                    },
                                   );
                                 },
                               );

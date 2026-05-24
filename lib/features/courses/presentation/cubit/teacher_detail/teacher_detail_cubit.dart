@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/errors/failure.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/teacher_detail_response.dart';
@@ -10,10 +11,13 @@ class TeacherDetailCubit extends Cubit<TeacherDetailState> {
 
   TeacherDetailCubit(this._coursesRepository) : super(TeacherDetailState());
 
-  Future<void> getTeacherDetail(String slug) async {
+  Future<void> getTeacherDetail(int teacherId, int subjectId) async {
     emit(state.copyWith(status: TeacherDetailRequestState.loading));
 
-    final result = await _coursesRepository.getTeacherDetail(slug: slug);
+    final result = await _coursesRepository.getTeacherDetail(
+      teacherId: teacherId,
+      subjectId: subjectId,
+    );
 
     result.fold(
       (failure) {
@@ -24,12 +28,18 @@ class TeacherDetailCubit extends Cubit<TeacherDetailState> {
           state.copyWith(status: TeacherDetailRequestState.error, message: msg),
         );
       },
-      (response) => emit(
-        state.copyWith(
-          status: TeacherDetailRequestState.success,
-          teacherDetail: TeacherDetail.fromJson(response),
-        ),
-      ),
+      (response) {
+        // Log the complete raw data/JSON response to the console
+        log("---------------- TEACHER GET DATA ----------------");
+        log(response.toString());
+        log("--------------------------------------------------");
+        emit(
+          state.copyWith(
+            status: TeacherDetailRequestState.success,
+            teacherDetail: TeacherDetail.fromJson(response['data']),
+          ),
+        );
+      },
     );
   }
 }

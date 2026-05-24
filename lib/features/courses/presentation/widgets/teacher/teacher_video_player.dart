@@ -16,23 +16,25 @@ class TeacherVideoPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: context.height / 3.5,
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      height: 200,
       width: double.infinity,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(context.width / 15),
-          bottomRight: Radius.circular(context.width / 15),
-        ),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ),
       child: Stack(
         fit: StackFit.expand,
         children: [
           // Thumbnail
           ClipRRect(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(context.width / 15),
-              bottomRight: Radius.circular(context.width / 15),
-            ),
+            borderRadius: BorderRadius.circular(24),
             child: CachedNetworkImage(
               imageUrl:
                   thumbnail ??
@@ -47,10 +49,10 @@ class TeacherVideoPlayer extends StatelessWidget {
             child: GestureDetector(
               onTap: () => _launchURL(videoUrl),
               child: Container(
-                width: context.width / 6,
-                height: context.width / 6,
+                width: 60,
+                height: 60,
                 decoration: const BoxDecoration(
-                  color: Color(0xFFFF6B35), // Primary Orange
+                  color: Color(0xFFF06523), // Vibrant Orange
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
@@ -60,10 +62,10 @@ class TeacherVideoPlayer extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.play_arrow_rounded,
                   color: Colors.white,
-                  size: context.width / 10,
+                  size: 40,
                 ),
               ),
             ),

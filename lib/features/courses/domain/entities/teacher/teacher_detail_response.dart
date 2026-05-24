@@ -6,8 +6,16 @@ class TeacherDetailResponse {
   TeacherDetailResponse({this.status, this.message, this.data});
 
   factory TeacherDetailResponse.fromJson(Map<String, dynamic> json) {
+    bool? parsedStatus;
+    if (json['status'] is bool) {
+      parsedStatus = json['status'] as bool?;
+    } else if (json['status'] is String) {
+      final s = json['status'].toString().toLowerCase();
+      parsedStatus = s == 'true' || s == 'success';
+    }
+
     return TeacherDetailResponse(
-      status: json['status'],
+      status: parsedStatus,
       message: json['message'],
       data: json['data'] != null ? TeacherDetail.fromJson(json['data']) : null,
     );
@@ -35,6 +43,23 @@ class TeacherDetail {
   final Map<String, List<String>>? availability;
   final List<TeacherReview>? reviews;
 
+  final List<TeacherSubject>? subjects;
+
+  // New raw fields in case they are used directly
+  final String? fullName;
+  final String? specializationTitle;
+  final String? location;
+  final double? averageRating;
+  final int? yearsExperience;
+  final double? hourlyRate;
+  final String? shortBio;
+  final String? about;
+  final String? targetStudents;
+  final String? teachingExperienceStr;
+  final String? introVideoUrl;
+  final String? introVideo;
+  final String? bookingPolicyHint;
+
   TeacherDetail({
     this.id,
     this.name,
@@ -55,35 +80,84 @@ class TeacherDetail {
     this.teachingExperiences,
     this.availability,
     this.reviews,
+    this.subjects,
+    this.fullName,
+    this.specializationTitle,
+    this.location,
+    this.averageRating,
+    this.yearsExperience,
+    this.hourlyRate,
+    this.shortBio,
+    this.about,
+    this.targetStudents,
+    this.teachingExperienceStr,
+    this.introVideoUrl,
+    this.introVideo,
+    this.bookingPolicyHint,
   });
 
   factory TeacherDetail.fromJson(Map<String, dynamic> json) {
+    // Extract country and city from "location" e.g., "Egypt, Cairo"
+    final locationStr = json['location'] as String?;
+    String? countryPart;
+    String? cityPart;
+    if (locationStr != null) {
+      final parts = locationStr.split(',');
+      if (parts.isNotEmpty) {
+        countryPart = parts[0].trim();
+      }
+      if (parts.length > 1) {
+        cityPart = parts[1].trim();
+      }
+    }
+
     return TeacherDetail(
       id: json['id'],
-      name: json['name'],
+      name: json['full_name'] ?? json['name'],
       image: json['image'],
       isVerified: json['is_verified'],
-      rating: (json['rating'] as num?)?.toDouble(),
+      rating: (json['average_rating'] as num?)?.toDouble() ??
+          (json['rating'] as num?)?.toDouble(),
       reviewsCount: json['reviews_count'],
-      city: json['city'],
-      country: json['country'],
+      city: cityPart ?? json['city'],
+      country: countryPart ?? json['country'],
       countryFlag: json['country_flag'],
-      hourlyPrice: (json['hourly_price'] as num?)?.toDouble(),
+      hourlyPrice: (json['hourly_rate'] as num?)?.toDouble() ??
+          (json['hourly_price'] as num?)?.toDouble(),
       languages: json['languages'] != null
           ? List<String>.from(json['languages'])
           : null,
       studentsCount: json['students_count'],
-      experienceYears: json['experience_years'],
-      bio: json['bio'],
-      videoUrl: json['video_url'],
-      targetAudience: json['target_audience'] != null
-          ? TargetAudience.fromJson(json['target_audience'])
-          : null,
-      teachingExperiences: json['teaching_experiences'] != null
-          ? (json['teaching_experiences'] as List)
-                .map((i) => TeachingExperience.fromJson(i))
-                .toList()
-          : null,
+      experienceYears: json['years_experience'] ?? json['experience_years'],
+      bio: json['about'] ?? json['short_bio'] ?? json['bio'],
+      videoUrl: json['intro_video_url'] ?? json['intro_video'] ?? json['video_url'],
+      
+      // Adapt target_students to TargetAudience object structure
+      targetAudience: json['target_students'] != null
+          ? TargetAudience(
+              gender: "جميع الفئات",
+              levels: [json['target_students'] as String],
+            )
+          : (json['target_audience'] != null
+              ? TargetAudience.fromJson(json['target_audience'])
+              : null),
+              
+      // Adapt teaching_experience string to TeachingExperience list structure
+      teachingExperiences: json['teaching_experience'] != null
+          ? [
+              TeachingExperience(
+                country: "خبرة التدريس",
+                countryFlag: null,
+                duration: "",
+                description: json['teaching_experience'] as String,
+              )
+            ]
+          : (json['teaching_experiences'] != null
+              ? (json['teaching_experiences'] as List)
+                    .map((i) => TeachingExperience.fromJson(i))
+                    .toList()
+              : null),
+              
       availability: json['availability'] != null
           ? (json['availability'] as Map<String, dynamic>).map(
               (key, value) => MapEntry(key, List<String>.from(value)),
@@ -94,6 +168,42 @@ class TeacherDetail {
                 .map((i) => TeacherReview.fromJson(i))
                 .toList()
           : null,
+      subjects: json['subjects'] != null
+          ? (json['subjects'] as List)
+                .map((i) => TeacherSubject.fromJson(i))
+                .toList()
+          : null,
+
+      // Raw new fields
+      fullName: json['full_name'],
+      specializationTitle: json['specialization_title'],
+      location: json['location'],
+      averageRating: (json['average_rating'] as num?)?.toDouble(),
+      yearsExperience: json['years_experience'],
+      hourlyRate: (json['hourly_rate'] as num?)?.toDouble(),
+      shortBio: json['short_bio'],
+      about: json['about'],
+      targetStudents: json['target_students'],
+      teachingExperienceStr: json['teaching_experience'],
+      introVideoUrl: json['intro_video_url'],
+      introVideo: json['intro_video'],
+      bookingPolicyHint: json['booking_policy_hint'],
+    );
+  }
+}
+
+class TeacherSubject {
+  final int? id;
+  final String? name;
+  final double? hourlyRate;
+
+  TeacherSubject({this.id, this.name, this.hourlyRate});
+
+  factory TeacherSubject.fromJson(Map<String, dynamic> json) {
+    return TeacherSubject(
+      id: json['id'],
+      name: json['name'],
+      hourlyRate: (json['hourly_rate'] as num?)?.toDouble(),
     );
   }
 }

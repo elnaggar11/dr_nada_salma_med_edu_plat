@@ -35,6 +35,21 @@ class Data {
   List<Specialties>? specialties;
   List<AcademicDegrees>? academicDegrees;
 
+  // Teacher specific fields
+  dynamic specializationTitle;
+  dynamic country;
+  dynamic city;
+  List<String>? languages;
+  dynamic studentsCount;
+  dynamic yearsExperience;
+  dynamic shortBio;
+  dynamic about;
+  dynamic targetStudents;
+  dynamic teachingExperience;
+  dynamic introVideoUrl;
+  List<dynamic>? subjects;
+  List<dynamic>? timeSlots;
+
   Data({
     this.id,
     this.fullName,
@@ -47,6 +62,19 @@ class Data {
     this.image,
     this.specialties,
     this.academicDegrees,
+    this.specializationTitle,
+    this.country,
+    this.city,
+    this.languages,
+    this.studentsCount,
+    this.yearsExperience,
+    this.shortBio,
+    this.about,
+    this.targetStudents,
+    this.teachingExperience,
+    this.introVideoUrl,
+    this.subjects,
+    this.timeSlots,
   });
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -71,6 +99,25 @@ class Data {
         academicDegrees!.add(AcademicDegrees.fromJson(v));
       });
     }
+    specializationTitle = json['specialization_title'];
+    country = json['country'];
+    city = json['city'];
+    if (json['languages'] != null) {
+      languages = List<String>.from(json['languages']);
+    }
+    studentsCount = json['students_count'];
+    yearsExperience = json['years_experience'];
+    shortBio = json['short_bio'];
+    about = json['about'];
+    targetStudents = json['target_students'];
+    teachingExperience = json['teaching_experience'];
+    introVideoUrl = json['intro_video_url'];
+    if (json['subjects'] != null) {
+      subjects = List<dynamic>.from(json['subjects']);
+    }
+    if (json['time_slots'] != null) {
+      timeSlots = List<dynamic>.from(json['time_slots']);
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -90,6 +137,19 @@ class Data {
           .map((v) => v.toJson())
           .toList();
     }
+    data['specialization_title'] = specializationTitle;
+    data['country'] = country;
+    data['city'] = city;
+    data['languages'] = languages;
+    data['students_count'] = studentsCount;
+    data['years_experience'] = yearsExperience;
+    data['short_bio'] = shortBio;
+    data['about'] = about;
+    data['target_students'] = targetStudents;
+    data['teaching_experience'] = teachingExperience;
+    data['intro_video_url'] = introVideoUrl;
+    data['subjects'] = subjects;
+    data['time_slots'] = timeSlots;
     return data;
   }
 }

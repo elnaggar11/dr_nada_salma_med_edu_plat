@@ -65,6 +65,11 @@ class ProfileCubit extends Cubit<ProfileState> {
   bool? logError = false;
   bool? logSuccess = false;
 
+  @override
+  Future<void> close() {
+    return super.close();
+  }
+
   Future<void> getProfile() async {
     loading = true;
     error = false;

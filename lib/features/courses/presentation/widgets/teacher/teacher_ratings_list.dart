@@ -1,5 +1,6 @@
+import 'package:easy_localization/easy_localization.dart';
+import '../../../../../gen/locale_keys.g.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/utils/extensions.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/teacher_detail_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/teacher/teacher_info_sections.dart';
@@ -18,10 +19,19 @@ class TeacherRatingsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: context.width * 0.05,
-        vertical: context.height * 0.02,
+    return Container(
+      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,27 +39,23 @@ class TeacherRatingsList extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const InfoSectionTitle(title: "تقييم المدرس"),
+              InfoSectionTitle(title: LocaleKeys.teacher_rating.tr()),
               Row(
                 children: [
-                  Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                    size: context.width * 0.06,
-                  ),
-                  SizedBox(width: context.width * 0.02),
                   Text(
-                    "$overallRating",
+                    overallRating.toStringAsFixed(2),
                     style: context.boldText.copyWith(
-                      fontSize: context.width * 0.045,
-                      color: context.primaryColor,
+                      fontSize: 18,
+                      color: const Color(0xFFF06523),
                     ),
                   ),
+                  const SizedBox(width: 8),
+                  const Icon(Icons.star, color: Color(0xFFF06523), size: 24),
                 ],
               ),
             ],
           ),
-          SizedBox(height: context.height * 0.025),
+          const SizedBox(height: 20),
           ...reviews
               .map((review) => _buildReviewItem(context, review))
               .toList(),
@@ -60,38 +66,42 @@ class TeacherRatingsList extends StatelessWidget {
 
   Widget _buildReviewItem(BuildContext context, TeacherReview review) {
     return Padding(
-      padding: EdgeInsets.only(bottom: context.height * 0.03),
+      padding: const EdgeInsets.only(bottom: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Avatar
               CircleAvatar(
-                radius: 25,
-                backgroundColor: Colors.grey[200],
+                radius: 24,
+                backgroundColor: const Color(0xFFF0F0F0),
                 backgroundImage: review.userImage != null
                     ? CachedNetworkImageProvider(review.userImage!)
                     : null,
                 child: review.userImage == null
-                    ? const Icon(Icons.person, color: Colors.grey)
+                    ? const Icon(Icons.person, color: Colors.grey, size: 24)
                     : null,
               ),
-              SizedBox(width: 15),
+              const SizedBox(width: 12),
               // Name and Time
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      review.userName ?? "مستخدم",
-                      style: context.boldText.copyWith(fontSize: 15),
+                      review.userName ?? LocaleKeys.user.tr(),
+                      style: context.boldText.copyWith(
+                        fontSize: 16,
+                        color: const Color(0xFF355C7D),
+                      ),
                     ),
                     Text(
                       review.date ?? "",
-                      style: context.regularText.copyWith(
-                        fontSize: 12,
-                        color: context.hintColor,
+                      style: context.mediumText.copyWith(
+                        fontSize: 13,
+                        color: Colors.grey,
                       ),
                     ),
                   ],
@@ -101,23 +111,23 @@ class TeacherRatingsList extends StatelessWidget {
               RatingBarIndicator(
                 rating: review.rating ?? 0,
                 itemBuilder: (context, index) =>
-                    const Icon(Icons.star, color: Colors.amber),
+                    const Icon(Icons.star, color: Color(0xFFFFB100)),
                 itemCount: 5,
-                itemSize: 14,
+                itemSize: 18,
               ),
             ],
           ),
-          SizedBox(height: 15),
+          const SizedBox(height: 16),
           Text(
             review.comment ?? "",
-            style: context.regularText.copyWith(
-              fontSize: 14,
-              height: 1.5,
-              color: const Color(0xFF5A5A5A),
+            style: context.mediumText.copyWith(
+              fontSize: 15,
+              height: 1.8,
+              color: const Color(0xFF666666),
             ),
           ),
           if (reviews.indexOf(review) != reviews.length - 1) ...[
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             const Divider(color: Color(0xFFF0F0F0), thickness: 1),
           ],
         ],

@@ -5,6 +5,8 @@ import 'package:dr_nada_salma_med_edu_plat/features/courses/data/courses_remote_
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/categories_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/courses_status_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/courses_status_params.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/teachers_response.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/subject_details_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/repositories/courses_repositories.dart';
 
 class CoursesRepositoryImpl implements CoursesRepositories {
@@ -46,12 +48,46 @@ class CoursesRepositoryImpl implements CoursesRepositories {
 
   @override
   Future<Either<Failure, Map<String, dynamic>>> getTeacherDetail({
-    required String slug,
+    required int teacherId,
+    required int subjectId,
   }) async {
     try {
       final response = await coursesRemoteDataSource.getTeacherDetail(
-        slug: slug,
+        teacherId: teacherId,
+        subjectId: subjectId,
       );
+      return Right(response);
+    } on ServerException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on UnAuthorizedException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on UnprocessableContentException catch (e) {
+      return left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, TeachersResponse>> getTeachers({
+    required Map<String, dynamic> query,
+  }) async {
+    try {
+      final response = await coursesRemoteDataSource.getTeachers(query: query);
+      return Right(response);
+    } on ServerException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on UnAuthorizedException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on UnprocessableContentException catch (e) {
+      return left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, SubjectDetailsResponse>> getSubjectDetails({
+    required int subjectId,
+  }) async {
+    try {
+      final response = await coursesRemoteDataSource.getSubjectDetails(subjectId: subjectId);
       return Right(response);
     } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));

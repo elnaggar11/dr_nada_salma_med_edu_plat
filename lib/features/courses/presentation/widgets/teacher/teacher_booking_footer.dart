@@ -1,37 +1,37 @@
-import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/utils/extensions.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/widgets/app_btn.dart';
-import 'package:dr_nada_salma_med_edu_plat/gen/locale_keys.g.dart';
+import 'dart:ui' as ui;
+
 import 'package:easy_localization/easy_localization.dart';
+import '../../../../../gen/locale_keys.g.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/extensions.dart';
 import 'package:flutter/material.dart';
 
 class TeacherBookingFooter extends StatelessWidget {
   final double price;
   final VoidCallback onBookNow;
+  final String? bookingPolicyHint;
 
   const TeacherBookingFooter({
     super.key,
     required this.price,
     required this.onBookNow,
+    this.bookingPolicyHint,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: context.width / 20,
-        vertical: context.height / 50,
-      ),
+      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
-        color: context.scaffoldBackgroundColor,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(context.width / 15),
-          topRight: Radius.circular(context.width / 15),
+        color: Colors.white,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(30),
+          topRight: Radius.circular(30),
         ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
+            blurRadius: 20,
             offset: const Offset(0, -5),
           ),
         ],
@@ -40,116 +40,182 @@ class TeacherBookingFooter extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Cost Title
             Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        LocaleKeys.cost.tr(),
-                        style: context.regularText.copyWith(
-                          fontSize: context.width / 25,
-                          color: context.hintColor,
-                        ),
-                      ),
-                      SizedBox(height: context.height / 200),
-                      Text(
-                        "\$$price",
-                        style: context.boldText.copyWith(
-                          fontSize: context.width / 18,
-                          color: context.primaryColor,
-                        ),
-                      ),
-                    ],
+                Text(
+                  LocaleKeys.cost.tr(),
+                  style: context.boldText.copyWith(
+                    fontSize: 18,
+                    color: const Color(0xFF355C7D),
                   ),
                 ),
+                const SizedBox(width: 8),
                 Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: context.width / 30,
-                    vertical: context.height / 100,
-                  ),
-                  decoration: BoxDecoration(
-                    color: context.primaryColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(context.width / 30),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.access_time_filled,
-                        size: context.width / 22,
-                        color: context.primaryColor,
-                      ),
-                      SizedBox(width: context.width / 90),
-                      Text(
-                        LocaleKeys.normal_session.tr(),
-                        style: context.mediumText.copyWith(
-                          fontSize: context.width / 28,
-                          color: context.primaryColor,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: context.width / 45,
-                        ),
-                        child: Container(
-                          width: 1,
-                          height: context.height / 60,
-                          color: context.primaryColor.withOpacity(0.3),
-                        ),
-                      ),
-                      Text(
-                        LocaleKeys.session_duration.tr(args: ["60"]),
-                        style: context.mediumText.copyWith(
-                          fontSize: context.width / 28,
-                          color: context.primaryColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: context.height / 40),
-            Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(context.width / 45),
-                  decoration: BoxDecoration(
-                    color: Colors.green.withOpacity(0.1),
+                  width: 8,
+                  height: 8,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFF06523),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(
-                    Icons.verified,
-                    color: Colors.green,
-                    size: context.width / 18,
-                  ),
                 ),
-                SizedBox(width: context.width / 30),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              ],
+            ),
+            const SizedBox(height: 12),
+            // Cost Card
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              decoration: BoxDecoration(
+                border: Border.all(color: const Color(0xFFF9D0BA), width: 1.5),
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.white,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "\$$price",
+                    style: context.boldText.copyWith(
+                      fontSize: 20,
+                      color: const Color(0xFF355C7D),
+                    ),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        LocaleKeys.verified_teacher.tr(),
+                        LocaleKeys.normal_session.tr(),
                         style: context.boldText.copyWith(
-                          fontSize: context.width / 25,
+                          fontSize: 16,
+                          color: const Color(0xFF355C7D),
                         ),
                       ),
                       Text(
-                        LocaleKeys.verification_details.tr(),
-                        style: context.regularText.copyWith(
-                          fontSize: context.width / 32,
-                          color: context.hintColor,
+                        LocaleKeys.session_duration.tr(args: ['60']),
+                        style: context.mediumText.copyWith(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            // Verified Badge
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+              decoration: BoxDecoration(
+                color: const Color(0xFF355C7D),
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF355C7D).withOpacity(0.2),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  const Icon(
+                    Icons.workspace_premium_outlined, // Ribbon-like icon
+                    color: Color(0xFFF06523),
+                    size: 40,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    LocaleKeys.verified_teacher.tr(),
+                    style: context.boldText.copyWith(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    LocaleKeys.verification_details.tr(),
+                    textAlign: TextAlign.center,
+                    style: context.regularText.copyWith(
+                      color: Colors.white70,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            // Book Now Button
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: onBookNow,
+                borderRadius: BorderRadius.circular(16),
+                child: Container(
+                  width: double.infinity,
+                  height: 56,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF06523),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFF06523).withOpacity(0.3),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    textDirection: ui
+                        .TextDirection
+                        .ltr, // Ensures the arrow is on the left
+                    children: [
+                      const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        LocaleKeys.book_now.tr(),
+                        style: context.boldText.copyWith(
+                          fontSize: 20,
+                          color: Colors.white,
                         ),
                       ),
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
-            SizedBox(height: context.height / 40),
-            AppBtn(title: LocaleKeys.book_now.tr(), onPressed: onBookNow),
+            if (bookingPolicyHint != null && bookingPolicyHint!.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.info_outline_rounded,
+                    color: Colors.grey,
+                    size: 14,
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      bookingPolicyHint!,
+                      style: context.regularText.copyWith(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
       ),

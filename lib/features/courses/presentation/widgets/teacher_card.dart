@@ -15,6 +15,8 @@ class TeacherCard extends StatelessWidget {
   final String price;
   final bool isVerified;
   final String slug;
+  final int teacherId;
+  final int subjectId;
   final VoidCallback onBookPressed;
 
   const TeacherCard({
@@ -27,6 +29,8 @@ class TeacherCard extends StatelessWidget {
     required this.studentCount,
     required this.price,
     required this.slug,
+    required this.teacherId,
+    required this.subjectId,
     this.isVerified = true,
     required this.onBookPressed,
   });
@@ -34,8 +38,11 @@ class TeacherCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () =>
-          Navigator.pushNamed(context, "teacherDetailSc", arguments: slug),
+      onTap: () => Navigator.pushNamed(
+        context,
+        "teacherDetailSc",
+        arguments: {"teacher_id": teacherId, "subject_id": subjectId},
+      ),
       child: Container(
         decoration: BoxDecoration(
           color: white,
@@ -48,152 +55,192 @@ class TeacherCard extends StatelessWidget {
             ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Image Section with badges
-            Stack(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final double imageHeight = constraints.maxHeight.isFinite
+                ? (constraints.maxHeight * 0.38)
+                      .clamp(110.0, context.height / 5)
+                      .toDouble()
+                : context.height / 5;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-                  child: NetWorkImageHandler(
-                    image: image,
-                    width: double.infinity,
-                    height: context.height / 5,
-                  ),
-                ),
-                // Rating Badge
-                Positioned(
-                  top: 12,
-                  right: 12,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: white,
-                      borderRadius: BorderRadius.circular(15),
+                // Image Section with badges
+                Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(25),
+                      ),
+                      child: NetWorkImageHandler(
+                        image: image,
+                        width: double.infinity,
+                        height: imageHeight,
+                      ),
                     ),
-                    child: Row(
-                      children: [
-                        Text(
-                          rating.toString(),
+                    // Rating Badge
+                    Positioned(
+                      top: 12,
+                      right: 12,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: white,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Row(
+                          children: [
+                            Text(
+                              rating.toString(),
+                              style: TextStyles.textStyleBold10.copyWith(
+                                color: primary,
+                              ),
+                            ),
+                            SizedBox(width: 4),
+                            Icon(Icons.star, color: Colors.amber, size: 14),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // Experience Badge
+                    Positioned(
+                      bottom: 12,
+                      left: 12,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: primary.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          experience,
                           style: TextStyles.textStyleBold10.copyWith(
+                            color: white,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                Padding(
+                  padding: EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Name
+                      Text(
+                        name,
+                        style: TextStyles.textStyleBold16.copyWith(
+                          color: primary,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 4),
+                      // Specialty
+                      Text(
+                        specialty,
+                        style: TextStyles.textStyleNormal12.copyWith(
+                          color: grey1,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+
+                      SizedBox(height: 16),
+
+                      // Info Row
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          // Verified
+                          _buildInfoItem(
+                            icon: Icons.verified_outlined,
+                            label: tr("verified"),
                             color: primary,
                           ),
-                        ),
-                        SizedBox(width: 4),
-                        Icon(Icons.star, color: Colors.amber, size: 14),
-                      ],
-                    ),
-                  ),
-                ),
-                // Experience Badge
-                Positioned(
-                  bottom: 12,
-                  left: 12,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: primary.withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      experience,
-                      style: TextStyles.textStyleBold10.copyWith(color: white),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            Padding(
-              padding: EdgeInsets.all(12),
-              child: Column(
-                children: [
-                  // Name
-                  Text(
-                    name,
-                    style: TextStyles.textStyleBold16.copyWith(color: primary),
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(height: 4),
-                  // Specialty
-                  Text(
-                    specialty,
-                    style: TextStyles.textStyleNormal12.copyWith(color: grey1),
-                    textAlign: TextAlign.center,
-                  ),
-
-                  SizedBox(height: 16),
-
-                  // Info Row
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      // Verified
-                      _buildInfoItem(
-                        icon: Icons.verified_outlined,
-                        label: tr("verified"),
-                        color: primary,
+                          // Students
+                          _buildInfoItem(
+                            icon: Icons.school_outlined,
+                            label: "+$studentCount ${tr("student")}",
+                            color: orangeBold,
+                          ),
+                        ],
                       ),
-                      // Students
-                      _buildInfoItem(
-                        icon: Icons.school_outlined,
-                        label: "+$studentCount ${tr("student")}",
-                        color: orangeBold,
-                      ),
-                    ],
-                  ),
 
-                  SizedBox(height: 20),
+                      SizedBox(height: 20),
 
-                  // Footer Row: Price and Button
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // Price
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      // Footer Row: Price and Button
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            tr("starts_from"),
-                            style: TextStyles.textStyleNormal10.copyWith(
-                              color: grey1,
+                          // Price
+                          Flexible(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  tr("starts_from"),
+                                  style: TextStyles.textStyleNormal10.copyWith(
+                                    color: grey1,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Text(
+                                  "$price ${tr("sar")}",
+                                  style: TextStyles.textStyleBold14.copyWith(
+                                    color: primary,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
                             ),
                           ),
-                          Text(
-                            "$price ${tr("sar")}",
-                            style: TextStyles.textStyleBold14.copyWith(
-                              color: primary,
+                          SizedBox(width: 8),
+                          // Booking Button
+                          SizedBox(
+                            height: 40,
+                            child: ElevatedButton(
+                              onPressed: onBookPressed,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: primary,
+                                shape: const StadiumBorder(),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 20,
+                                ),
+                              ),
+                              child: Text(
+                                tr("book_now"),
+                                style: TextStyles.textStyleBold12.copyWith(
+                                  color: white,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      // Booking Button
-                      SizedBox(
-                        height: 40,
-                        child: ElevatedButton(
-                          onPressed: onBookPressed,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: primary,
-                            shape: const StadiumBorder(),
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                          ),
-                          child: Text(
-                            tr("book_now"),
-                            style: TextStyles.textStyleBold12.copyWith(
-                              color: white,
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
-                ],
-              ),
-            ),
-          ],
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -215,7 +262,12 @@ class TeacherCard extends StatelessWidget {
           child: Icon(icon, color: color, size: 20),
         ),
         SizedBox(height: 4),
-        Text(label, style: TextStyles.textStyleNormal10.copyWith(color: grey1)),
+        Text(
+          label,
+          style: TextStyles.textStyleNormal10.copyWith(color: grey1),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
       ],
     );
   }

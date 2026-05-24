@@ -87,7 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     .read<ProfileCubit>()
                                     .profileResponse!
                                     .data!
-                                    .image!,
+                                    .image ??
+                                "",
                                 width: context.width / 8,
                                 height: context.width / 8,
                               ),
@@ -107,7 +108,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 SizedBox(height: context.height / 280),
                                 Text(
-                                  "${context.read<ProfileCubit>().profileResponse!.data!.specialties![0].name}",
+                                  (context.read<ProfileCubit>().profileResponse?.data?.specialties?.isNotEmpty ?? false)
+                                      ? "${context.read<ProfileCubit>().profileResponse!.data!.specialties![0].name}"
+                                      : "",
                                   style: TextStyles.textStyleNormal12.copyWith(
                                     color: primary,
                                   ),

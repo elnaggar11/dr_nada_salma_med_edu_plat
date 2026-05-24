@@ -1,6 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
+import '../../../../../gen/locale_keys.g.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/utils/extensions.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/teacher_detail_response.dart';
 import 'package:flutter/material.dart';
+
 
 class InfoSectionTitle extends StatelessWidget {
   final String title;
@@ -12,14 +15,20 @@ class InfoSectionTitle extends StatelessWidget {
       children: [
         Container(
           width: 4,
-          height: 25,
+          height: 24,
           decoration: BoxDecoration(
-            color: context.primaryColor,
-            borderRadius: BorderRadius.circular(2),
+            color: const Color(0xFFF06523), // Orange bar
+            borderRadius: BorderRadius.circular(4),
           ),
         ),
-        SizedBox(width: 10),
-        Text(title, style: context.boldText.copyWith(fontSize: 18)),
+        const SizedBox(width: 10),
+        Text(
+          title,
+          style: context.boldText.copyWith(
+            fontSize: 18,
+            color: const Color(0xFF355C7D),
+          ),
+        ),
       ],
     );
   }
@@ -36,10 +45,10 @@ class TeacherAboutSection extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withOpacity(0.03),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -48,14 +57,14 @@ class TeacherAboutSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const InfoSectionTitle(title: "عن المدرس"),
-          SizedBox(height: 15),
+          InfoSectionTitle(title: LocaleKeys.about_teacher.tr()),
+          const SizedBox(height: 16),
           Text(
             bio,
-            style: context.regularText.copyWith(
-              fontSize: 14,
-              height: 1.6,
-              color: const Color(0xFF4A4A4A),
+            style: context.mediumText.copyWith(
+              fontSize: 15,
+              height: 1.8,
+              color: const Color(0xFF666666),
             ),
           ),
         ],
@@ -70,23 +79,35 @@ class TargetAudienceSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    return Container(
+      padding: EdgeInsets.all(20),
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const InfoSectionTitle(title: "من هم الطلاب الذين يرغب في تدريسهم؟"),
-          SizedBox(height: 15),
+          InfoSectionTitle(title: LocaleKeys.target_students.tr()),
+          const SizedBox(height: 20),
           _buildAudienceCard(
             context,
-            "جنس الطلاب",
-            audience.gender ?? "جميع الفئات",
+            LocaleKeys.students_gender.tr(),
+            audience.gender ?? LocaleKeys.all_genders.tr(),
             Icons.people_outline,
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 12),
           _buildAudienceCard(
             context,
-            "مستوى الطلاب",
+            LocaleKeys.students_level.tr(),
             (audience.levels ?? []).join("، "),
             Icons.school_outlined,
           ),
@@ -102,39 +123,46 @@ class TargetAudienceSection extends StatelessWidget {
     IconData icon,
   ) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
-        color: const Color(0xFFF7F8FA),
-        borderRadius: BorderRadius.circular(15),
+        color: const Color(0xFFF8F9FA),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(8),
+            padding: EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 5,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-            child: Icon(icon, color: const Color(0xFFFF6B35), size: 22),
+            child: Icon(icon, color: const Color(0xFFF06523), size: 24),
           ),
-          SizedBox(width: 15),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   label,
-                  style: context.regularText.copyWith(
-                    fontSize: 12,
-                    color: context.hintColor,
+                  style: context.mediumText.copyWith(
+                    fontSize: 13,
+                    color: Colors.grey,
                   ),
                 ),
-                SizedBox(height: 3),
+                const SizedBox(height: 4),
                 Text(
                   value,
                   style: context.boldText.copyWith(
-                    fontSize: 14,
-                    color: context.primaryColor,
+                    fontSize: 16,
+                    color: const Color(0xFF355C7D),
                   ),
                 ),
               ],
@@ -152,13 +180,25 @@ class TeachingExperienceSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    return Container(
+      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const InfoSectionTitle(title: "خبرات التدريس"),
-          SizedBox(height: 15),
+          InfoSectionTitle(title: LocaleKeys.teaching_experience.tr()),
+          const SizedBox(height: 16),
           ...experiences
               .map((exp) => _buildExperienceCard(context, exp))
               .toList(),
@@ -169,68 +209,69 @@ class TeachingExperienceSection extends StatelessWidget {
 
   Widget _buildExperienceCard(BuildContext context, TeachingExperience exp) {
     return Container(
-      margin: EdgeInsets.only(bottom: 15),
-      padding: EdgeInsets.all(15),
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: const Color(0xFFF7F8FA),
+        color: const Color(0xFFF8F9FA),
         borderRadius: BorderRadius.circular(20),
-      ),
-      child: Stack(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    exp.country ?? "",
-                    style: context.boldText.copyWith(fontSize: 16),
-                  ),
-                  if (exp.countryFlag != null)
-                    Text(exp.countryFlag!, style: TextStyle(fontSize: 24)),
-                ],
-              ),
-              SizedBox(height: 10),
-              Row(
-                children: [
-                  Icon(
-                    Icons.access_time,
-                    size: 16,
-                    color: const Color(0xFFFF6B35),
-                  ),
-                  SizedBox(width: 5),
-                  Text(
-                    exp.duration ?? "",
-                    style: context.mediumText.copyWith(
-                      fontSize: 13,
-                      color: const Color(0xFFFF6B35),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 10),
-              Text(
-                exp.description ?? "",
-                style: context.regularText.copyWith(
-                  fontSize: 13,
-                  color: context.hintColor,
-                ),
-              ),
-            ],
+        border: const Border(
+          bottom: BorderSide(
+            color: Color(0xFFF06523), // Vibrant Orange bottom border
+            width: 3,
           ),
-          Positioned(
-            bottom: 0,
-            left: 20,
-            right: 20,
-            child: Container(
-              height: 3,
-              decoration: BoxDecoration(
-                color: const Color(0xFFFF6B35).withOpacity(0.5),
-                borderRadius: BorderRadius.circular(2),
-              ),
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Left: The details (Aligned to the start in RTL)
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  exp.country ?? "",
+                  style: context.boldText.copyWith(
+                    fontSize: 16,
+                    color: const Color(0xFF355C7D),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.access_time_rounded,
+                      size: 16,
+                      color: Color(0xFFF06523),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      exp.duration ?? "",
+                      style: context.boldText.copyWith(
+                        fontSize: 13,
+                        color: const Color(0xFFF06523),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  exp.description ?? "",
+                  style: context.mediumText.copyWith(
+                    fontSize: 13,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
             ),
           ),
+          const SizedBox(width: 16),
+          // Right: Flag Emoji / Flag Icon
+          if (exp.countryFlag != null)
+            Text(
+              exp.countryFlag!,
+              style: const TextStyle(fontSize: 32),
+            ),
         ],
       ),
     );
@@ -243,46 +284,60 @@ class AvailabilitySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    return Container(
+      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const InfoSectionTitle(title: "الأوقات المتاحة"),
-          SizedBox(height: 15),
-          Container(
-            padding: EdgeInsets.all(15),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: const Color(0xFFF0F0F0)),
-            ),
-            child: Column(
-              children: availability.entries.map((entry) {
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        entry.key,
-                        style: context.boldText.copyWith(fontSize: 14),
-                      ),
-                      Text(
-                        entry.value.join(" - "),
-                        style: context.mediumText.copyWith(
-                          fontSize: 14,
-                          color: context.primaryColor,
+          InfoSectionTitle(title: LocaleKeys.available_times.tr()),
+          const SizedBox(height: 16),
+          Column(
+            children: availability.entries.map((entry) {
+              final isLast = entry.key == availability.entries.last.key;
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          entry.key,
+                          style: context.boldText.copyWith(
+                            fontSize: 15,
+                            color: const Color(0xFF355C7D),
+                          ),
                         ),
-                      ),
-                    ],
+                        Text(
+                          entry.value.join(" - "),
+                          style: context.boldText.copyWith(
+                            fontSize: 15,
+                            color: const Color(0xFF666666),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                );
-              }).toList(),
-            ),
+                  if (!isLast) const Divider(color: Color(0xFFF0F0F0), height: 1),
+                ],
+              );
+            }).toList(),
           ),
         ],
       ),
     );
   }
 }
+

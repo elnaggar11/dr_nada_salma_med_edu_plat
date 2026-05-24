@@ -28,6 +28,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController whatsappController = TextEditingController();
   final TextEditingController alternativeController = TextEditingController();
   final TextEditingController bioController = TextEditingController();
+  
+  // Teacher controllers
+  final TextEditingController shortBioController = TextEditingController();
 
   int? selectedSpecialtyId;
   int? selectedDegreeId;
@@ -55,7 +58,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       whatsappController.text = ""; // Need WhatsApp from API if available
       alternativeController.text =
           data?.countryCode?.toString() ?? ""; // Placeholder or check API
-      bioController.text = ""; // Need Bio from API if available
+      bioController.text = data?.shortBio?.toString() ?? ""; // Need Bio from API if available
+      
+      shortBioController.text = data?.shortBio?.toString() ?? "";
+      
+      if (data?.specializationTitle != null) {
+        selectedSpecialty = data?.specializationTitle?.toString();
+      }
     }
     super.initState();
   }
@@ -254,7 +263,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                     CustomTextField(
                       controller: fullNameController,
-                      labelColor: black,
+                      labelColor: primary,
                       obscure: false,
                       validation: (val) =>
                           val!.isEmpty ? tr("this_field_required") : null,
@@ -266,7 +275,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                     CustomTextField(
                       controller: phoneNumberController,
-                      labelColor: black,
+                      labelColor: primary,
                       obscure: false,
                       validation: (val) =>
                           val!.isEmpty ? tr("this_field_required") : null,
@@ -278,7 +287,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                     CustomTextField(
                       controller: mailController,
-                      labelColor: black,
+                      labelColor: primary,
                       obscure: false,
                       validation: (val) =>
                           val!.isEmpty ? tr("this_field_required") : null,
@@ -291,7 +300,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       SizedBox(height: 16),
                       CustomTextField(
                         controller: whatsappController,
-                        labelColor: black,
+                        labelColor: primary,
                         obscure: false,
                         validation: (val) =>
                             val!.isEmpty ? tr("this_field_required") : null,
@@ -325,7 +334,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     children: [
                       CustomTextField(
                         controller: alternativeController,
-                        labelColor: black,
+                        labelColor: primary,
                         obscure: false,
                         labelTxt: tr("alternative_contact"),
                         hintText: "01112345678",
@@ -335,7 +344,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         builder: (context, state) {
                           return CustomTextField(
                             controller: passwordController,
-                            labelColor: black,
+                            labelColor: primary,
                             obscure: context.read<ProfileCubit>().visibility,
                             suffixIcon: InkWell(
                               onTap: () =>
@@ -423,9 +432,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       ),
                       SizedBox(height: 16),
                       _buildTextArea(
-                        controller: bioController,
-                        label: tr("about_you"),
+                        controller: shortBioController,
+                        label: tr("short_bio"),
                         isRequired: true,
+                        hint: tr("short_bio_hint"),
                       ),
                     ],
                   ),
@@ -449,6 +459,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               email: mailController.text,
                               password: passwordController.text,
                               img: context.read<ProfileCubit>().img,
+                              shortBio: Const.isTeacher ? shortBioController.text : null,
+                              specializationTitle: Const.isTeacher ? selectedSpecialty : null,
                             ),
                           );
                         }
@@ -630,6 +642,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     required TextEditingController controller,
     required String label,
     bool isRequired = false,
+    String? hint,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -639,7 +652,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             children: [
               TextSpan(
                 text: label,
-                style: TextStyles.textStyleBold13.copyWith(color: black),
+                style: TextStyles.textStyleBold13.copyWith(color: primary),
               ),
               if (isRequired)
                 TextSpan(
@@ -654,7 +667,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           controller: controller,
           maxLines: 4,
           decoration: InputDecoration(
-            hintText: tr("bio_hint_text"),
+            hintText: hint ?? tr("bio_hint_text"),
             hintStyle: TextStyles.textStyleNormal12.copyWith(color: grey2),
             filled: true,
             fillColor: white,
