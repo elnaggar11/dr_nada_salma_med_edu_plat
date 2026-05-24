@@ -4,6 +4,7 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/screens.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/errors/failure.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/const.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/login/login_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/login/login_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/usecases/login_use_case.dart';
@@ -80,6 +81,9 @@ class LoginCubit extends Cubit<LoginState> {
           );
           navKey.currentContext?.pushReplacementNamed(name: bottomBarSc);
           await sharedPreferences.setBool("saveUser", true);
+          await sharedPreferences.setBool("isTeacher", params.isTeacher);
+          Const.isTeacher = params.isTeacher;
+
           emit(LoginSuccessState(loginResponse: user));
         },
       );

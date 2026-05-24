@@ -13,6 +13,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/const.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -48,7 +49,6 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 SizedBox(height: context.height / 16),
                 Container(
-<<<<<<< HEAD
                   alignment: Alignment.center,
                   child: customSvg(
                     name: logo,
@@ -57,24 +57,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 SizedBox(height: context.height / 80),
-=======
-                  alignment: Alignment.center,
-                  child: customSvg(
-                    name: logo,
-                    width: context.width / 2.4,
-                    height: context.width / 2.4,
-                  ),
-                ),
-                SizedBox(height: context.height / 80),
-                /*  Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(23),
-                  decoration: BoxDecoration(
-                    color: orangeBold,
-                    shape: BoxShape.circle,),
-                  child: customSvg(name: user,color: white),),
-                SizedBox(height: context.height/25,),*/
->>>>>>> 25308fc87a2b1cb6c15d8db7da4ba6113add6532
                 Text(
                   tr("login_account"),
                   style: TextStyles.textStyleExtraBold24.copyWith(
@@ -229,6 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 email: mailController.text,
                                 password: passController.text,
                                 fcmToken: context.read<LoginCubit>().fcmToken,
+                                isTeacher: Const.isTeacher,
                               ),
                             );
                           }
@@ -241,7 +224,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
 
-<<<<<<< HEAD
                 SizedBox(height: context.height / 60),
 
                 Container(
@@ -258,9 +240,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     btnTitle: tr("join_as_teacher"),
                   ),
                 ),
-
-=======
->>>>>>> 25308fc87a2b1cb6c15d8db7da4ba6113add6532
                 SizedBox(height: context.height / 30),
 
                 Row(

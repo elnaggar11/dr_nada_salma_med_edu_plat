@@ -5,11 +5,13 @@ import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/usecases/cate
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/usecases/courses_status_use_case.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/categories/categories_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/courses_status_cubit/courses_status_cubit.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/teacher_detail/teacher_detail_cubit.dart';
 import 'package:get_it/get_it.dart';
 
 Future<void> coursesInj(GetIt s) async {
   s.registerFactory(() => CategoriesCubit(s()));
   s.registerFactory(() => CoursesStatusCubit(s()));
+  s.registerFactory(() => TeacherDetailCubit(s()));
   s.registerLazySingleton(() => CategoriesUseCase(s()));
   s.registerLazySingleton(() => CoursesStatusUseCase(s()));
   s.registerLazySingleton<CoursesRemoteDataSource>(

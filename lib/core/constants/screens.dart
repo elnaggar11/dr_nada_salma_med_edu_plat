@@ -34,7 +34,7 @@ const String notificationsSc = "notificationSc";
 const String aboutUsSc = "aboutUsSc";
 const String termsAndConditions = "termsConditionsSc";
 const String emptyPrivateLessons = "emptyPrivateLessonsSc";
-<<<<<<< HEAD
 const String teacherRegistrationSc = "teacherRegistrationSc";
-=======
->>>>>>> 25308fc87a2b1cb6c15d8db7da4ba6113add6532
+const String appointmentsSc = "appointmentsSc";
+const String teachersListSc = "teachersListSc";
+const String teacherDetailSc = "teacherDetailSc";

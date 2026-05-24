@@ -21,6 +21,7 @@ import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/verify/
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/teacher_registration/subject_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/teacher_registration/teacher_application_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/teacher_registration/teacher_application_response.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/const.dart';
 
 const registerApi = "/auth/register";
 const specialistsApi = "/auth/specialties";
@@ -28,6 +29,7 @@ const academicDegreeApi = "/auth/academic-degrees";
 const academicInfoApi = "/auth/academic-info";
 const verifyApi = "/auth/verify-otp";
 const loginApi = "/auth/login";
+const teacherLoginApi = "/auth/teacher-login";
 const resetPasswordApi = "/auth/reset-password";
 const resendOtpApi = "/auth/resend-otp";
 const forgotPasswordApi = "/auth/forget-password";
@@ -44,20 +46,17 @@ abstract class AuthRemoteDataSource {
     AcademicInfoParams? academicInfoParams,
   });
   Future<VerifyOtpResponse> verifyOtp({VerifyOtpParams params});
-  Future<LoginResponse> login({LoginParams params});
+  Future<LoginResponse> login({LoginParams? params});
   Future<ResetPasswordResponse> resetPass({ResetPasswordParams params});
   Future<ResendOtpResponse> resendOtp({ResendOtpParams params});
   Future<ForgotPasswordResponse> forgotPass({ForgotPasswordParams params});
   Future<CheckOtpResponse> checkOtp({CheckOtpParams params});
-<<<<<<< HEAD
 
   Future<SpecialistResponse> getSpecialties();
   Future<SubjectResponse> getSubjects();
   Future<TeacherApplicationResponse> submitTeacherApplication({
     TeacherApplicationParams? params,
   });
-=======
->>>>>>> 25308fc87a2b1cb6c15d8db7da4ba6113add6532
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -152,7 +151,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<LoginResponse> login({LoginParams? params}) async {
     try {
-      final response = await helper.post(url: loginApi, body: params!.toMap());
+      final response = await helper.post(
+        url: Const.isTeacher == true ? teacherLoginApi : loginApi,
+        body: params!.toMap(),
+      );
       return LoginResponse.fromJson(response);
     } on ServerException catch (e) {
       throw ServerException(message: e.message);
@@ -240,7 +242,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ForbiddenException(message: e.message);
     }
   }
-<<<<<<< HEAD
 
   @override
   Future<SpecialistResponse> getSpecialties() async {
@@ -294,6 +295,4 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ForbiddenException(message: e.message);
     }
   }
-=======
->>>>>>> 25308fc87a2b1cb6c15d8db7da4ba6113add6532
 }

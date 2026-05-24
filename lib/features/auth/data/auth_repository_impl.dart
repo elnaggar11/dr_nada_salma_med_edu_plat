@@ -193,7 +193,6 @@ class AuthRepositoryImpl implements AuthRepositories {
       return left(ServerFailure(message: e.message));
     }
   }
-<<<<<<< HEAD
 
   @override
   Future<Either<Failure, SpecialistResponse>> getSpecialties() async {
@@ -224,9 +223,13 @@ class AuthRepositoryImpl implements AuthRepositories {
   }
 
   @override
-  Future<Either<Failure, TeacherApplicationResponse>> submitTeacherApplication({TeacherApplicationParams? params}) async {
+  Future<Either<Failure, TeacherApplicationResponse>> submitTeacherApplication({
+    TeacherApplicationParams? params,
+  }) async {
     try {
-      final response = await authRemoteDataSource.submitTeacherApplication(params: params);
+      final response = await authRemoteDataSource.submitTeacherApplication(
+        params: params,
+      );
       return Right(response);
     } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));
@@ -237,6 +240,3 @@ class AuthRepositoryImpl implements AuthRepositories {
     }
   }
 }
-=======
-}
->>>>>>> 25308fc87a2b1cb6c15d8db7da4ba6113add6532

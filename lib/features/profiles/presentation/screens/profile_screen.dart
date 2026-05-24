@@ -99,17 +99,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     SizedBox(width: context.width / 20),
                                     ClipOval(
                                       child: NetWorkImageHandler(
-                                        image:
-                                            context
-                                                    .read<ProfileCubit>()
-                                                    .profileResponse ==
-                                                null
-                                            ? ""
-                                            : context
-                                                  .read<ProfileCubit>()
-                                                  .profileResponse!
-                                                  .data!
-                                                  .image!,
+                                        image: context
+                                                .read<ProfileCubit>()
+                                                .profileResponse
+                                                ?.data
+                                                ?.image ??
+                                            "",
                                         width: context.width / 6.5,
                                         height: context.width / 6.5,
                                       ),
@@ -123,15 +118,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       children: [
                                         Text(
                                           context
-                                                      .read<ProfileCubit>()
-                                                      .profileResponse ==
-                                                  null
-                                              ? ""
-                                              : context
-                                                    .read<ProfileCubit>()
-                                                    .profileResponse!
-                                                    .data!
-                                                    .fullName!,
+                                                  .read<ProfileCubit>()
+                                                  .profileResponse
+                                                  ?.data
+                                                  ?.fullName ??
+                                              "",
                                           style: TextStyles.textStyleBold12
                                               .copyWith(
                                                 fontWeight: FontWeight.w800,
@@ -141,12 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                         SizedBox(height: context.height / 80),
                                         Text(
-                                          context
-                                                      .read<ProfileCubit>()
-                                                      .profileResponse ==
-                                                  null
-                                              ? ""
-                                              : "${context.read<ProfileCubit>().profileResponse!.data!.phoneNumber ?? ""}",
+                                          "${context.read<ProfileCubit>().profileResponse?.data?.phoneNumber ?? ""}",
                                           style: TextStyles.textStyleBold12
                                               .copyWith(
                                                 fontWeight: FontWeight.w500,
@@ -269,6 +255,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     SizedBox(height: context.height / 30),
                     InkWell(
                       onTap: () {
+                        context.pushNamed(name: appointmentsSc);
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(width: context.width / 15),
+                          Container(
+                            alignment: Alignment.center,
+                            child: customSvg(
+                              name: privateMenu,
+                              width: context.width / 20,
+                              height: context.width / 20,
+                            ),
+                          ),
+                          SizedBox(width: context.width / 30),
+                          Text(
+                            tr("my_schedule"),
+                            style: TextStyles.textStyleBold12.copyWith(
+                              color: primary,
+                            ),
+                            textScaler: TextScaler.linear(1),
+                          ),
+                          Spacer(),
+                          context.locale.languageCode == "ar"
+                              ? Transform.rotate(
+                                  angle: 180 * math.pi / 180,
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    child: customSvg(
+                                      name: forward1,
+                                      width: context.width / 24,
+                                      height: context.width / 24,
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  alignment: Alignment.center,
+                                  child: customSvg(
+                                    name: forward1,
+                                    width: context.width / 24,
+                                    height: context.width / 24,
+                                  ),
+                                ),
+                          SizedBox(width: context.width / 12),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: context.height / 30),
+
+                    InkWell(
+                      onTap: () {
                         context.pushNamed(
                           name: privateLessons,
                           args: "lessons",
@@ -287,6 +325,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: context.width / 22,
                             ),
                           ),
+
                           SizedBox(width: context.width / 30),
                           Text(
                             tr("my_private_lessons"),

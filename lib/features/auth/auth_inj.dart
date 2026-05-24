@@ -28,43 +28,6 @@ import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/usecases/submit_
 import 'package:dr_nada_salma_med_edu_plat/features/auth/presentation/cubit/teacher_registration/teacher_registration_cubit.dart';
 import 'package:get_it/get_it.dart';
 
-<<<<<<< HEAD
-Future<void>authInj(GetIt s)async{
-  s.registerFactory(()=> RegisterCubit(s()));
-  s.registerFactory(()=> SpecialistsCubit(s()));
-  s.registerFactory(()=>AcademicDegreeCubit(s()));
-  s.registerFactory(()=>AcademicInfoCubit(s()));
-  s.registerFactory(()=> VerifyCubit(s()));
-  s.registerFactory(()=> LoginCubit(s()));
-  s.registerFactory(()=>ResetPassCubit(s()));
-  s.registerFactory(()=> ForgotPasswordCubit(s()));
-  s.registerFactory(()=> ResendOtpCubit(s()));
-  s.registerFactory(()=> CheckOtpCubit(s()));
-  s.registerFactory(()=> TeacherRegistrationCubit(
-    getSpecialtiesUseCase: s(),
-    getSubjectsUseCase: s(),
-    submitTeacherApplicationUseCase: s(),
-  ));
-
-  s.registerLazySingleton<AuthRemoteDataSource>(()=> AuthRemoteDataSourceImpl(s()));
-  s.registerLazySingleton<AuthRepositories>(()=> AuthRepositoryImpl(s(),s()));
-  s.registerLazySingleton<AuthLocalDataSource>(()=>AuthLocalDataSourceImpl(s()));
-  s.registerLazySingleton(()=> RegisterUseCase(s()));
-  s.registerLazySingleton(()=>SpecialistUseCase(s()));
-  s.registerLazySingleton(()=>AcademicDegreeUseCase(s()));
-  s.registerLazySingleton(()=> AcademicInfoUseCase(s()));
-  s.registerLazySingleton(()=> VerifyOtpUseCase(s()));
-  s.registerLazySingleton(()=> LoginUseCase(s()));
-  s.registerLazySingleton(()=> ResetPasswordUseCase(s()));
-  s.registerLazySingleton(()=> ResendOtpUseCase(s()));
-  s.registerLazySingleton(()=> ForgotPasswordUseCase(s()));
-  s.registerLazySingleton(()=> CheckOtpUseCase(s()));
-  s.registerLazySingleton(()=> GetSpecialtiesUseCase(s()));
-  s.registerLazySingleton(()=> GetSubjectsUseCase(s()));
-  s.registerLazySingleton(()=> SubmitTeacherApplicationUseCase(s()));
-
-}
-=======
 Future<void> authInj(GetIt s) async {
   s.registerFactory(() => RegisterCubit(s()));
   s.registerFactory(() => SpecialistsCubit(s()));
@@ -76,6 +39,13 @@ Future<void> authInj(GetIt s) async {
   s.registerFactory(() => ForgotPasswordCubit(s()));
   s.registerFactory(() => ResendOtpCubit(s()));
   s.registerFactory(() => CheckOtpCubit(s()));
+  s.registerFactory(
+    () => TeacherRegistrationCubit(
+      getSpecialtiesUseCase: s(),
+      getSubjectsUseCase: s(),
+      submitTeacherApplicationUseCase: s(),
+    ),
+  );
 
   s.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(s()),
@@ -94,5 +64,7 @@ Future<void> authInj(GetIt s) async {
   s.registerLazySingleton(() => ResendOtpUseCase(s()));
   s.registerLazySingleton(() => ForgotPasswordUseCase(s()));
   s.registerLazySingleton(() => CheckOtpUseCase(s()));
+  s.registerLazySingleton(() => GetSpecialtiesUseCase(s()));
+  s.registerLazySingleton(() => GetSubjectsUseCase(s()));
+  s.registerLazySingleton(() => SubmitTeacherApplicationUseCase(s()));
 }
->>>>>>> 25308fc87a2b1cb6c15d8db7da4ba6113add6532

@@ -9,4 +9,7 @@ abstract class CoursesRepositories {
   Future<Either<Failure, CoursesStatusResponse>> getCoursesStatus({
     CoursesStatusParams? params,
   });
+  Future<Either<Failure, Map<String, dynamic>>> getTeacherDetail({
+    required String slug,
+  });
 }

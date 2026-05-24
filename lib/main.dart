@@ -59,7 +59,7 @@ void main() async {
   });
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true, // Required to display a heads up notification
+    alert: true,
     badge: true,
     sound: true,
   );

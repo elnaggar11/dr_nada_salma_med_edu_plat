@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:math' as math;
 
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
@@ -8,10 +9,10 @@ import 'package:dr_nada_salma_med_edu_plat/core/widgets/fade_button.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/image_handler.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/svg_handler.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/splash/presentation/cubit/splash_cubit.dart';
-import 'package:dr_nada_salma_med_edu_plat/main.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/images.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/const.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -230,7 +231,7 @@ class SecondSplash extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "More than 1500+ clients..",
+                          tr("more_than_1500_clients"),
                           style: TextStyles.textStyleNormal10.copyWith(
                             color: primary,
                             fontWeight: FontWeight.w600,
@@ -274,19 +275,36 @@ class SecondSplash extends StatelessWidget {
               SizedBox(height: context.height / 22),
               BlocBuilder<SplashCubit, SplashState>(
                 builder: (context, state) {
-                  return FadeColorButton(
-                    onButtonPressed: () {
-                      context.read<SplashCubit>().setButtonAnimation();
-                      Future.delayed(
-                        Duration(milliseconds: 300),
-                        () => navKey.currentContext!.pushReplacementNamed(
-                          name: loginSc,
-                        ),
-                      );
-                    },
-                    buttonColor: context.read<SplashCubit>().buttonColor,
-                    isPressed: context.read<SplashCubit>().isPressed!,
-                    btnTitle: tr("get_started"),
+                  return Column(
+                    children: [
+                      FadeColorButton(
+                        onButtonPressed: () {
+                          Const.isTeacher = true;
+                          context.read<SplashCubit>().setButtonAnimation();
+                          Future.delayed(Duration(milliseconds: 300), () {
+                            context.pushNamed(name: loginSc);
+                            log(Const.isTeacher.toString());
+                          });
+                        },
+                        buttonColor: context.read<SplashCubit>().buttonColor,
+                        isPressed: context.read<SplashCubit>().isPressed!,
+                        btnTitle: tr("login_as_teacher"),
+                      ),
+                      SizedBox(height: context.height / 50),
+                      FadeColorButton(
+                        onButtonPressed: () {
+                          Const.isTeacher = false;
+                          context.read<SplashCubit>().setButtonAnimation();
+                          Future.delayed(Duration(milliseconds: 300), () {
+                            context.pushNamed(name: loginSc);
+                            log(Const.isTeacher.toString());
+                          });
+                        },
+                        buttonColor: context.read<SplashCubit>().buttonColor,
+                        isPressed: context.read<SplashCubit>().isPressed!,
+                        btnTitle: tr("login_as_student"),
+                      ),
+                    ],
                   );
                 },
               ),

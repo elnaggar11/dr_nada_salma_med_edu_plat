@@ -1,4 +1,5 @@
 import 'package:dr_nada_salma_med_edu_plat/core/constants/screens.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/screens/teachers_list_screen.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/academic_info/academic_info_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/check/check_otp_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/verify/verify_otp_params.dart';
@@ -29,6 +30,8 @@ import 'package:dr_nada_salma_med_edu_plat/features/bottom_bar/presentation/scre
 import 'package:dr_nada_salma_med_edu_plat/features/certificates/presentation/screen/certificate_screen.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/categories/categories_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/courses_status_cubit/courses_status_cubit.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/teacher_detail/teacher_detail_cubit.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/screens/teacher_detail_view.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/my_courses.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/private_lessons_screen.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/favourite/presentation/cubit/favourite_cubit.dart';
@@ -68,6 +71,8 @@ import 'package:dr_nada_salma_med_edu_plat/features/splash/presentation/screens/
 import 'package:dr_nada_salma_med_edu_plat/injection_container/injection_container.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/presentation/cubit/teacher_registration/teacher_registration_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/presentation/screens/teacher_registration/teacher_registration_screen.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/appointments/presentation/cubit/appointments_cubit.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/appointments/presentation/screens/appointments_view.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -80,11 +85,10 @@ class AppRoutes {
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider(
-                create: (_) => sl<TeacherRegistrationCubit>()..loadInitialData(),
+                create: (_) =>
+                    sl<TeacherRegistrationCubit>()..loadInitialData(),
               ),
-              BlocProvider(
-                create: (_) => sl<BottomBarCubit>(),
-              ),
+              BlocProvider(create: (_) => sl<BottomBarCubit>()),
             ],
             child: const TeacherRegistrationScreen(),
           ),
@@ -418,11 +422,36 @@ class AppRoutes {
           ),
           settings: settings,
         );
+      case appointmentsSc:
+        return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (context) => sl<AppointmentsCubit>()),
+              BlocProvider(create: (context) => sl<BottomBarCubit>()),
+            ],
+            child: const AppointmentsView(),
+          ),
+          settings: settings,
+        );
       case emptyPrivateLessons:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(
             create: (context) => sl<BottomBarCubit>(),
             child: EmptyPrivateLessonsWidget(),
+          ),
+          settings: settings,
+        );
+      case teachersListSc:
+        return MaterialPageRoute(
+          builder: (_) =>
+              TeachersListScreen(categoryName: settings.arguments as String),
+          settings: settings,
+        );
+      case teacherDetailSc:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => sl<TeacherDetailCubit>(),
+            child: TeacherDetailView(slug: settings.arguments as String),
           ),
           settings: settings,
         );

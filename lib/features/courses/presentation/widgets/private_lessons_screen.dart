@@ -4,9 +4,9 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/custom_app_bar.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/courses_status_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/courses_status_cubit/courses_status_cubit.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/comin_soon_item.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/completed_item.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/constants/screens.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/empty_private_lessons_widget.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/private_lesson_item.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/shimmer/courses/in_progress_shimmer_list.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +27,11 @@ class _PrivateLessonsScreenState extends State<PrivateLessonsScreen>
   @override
   void initState() {
     tabController = TabController(length: 2, vsync: this);
+    _fetchData();
+    super.initState();
+  }
+
+  void _fetchData() {
     if (tabController!.index == 0) {
       context.read<CoursesStatusCubit>().getCoursesStatus(
         params: CoursesStatusParams(
@@ -42,7 +47,6 @@ class _PrivateLessonsScreenState extends State<PrivateLessonsScreen>
         ),
       );
     }
-    super.initState();
   }
 
   @override
@@ -51,15 +55,16 @@ class _PrivateLessonsScreenState extends State<PrivateLessonsScreen>
       color: white,
       child: Column(
         children: [
-          ?widget.type == "lessons"
+          (widget.type == "lessons")
               ? customAppBar(
-                  appBarInd: 0,
-                  widget: widget,
-                  title: tr("my_private_lessons"),
-                  context: context,
-                  status: false,
-                )
-              : SizedBox(),
+                      appBarInd: 0,
+                      widget: widget,
+                      title: tr("my_private_lessons"),
+                      context: context,
+                      status: false,
+                    ) ??
+                    const SizedBox()
+              : const SizedBox(),
           Container(
             margin: EdgeInsets.only(
               left: context.width / 30,
@@ -78,26 +83,12 @@ class _PrivateLessonsScreenState extends State<PrivateLessonsScreen>
                 fontWeight: FontWeight.w600,
               ),
               onTap: (int? ind) {
-                if (ind == 0) {
-                  context.read<CoursesStatusCubit>().getCoursesStatus(
-                    params: CoursesStatusParams(
-                      courseStatus: "coming_soon",
-                      coursesType: "my-private-courses/",
-                    ),
-                  );
-                } else if (ind == 1) {
-                  context.read<CoursesStatusCubit>().getCoursesStatus(
-                    params: CoursesStatusParams(
-                      courseStatus: "completed",
-                      coursesType: "my-private-courses/",
-                    ),
-                  );
-                }
+                _fetchData();
               },
-              textScaler: TextScaler.linear(1),
+              textScaler: const TextScaler.linear(1),
               indicatorColor: primary,
               tabs: [
-                Tab(text: tr("coming_soon")),
+                Tab(text: tr("lessons")),
                 Tab(text: tr("completed")),
               ],
             ),
@@ -105,168 +96,95 @@ class _PrivateLessonsScreenState extends State<PrivateLessonsScreen>
           Expanded(
             child: TabBarView(
               controller: tabController,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               children: [
+                // Coming Soon Tab
                 BlocBuilder<CoursesStatusCubit, CoursesStatusState>(
                   builder: (context, state) {
-                    return context.read<CoursesStatusCubit>().loading == true
-                        ? InProgressShimmerList()
-                        : (context
-                                      .read<CoursesStatusCubit>()
-                                      .coursesStatusResponse ==
-                                  null ||
-                              context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data!
-                                  .isEmpty)
-                        ? EmptyPrivateLessonsWidget()
+                    final cubit = context.read<CoursesStatusCubit>();
+                    final hasRealData =
+                        cubit.coursesStatusResponse?.data?.isNotEmpty ?? false;
+
+                    return cubit.loading == true
+                        ? const InProgressShimmerList()
                         : ListView.builder(
                             shrinkWrap: true,
                             padding: EdgeInsets.only(
                               top: context.height / 90,
                               bottom: 0,
                             ),
-                            itemCount: context
-                                .read<CoursesStatusCubit>()
-                                .coursesStatusResponse!
-                                .data!
-                                .length,
-                            itemBuilder: (context, index) => ComingSoonItem(
-                              title: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .title!,
-                              img: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .image!,
-                              progress: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .progress
-                                  .toString(),
-                              points: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .points
-                                  .toString(),
-                              slug: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .slug,
-                              totalHours: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .totalHours
-                                  .toString(),
-                              categoryName: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .categoryName
-                                  .toString(),
-                              lectureNum: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .lecturesCount
-                                  .toString(),
-                              sectionNum: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .contentsCount
-                                  .toString(),
-                            ),
+                            // Show 1 mock item if no real data is found (for design verification)
+                            itemCount: hasRealData
+                                ? cubit.coursesStatusResponse!.data!.length
+                                : 1,
+                            itemBuilder: (context, index) {
+                              if (!hasRealData) {
+                                return PrivateLessonItem(
+                                  title: "كورس المهارات الجراحية المتقدمة",
+                                  description:
+                                      "هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها التطبيق.",
+                                  image: "https://via.placeholder.com/400x200",
+                                  tags: ["جراحة", "طوارئ", "عناية مركزة"],
+                                  onDetailsPressed: () {
+                                    context.pushNamed(
+                                      name: teachersListSc,
+                                      args: "جراحة",
+                                    );
+                                  },
+                                );
+                              }
+                              final data =
+                                  cubit.coursesStatusResponse!.data![index];
+                              return PrivateLessonItem(
+                                title: data.title ?? "",
+                                description: data.semiDescription ?? "",
+                                image: data.image ?? "",
+                                tags: [data.categoryName ?? tr("medicine")],
+                                onDetailsPressed: () {
+                                  context.pushNamed(
+                                    name: teachersListSc,
+                                    args: data.categoryName ?? tr("medicine"),
+                                  );
+                                },
+                              );
+                            },
                           );
                   },
                 ),
 
+                // Completed Tab
                 BlocBuilder<CoursesStatusCubit, CoursesStatusState>(
                   builder: (context, state) {
-                    return context.read<CoursesStatusCubit>().loading == true
-                        ? InProgressShimmerList()
-                        : (context
-                                      .read<CoursesStatusCubit>()
-                                      .coursesStatusResponse ==
-                                  null ||
-                              context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data!
-                                  .isEmpty)
-                        ? EmptyPrivateLessonsWidget()
+                    final cubit = context.read<CoursesStatusCubit>();
+                    return cubit.loading == true
+                        ? const InProgressShimmerList()
+                        : (cubit.coursesStatusResponse?.data == null ||
+                              cubit.coursesStatusResponse!.data!.isEmpty)
+                        ? const EmptyPrivateLessonsWidget()
                         : ListView.builder(
                             shrinkWrap: true,
                             padding: EdgeInsets.only(
                               top: context.height / 90,
                               bottom: 0,
                             ),
-                            itemCount: context
-                                .read<CoursesStatusCubit>()
-                                .coursesStatusResponse!
-                                .data!
-                                .length,
-                            itemBuilder: (context, index) => CompletedItem(
-                              title: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .title!,
-                              img: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .image!,
-                              progress: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .progress
-                                  .toString(),
-                              points: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .points
-                                  .toString(),
-                              slug: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .slug,
-                              totalHours: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .totalHours
-                                  .toString(),
-                              categoryName: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .categoryName
-                                  .toString(),
-                              lectureNum: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .lecturesCount
-                                  .toString(),
-                              sectionNum: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .contentsCount
-                                  .toString(),
-                            ),
+                            itemCount:
+                                cubit.coursesStatusResponse!.data!.length,
+                            itemBuilder: (context, index) {
+                              final data =
+                                  cubit.coursesStatusResponse!.data![index];
+                              return PrivateLessonItem(
+                                title: data.title ?? "",
+                                description: data.semiDescription ?? "",
+                                image: data.image ?? "",
+                                tags: [data.categoryName ?? tr("medicine")],
+                                onDetailsPressed: () {
+                                  context.pushNamed(
+                                    name: teachersListSc,
+                                    args: data.categoryName ?? tr("medicine"),
+                                  );
+                                },
+                              );
+                            },
                           );
                   },
                 ),

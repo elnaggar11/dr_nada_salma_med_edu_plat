@@ -203,7 +203,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     initialCountryCode: 'SA',
                     onChanged: (phone) {
-                      phoneNum = phone.completeNumber;
+                      phoneNum = phone.number;
                       countryCode = phone.countryCode;
                       countrySymbol = phone.countryISOCode;
                     },

@@ -27,28 +27,33 @@ AppBar? customAppBar({
     automaticallyImplyLeading: false,
     leadingWidth: navKey.currentContext!.width / 1.5,
 
-    leading: BlocBuilder<BottomBarCubit, BottomBarState>(
-      builder: (context, state) {
+    leading: Builder(
+      builder: (context) {
         return InkWell(
           splashColor: Colors.transparent,
           hoverColor: Colors.transparent,
           highlightColor: Colors.transparent,
           onTap: () {
-            if (appBarInd == 0) {
-              context.pop();
-              context.read<BottomBarCubit>().updateBottomBarVisibility(
-                visible: true,
-              );
-            } else {
-              context.read<BottomBarCubit>().changeNavBarStatus(ind: 0);
-            }
-            if (index == 0) {
-              context.pop();
-              context.read<BottomBarCubit>().updateBottomBarVisibility(
-                visible: false,
-              );
-            }
-            if (appBarInd == -1) {
+            try {
+              final bottomBarCubit = context.read<BottomBarCubit>();
+              if (appBarInd == 0) {
+                context.pop();
+                bottomBarCubit.updateBottomBarVisibility(
+                  visible: true,
+                );
+              } else {
+                bottomBarCubit.changeNavBarStatus(ind: 0);
+              }
+              if (index == 0) {
+                context.pop();
+                bottomBarCubit.updateBottomBarVisibility(
+                  visible: false,
+                );
+              }
+              if (appBarInd == -1) {
+                context.pop();
+              }
+            } catch (_) {
               context.pop();
             }
           },
