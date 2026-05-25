@@ -27,4 +27,5 @@ abstract class LocaleKeys {
   static const get_started = 'get_started';
   static const login_as_teacher = 'login_as_teacher';
   static const login_as_student = 'login_as_student';
+  static const view_details = 'view_details';
 }

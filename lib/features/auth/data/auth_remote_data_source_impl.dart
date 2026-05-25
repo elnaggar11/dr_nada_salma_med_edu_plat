@@ -34,9 +34,9 @@ const resetPasswordApi = "/auth/reset-password";
 const resendOtpApi = "/auth/resend-otp";
 const forgotPasswordApi = "/auth/forget-password";
 const checkOtpApi = "/auth/check-code";
-const specialtiesListApi = "/api/specialties";
-const subjectsListApi = "/api/subjects";
-const teacherApplicationApi = "/api/teacher-applications";
+const specialtiesListApi = "/specialties";
+const subjectsListApi = "/subjects";
+const teacherApplicationApi = "/teacher-applications";
 
 abstract class AuthRemoteDataSource {
   Future<RegisterResponse> register({RegisterParams? params});

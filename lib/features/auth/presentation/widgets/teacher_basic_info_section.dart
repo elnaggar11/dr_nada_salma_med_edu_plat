@@ -134,7 +134,7 @@ class _SpecialtySelector extends StatelessWidget {
                                 )
                                 .name ??
                             ""
-                      : tr("choose_subjects"),
+                      : tr("choose_specialty"),
                   style: TextStyles.textStyleNormal12
                       .copyWith(
                         color:

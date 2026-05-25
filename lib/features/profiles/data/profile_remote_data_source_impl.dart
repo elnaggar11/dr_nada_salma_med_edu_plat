@@ -26,6 +26,7 @@ const updateProfileApi = "/profile/update";
 const updateTeacherProfileApi = "/teacher/update-profile";
 const settingsApi = "/settings";
 const logOutApi = "/logout";
+const teacherLogOutApi = "/teacher/logout";
 const deleteAccountApi = "/delete-account";
 
 abstract class ProfileRemoteDataSource {
@@ -214,7 +215,8 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<LogOutResponse> logOut() async {
     try {
-      final response = await helper.post(url: logOutApi, body: {});
+      final url = Const.isTeacher ? teacherLogOutApi : logOutApi;
+      final response = await helper.post(url: url, body: {});
 
       return LogOutResponse.fromJson(response);
     } on ServerException catch (e) {
@@ -229,7 +231,8 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<DeleteAccountResponse> deleteAccount() async {
     try {
-      final response = await helper.delete(url: deleteAccountApi);
+      final url = Const.isTeacher ? "/teacher/delete-account" : deleteAccountApi;
+      final response = await helper.delete(url: url);
 
       return DeleteAccountResponse.fromJson(response);
     } on ServerException catch (e) {
