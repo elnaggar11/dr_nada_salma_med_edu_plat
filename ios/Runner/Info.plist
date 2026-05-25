@@ -66,5 +66,29 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>نحتاج للوصول إلى مكتبة الصور لتعديل صورتك الشخصية في الملف الشخصي. / We need access to your photo library to update your profile picture.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>نحتاج للوصول إلى الكاميرا لالتقاط صورة شخصية وتحديث حسابك. / We need access to your camera to take a profile photo.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>نحتاج للوصول إلى الميكروفون لتسجيل الصوت عند الحاجة. / We need access to your microphone if needed.</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>ar</string>
+		<string>en</string>
+	</array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>whatsapp</string>
+		<string>mailto</string>
+		<string>https</string>
+		<string>http</string>
+		<string>tel</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
 </dict>
 </plist>
