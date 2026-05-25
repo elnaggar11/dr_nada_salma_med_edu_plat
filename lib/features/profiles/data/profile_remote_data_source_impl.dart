@@ -28,6 +28,7 @@ const settingsApi = "/settings";
 const logOutApi = "/logout";
 const teacherLogOutApi = "/teacher/logout";
 const deleteAccountApi = "/delete-account";
+const teacherDeleteAccountApi = "/teacher/delete-account";
 
 abstract class ProfileRemoteDataSource {
   Future<ProfileResponse> getProfile();
@@ -231,7 +232,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   @override
   Future<DeleteAccountResponse> deleteAccount() async {
     try {
-      final url = Const.isTeacher ? "/teacher/delete-account" : deleteAccountApi;
+      final url = Const.isTeacher ? teacherDeleteAccountApi : deleteAccountApi;
       final response = await helper.delete(url: url);
 
       return DeleteAccountResponse.fromJson(response);
