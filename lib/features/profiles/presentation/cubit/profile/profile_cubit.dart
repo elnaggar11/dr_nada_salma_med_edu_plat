@@ -7,6 +7,7 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/screens.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/errors/failure.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/usecase/usecase.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/const.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/profiles/domain/entities/delete_account_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/profiles/domain/entities/log_out_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/profiles/domain/entities/profile_response.dart';

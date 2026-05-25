@@ -3,12 +3,12 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/fonts.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/custom_app_bar.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/appointments/model/time_slot.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/appointments/presentation/cubit/appointments_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/appointments/presentation/cubit/appointments_state.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 class AppointmentsView extends StatefulWidget {
   const AppointmentsView({super.key});
@@ -47,6 +47,8 @@ class _AppointmentsViewState extends State<AppointmentsView> {
       }
       _isUpdating = false;
     });
+
+    context.read<AppointmentsCubit>().fetchTimeSlots();
   }
 
   @override
@@ -56,10 +58,121 @@ class _AppointmentsViewState extends State<AppointmentsView> {
     super.dispose();
   }
 
+  TimeSlot? _findMatchingSlot(AppointmentsState state, DateTime cellDate, int hour) {
+    for (var slot in state.timeSlots) {
+      final localDate = slot.date.toLocal();
+      if (localDate.year == cellDate.year &&
+          localDate.month == cellDate.month &&
+          localDate.day == cellDate.day &&
+          int.parse(slot.startTime.split(':')[0]) == hour) {
+        return slot;
+      }
+    }
+    return null;
+  }
+
+  void _showEditSlotDialog(BuildContext context, TimeSlot slot) {
+    final cubit = context.read<AppointmentsCubit>();
+    String selectedStart = slot.startTime.substring(0, 5);
+    String selectedEnd = slot.endTime.substring(0, 5);
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              title: Text(
+                tr("edit_availability"),
+                style: TextStyles.textStyleBold16.copyWith(color: primary),
+                textAlign: TextAlign.center,
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(tr("from_hour"), style: TextStyles.textStyleBold13.copyWith(color: black)),
+                      DropdownButton<String>(
+                        dropdownColor: white,
+                        value: selectedStart,
+                        items: List.generate(13, (index) => 8 + index).map((h) {
+                          final label = "${h.toString().padLeft(2, '0')}:00";
+                          return DropdownMenuItem(value: label, child: Text(label, style: const TextStyle(fontFamily: poppins)));
+                        }).toList(),
+                        onChanged: (val) {
+                          if (val != null) {
+                            setState(() {
+                              selectedStart = val;
+                              int h = int.parse(val.split(':')[0]);
+                              selectedEnd = "${(h + 1).toString().padLeft(2, '0')}:00";
+                            });
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(tr("to_hour"), style: TextStyles.textStyleBold13.copyWith(color: black)),
+                      DropdownButton<String>(
+                        dropdownColor: white,
+                        value: selectedEnd,
+                        items: List.generate(13, (index) => 9 + index).map((h) {
+                          final label = "${h.toString().padLeft(2, '0')}:00";
+                          return DropdownMenuItem(value: label, child: Text(label, style: const TextStyle(fontFamily: poppins)));
+                        }).toList(),
+                        onChanged: (val) {
+                          if (val != null) {
+                            setState(() {
+                              selectedEnd = val;
+                            });
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(tr("no"), style: const TextStyle(color: grey2)),
+                ),
+                MaterialButton(
+                  color: primary,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    final formattedDate = DateFormat('yyyy-MM-dd').format(slot.date);
+                    cubit.updateTimeSlot(
+                      id: slot.id,
+                      date: formattedDate,
+                      startTime: "$selectedStart:00",
+                      endTime: "$selectedEnd:00",
+                    );
+                  },
+                  child: Text(tr("save"), style: const TextStyle(color: white)),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final double columnWidth = context.width / 3.5;
-    final double timeLabelWidth = context.width / 6;
+    final double columnWidth = context.width / 3.2;
+    final double timeLabelWidth = context.width / 6.5;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -79,12 +192,14 @@ class _AppointmentsViewState extends State<AppointmentsView> {
             children: [
               _buildStickyHeader(context, state, timeLabelWidth, columnWidth),
               Expanded(
-                child: _buildScrollableArea(
-                  context,
-                  state,
-                  timeLabelWidth,
-                  columnWidth,
-                ),
+                child: state.state == RequestState.loading
+                    ? const Center(child: CircularProgressIndicator())
+                    : _buildScrollableArea(
+                        context,
+                        state,
+                        timeLabelWidth,
+                        columnWidth,
+                      ),
               ),
               _buildLegend(context),
             ],
@@ -163,7 +278,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
             DateFormat('MMM d').format(date),
             style: TextStyles.textStyleBold12.copyWith(
               color: grey1,
-              fontSize: 8,
+              fontSize: 10,
               fontFamily: poppins,
             ),
           ),
@@ -196,7 +311,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
                     width: colWidth,
                     child: Column(
                       children: times
-                          .map((hour) => _buildCell(context, dayIndex, hour))
+                          .map((hour) => _buildCell(context, state, dayIndex, hour))
                           .toList(),
                     ),
                   );
@@ -214,14 +329,14 @@ class _AppointmentsViewState extends State<AppointmentsView> {
       children: times.map((hour) {
         return Container(
           width: width,
-          height: context.height / 13,
+          height: context.height / 12.5,
           alignment: Alignment.topCenter,
           padding: EdgeInsets.only(top: context.height / 160),
           child: Text(
             "${hour.toString().padLeft(2, '0')}:00",
             style: TextStyles.textStyleBold12.copyWith(
               color: grey1,
-              fontSize: 10,
+              fontSize: 11,
               fontFamily: poppins,
             ),
           ),
@@ -230,27 +345,15 @@ class _AppointmentsViewState extends State<AppointmentsView> {
     );
   }
 
-  Widget _buildCell(BuildContext context, int dayIndex, int hour) {
+  Widget _buildCell(BuildContext context, AppointmentsState state, int dayIndex, int hour) {
     bool isHoliday = dayIndex == 6; // Friday
-    bool isReserved =
-        (dayIndex == 1 && hour == 9) ||
-        (dayIndex == 3 && hour == 14) ||
-        (dayIndex == 2 && hour == 16) ||
-        (dayIndex == 1 && hour == 16);
-
-    bool isAvailable =
-        (dayIndex == 0 && hour == 8) ||
-        (dayIndex == 4 && hour == 8) ||
-        (dayIndex == 3 && hour == 9) ||
-        (dayIndex == 2 && hour == 10) ||
-        (dayIndex == 5 && hour == 15) ||
-        (dayIndex == 0 && hour == 13) ||
-        (dayIndex == 0 && hour == 18) ||
-        (dayIndex == 5 && hour == 18);
+    final cellDate = state.weekDays[dayIndex];
+    final matchingSlot = _findMatchingSlot(state, cellDate, hour);
+    final cubit = context.read<AppointmentsCubit>();
 
     if (isHoliday && hour == 13) {
       return Container(
-        height: context.height / 13,
+        height: context.height / 12.5,
         decoration: BoxDecoration(
           border: Border.all(color: greyLight.withOpacity(0.5), width: 0.5),
         ),
@@ -262,7 +365,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
               Text(
                 tr("not_available") + "\n" + "يوم إجازة",
                 textAlign: TextAlign.center,
-                style: TextStyle(color: grey1, fontSize: 8),
+                style: const TextStyle(color: grey1, fontSize: 10),
               ),
             ],
           ),
@@ -270,75 +373,127 @@ class _AppointmentsViewState extends State<AppointmentsView> {
       );
     }
 
-    if (isReserved) {
-      return Container(
-        margin: const EdgeInsets.all(4),
-        padding: const EdgeInsets.all(4),
-        height: context.height / 15,
-        decoration: BoxDecoration(
-          color: orangeBold.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: orangeBold.withOpacity(0.2)),
-        ),
-        child: Column(
-          children: [
-            Text(
-              "${hour}:00 - ${hour + 2}:00",
-              style: const TextStyle(
-                color: orangeBold,
-                fontSize: 7,
-                fontWeight: FontWeight.bold,
+    if (matchingSlot != null) {
+      final isReserved = matchingSlot.isBooked;
+
+      if (isReserved) {
+        return Container(
+          margin: const EdgeInsets.all(4),
+          padding: const EdgeInsets.all(6),
+          height: context.height / 12.5 - 8,
+          decoration: BoxDecoration(
+            color: orangeBold.withOpacity(0.08),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: orangeBold.withOpacity(0.2)),
+          ),
+          child: Stack(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "${matchingSlot.startTime.substring(0, 5)} - ${matchingSlot.endTime.substring(0, 5)}",
+                    style: const TextStyle(
+                      color: orangeBold,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: poppins,
+                    ),
+                  ),
+                  Text(
+                    tr("reserved_appointment"),
+                    style: const TextStyle(color: grey1, fontSize: 9.5),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
-            ),
-            Text(
-              tr("reserved_appointment"),
-              style: const TextStyle(color: grey1, fontSize: 6),
-              overflow: TextOverflow.ellipsis,
-            ),
-            Text(
-              "طالب: محمد علي",
-              style: const TextStyle(
-                color: primary,
-                fontSize: 6,
-                fontWeight: FontWeight.bold,
+              Positioned(
+                top: -6,
+                right: -6,
+                child: IconButton(
+                  icon: const Icon(Icons.close, color: orangeBold, size: 16),
+                  onPressed: () => cubit.deleteTimeSlot(matchingSlot.id),
+                ),
               ),
-              overflow: TextOverflow.ellipsis,
+            ],
+          ),
+        );
+      } else {
+        // Available Slot (Green)
+        return GestureDetector(
+          onTap: () => _showEditSlotDialog(context, matchingSlot),
+          child: Container(
+            margin: const EdgeInsets.all(4),
+            padding: const EdgeInsets.all(6),
+            height: context.height / 12.5 - 8,
+            decoration: BoxDecoration(
+              color: greenLight.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: greenLight.withOpacity(0.2)),
             ),
-          ],
-        ),
-      );
+            child: Stack(
+              children: [
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${matchingSlot.startTime.substring(0, 5)} - ${matchingSlot.endTime.substring(0, 5)}",
+                        style: const TextStyle(
+                          color: greenLight,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: poppins,
+                        ),
+                      ),
+                      Text(
+                        tr("available_time"),
+                        style: const TextStyle(color: greenLight, fontSize: 9.5),
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  top: -8,
+                  right: -8,
+                  child: IconButton(
+                    icon: const Icon(Icons.close, color: Colors.red, size: 18),
+                    onPressed: () => cubit.deleteTimeSlot(matchingSlot.id),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
     }
 
-    if (isAvailable) {
-      return Container(
-        margin: const EdgeInsets.all(4),
-        height: context.height / 15,
+    // Empty Cell with Green "+" button to interactively add slot
+    return GestureDetector(
+      onTap: () {
+        final String formattedDate = DateFormat('yyyy-MM-dd').format(cellDate);
+        final String start = "${hour.toString().padLeft(2, '0')}:00";
+        final String end = "${(hour + 1).toString().padLeft(2, '0')}:00";
+        cubit.addTimeSlot(
+          date: formattedDate,
+          startTime: start,
+          endTime: end,
+        );
+      },
+      child: Container(
+        height: context.height / 12.5,
         decoration: BoxDecoration(
-          color: greenLight.withOpacity(0.05),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: greenLight.withOpacity(0.2)),
+          border: Border.all(color: greyLight.withOpacity(0.5), width: 0.5),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "${hour}:00 - ${hour + 2}:00",
-              style: const TextStyle(
-                color: greenLight,
-                fontSize: 7,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const Icon(Icons.add, color: greenLight, size: 14),
-          ],
+        child: const Center(
+          child: Icon(
+            Icons.add_circle_outline,
+            color: greenLight,
+            size: 20,
+          ),
         ),
-      );
-    }
-
-    return Container(
-      height: context.height / 13,
-      decoration: BoxDecoration(
-        border: Border.all(color: greyLight.withOpacity(0.5), width: 0.5),
       ),
     );
   }
