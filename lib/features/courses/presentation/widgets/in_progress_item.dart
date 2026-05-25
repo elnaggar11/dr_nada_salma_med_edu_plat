@@ -50,11 +50,24 @@ class InProgressItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        CoursesDetailsParams params = CoursesDetailsParams(
-          slug: slug,
-          status: status,
-        );
-        context.pushNamed(name: courseDetailsSc, args: params);
+        if (status == 'completed') {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
+              content: Text(
+                "لقد اكتمل الكورس بالفعل",
+                style: TextStyles.textStyleNormal13.copyWith(color: white),
+                textScaler: TextScaler.linear(1),
+              ),
+            ),
+          );
+        } else {
+          CoursesDetailsParams params = CoursesDetailsParams(
+            slug: slug,
+            status: status,
+          );
+          context.pushNamed(name: courseDetailsSc, args: params);
+        }
       },
       child: Container(
         color: Colors.transparent,
@@ -176,53 +189,57 @@ class InProgressItem extends StatelessWidget {
             SizedBox(height: context.height / 50),
             Row(
               children: [
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.only(
-                    left: context.width / 30,
-                    right: context.width / 30,
-                    top: context.height / 60,
-                    bottom: context.height / 60,
-                  ),
-                  decoration: BoxDecoration(
-                    color: primary,
-                    borderRadius: BorderRadius.all(Radius.circular(38)),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.all(6),
+                status == 'completed'
+                    ? const SizedBox()
+                    : Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.only(
+                          left: context.width / 30,
+                          right: context.width / 30,
+                          top: context.height / 60,
+                          bottom: context.height / 60,
+                        ),
                         decoration: BoxDecoration(
-                          color: white,
-                          borderRadius: BorderRadius.all(Radius.circular(23)),
+                          color: primary,
+                          borderRadius: BorderRadius.all(Radius.circular(38)),
                         ),
-                        child: customSvg(name: carrier, color: primary),
-                      ),
-                      SizedBox(width: context.width / 60),
-                      Text(
-                        tr("keep_learning"),
-                        style: TextStyles.textStyleNormal10.copyWith(
-                          fontWeight: FontWeight.w500,
-                          color: white,
-                        ),
-                        textScaler: TextScaler.linear(1),
-                      ),
-                      SizedBox(width: context.width / 60),
-                      context.locale.languageCode == "ar"
-                          ? Transform.rotate(
-                              angle: 180 * math.pi / 180,
-                              child: Container(
-                                alignment: Alignment.center,
-                                child: customSvg(name: arrowRight),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: white,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(23),
+                                ),
                               ),
-                            )
-                          : Container(
-                              alignment: Alignment.center,
-                              child: customSvg(name: arrowRight),
+                              child: customSvg(name: carrier, color: primary),
                             ),
-                    ],
-                  ),
-                ),
+                            SizedBox(width: context.width / 60),
+                            Text(
+                              tr("keep_learning"),
+                              style: TextStyles.textStyleNormal10.copyWith(
+                                fontWeight: FontWeight.w500,
+                                color: white,
+                              ),
+                              textScaler: TextScaler.linear(1),
+                            ),
+                            SizedBox(width: context.width / 60),
+                            context.locale.languageCode == "ar"
+                                ? Transform.rotate(
+                                    angle: 180 * math.pi / 180,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      child: customSvg(name: arrowRight),
+                                    ),
+                                  )
+                                : Container(
+                                    alignment: Alignment.center,
+                                    child: customSvg(name: arrowRight),
+                                  ),
+                          ],
+                        ),
+                      ),
                 Expanded(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,

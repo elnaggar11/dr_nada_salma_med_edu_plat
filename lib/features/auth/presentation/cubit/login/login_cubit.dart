@@ -83,6 +83,11 @@ class LoginCubit extends Cubit<LoginState> {
           await sharedPreferences.setBool("saveUser", true);
           await sharedPreferences.setBool("isTeacher", params.isTeacher);
           Const.isTeacher = params.isTeacher;
+          if (user.data != null) {
+            await sharedPreferences.setInt("user_id", user.data!.id ?? 0);
+            await sharedPreferences.setString("user_email", user.data!.email ?? "");
+            await sharedPreferences.setString("user_fullName", user.data!.fullName ?? "");
+          }
 
           emit(LoginSuccessState(loginResponse: user));
         },
