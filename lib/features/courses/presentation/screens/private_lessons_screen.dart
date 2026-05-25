@@ -107,49 +107,35 @@ class _PrivateLessonsScreenState extends State<PrivateLessonsScreen>
 
                     return cubit.loading == true
                         ? const InProgressShimmerList()
+                        : (cubit.coursesStatusResponse?.data == null ||
+                              cubit.coursesStatusResponse!.data!.isEmpty)
+                        ? const EmptyPrivateLessonsWidget()
                         : ListView.builder(
                             shrinkWrap: true,
                             padding: EdgeInsets.only(
                               top: context.height / 90,
                               bottom: 0,
                             ),
-                            // Show 1 mock item if no real data is found (for design verification)
-                            itemCount: hasRealData
-                                ? cubit.coursesStatusResponse!.data!.length
-                                : 1,
+                            itemCount: cubit.coursesStatusResponse!.data!.length,
                             itemBuilder: (context, index) {
-                              if (!hasRealData) {
-                                return PrivateLessonItem(
-                                  title: "كورس المهارات الجراحية المتقدمة",
-                                  description:
-                                      "هذا النص هو مثال لنص يمكن أن يستبدل في نفس المساحة، لقد تم توليد هذا النص من مولد النص العربى، حيث يمكنك أن تولد مثل هذا النص أو العديد من النصوص الأخرى إضافة إلى زيادة عدد الحروف التى يولدها التطبيق.",
-                                  image:
-                                      "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=300&auto=format&fit=crop",
-
-                                  tags: ["جراحة", "طوارئ", "عناية مركزة"],
-                                  onDetailsPressed: () {
-                                    context.pushNamed(
-                                      name: teachersListSc,
-                                      args: {
-                                        "subject_id": 3,
-                                        "category_name": "جراحة",
-                                      },
-                                    );
-                                  },
-                                );
-                              }
                               final data =
                                   cubit.coursesStatusResponse!.data![index];
+                              final description = (data.semiDescription != null && data.semiDescription!.toString().isNotEmpty)
+                                  ? data.semiDescription!.toString()
+                                  : tr("working_launching");
+                              final image = (data.image != null && data.image!.toString().isNotEmpty)
+                                  ? data.image!.toString()
+                                  : "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=300&auto=format&fit=crop";
                               return PrivateLessonItem(
                                 title: data.title ?? "",
-                                description: data.semiDescription ?? "",
-                                image: data.image ?? "",
+                                description: description,
+                                image: image,
                                 tags: [data.categoryName ?? tr("medicine")],
                                 onDetailsPressed: () {
                                   context.pushNamed(
                                     name: teachersListSc,
                                     args: {
-                                      "subject_id": data.id,
+                                      "subject_id": data.id ?? 1,
                                       "category_name": data.categoryName,
                                     },
                                   );
@@ -180,10 +166,16 @@ class _PrivateLessonsScreenState extends State<PrivateLessonsScreen>
                             itemBuilder: (context, index) {
                               final data =
                                   cubit.coursesStatusResponse!.data![index];
+                              final description = (data.semiDescription != null && data.semiDescription!.toString().isNotEmpty)
+                                  ? data.semiDescription!.toString()
+                                  : tr("working_launching");
+                              final image = (data.image != null && data.image!.toString().isNotEmpty)
+                                  ? data.image!.toString()
+                                  : "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=300&auto=format&fit=crop";
                               return PrivateLessonItem(
                                 title: data.title ?? "",
-                                description: data.semiDescription ?? "",
-                                image: data.image ?? "",
+                                description: description,
+                                image: image,
                                 tags: [data.categoryName ?? tr("medicine")],
                                 onDetailsPressed: () {
                                   context.pushNamed(

@@ -1,46 +1,27 @@
-import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/usecase/usecase.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/appointments/domain/usecases/add_time_slot_use_case.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/appointments/domain/usecases/delete_time_slot_use_case.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/appointments/domain/usecases/fetch_time_slots_use_case.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/appointments/domain/usecases/update_time_slot_use_case.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/appointments/model/time_slot.dart';
-import 'package:dr_nada_salma_med_edu_plat/main.dart';
-import 'package:flutter/material.dart';
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/errors/failure.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/appointments/domain/repositories/appointments_repository.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/appointments/domain/entities/time_slot_response.dart';
 import 'appointments_state.dart';
 
 class AppointmentsCubit extends Cubit<AppointmentsState> {
-  final FetchTimeSlotsUseCase fetchTimeSlotsUseCase;
-  final AddTimeSlotUseCase addTimeSlotUseCase;
-  final UpdateTimeSlotUseCase updateTimeSlotUseCase;
-  final DeleteTimeSlotUseCase deleteTimeSlotUseCase;
+  final AppointmentsRepository repository;
 
-  AppointmentsCubit({
-    required this.fetchTimeSlotsUseCase,
-    required this.addTimeSlotUseCase,
-    required this.updateTimeSlotUseCase,
-    required this.deleteTimeSlotUseCase,
-  }) : super(AppointmentsState(selectedDate: DateTime.now())) {
+  AppointmentsCubit(this.repository)
+    : super(AppointmentsState(selectedDate: DateTime.now())) {
     getWeekDays();
-    fetchTimeSlots();
+    getTimeSlots();
   }
 
   void getWeekDays() {
-    DateTime now = DateTime.now();
-    DateTime saturday;
-    if (now.weekday == DateTime.saturday) {
-      saturday = now;
-    } else if (now.weekday == DateTime.sunday) {
-      saturday = now.subtract(const Duration(days: 1));
-    } else {
-      saturday = now.subtract(Duration(days: now.weekday + 1));
-    }
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
 
     List<DateTime> days = [];
     for (int i = 0; i < 7; i++) {
-      days.add(saturday.add(Duration(days: i)));
+      days.add(today.add(Duration(days: i)));
     }
 
     emit(state.copyWith(weekDays: days));
@@ -50,15 +31,57 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
     emit(state.copyWith(selectedDate: date));
   }
 
-  Future<void> fetchTimeSlots() async {
+  Future<void> getTimeSlots() async {
     emit(state.copyWith(state: RequestState.loading));
-    final failOrSlots = await fetchTimeSlotsUseCase(NoParams());
-    failOrSlots.fold(
+    final result = await repository.getTimeSlots();
+    result.fold(
       (failure) {
-        emit(state.copyWith(state: RequestState.error, message: failure.message));
+        String msg = 'Something went wrong';
+        if (failure is ServerFailure) {
+          msg = failure.message;
+        } else if (failure is AuthFailure) {
+          msg = failure.message;
+        } else if (failure is StatusFailure) {
+          msg = failure.message;
+        }
+        emit(state.copyWith(state: RequestState.error, message: msg));
       },
-      (slots) {
-        emit(state.copyWith(state: RequestState.loaded, timeSlots: slots));
+      (response) {
+        emit(
+          state.copyWith(
+            state: RequestState.loaded,
+            timeSlots: response.data ?? [],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> deleteTimeSlot(int id) async {
+    emit(state.copyWith(deleteState: RequestState.loading));
+    final result = await repository.deleteTimeSlot(id);
+    result.fold(
+      (failure) {
+        String msg = 'Something went wrong';
+        if (failure is ServerFailure) {
+          msg = failure.message;
+        } else if (failure is AuthFailure) {
+          msg = failure.message;
+        } else if (failure is StatusFailure) {
+          msg = failure.message;
+        }
+        emit(state.copyWith(deleteState: RequestState.error, message: msg));
+      },
+      (response) {
+        final updatedSlots = List<TimeSlot>.from(state.timeSlots)
+          ..removeWhere((slot) => slot.id == id);
+        emit(
+          state.copyWith(
+            deleteState: RequestState.loaded,
+            timeSlots: updatedSlots,
+            message: response['message'] ?? 'Deleted successfully',
+          ),
+        );
       },
     );
   }
@@ -68,33 +91,42 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
     required String startTime,
     required String endTime,
   }) async {
-    emit(state.copyWith(state: RequestState.loading));
-    final params = AddTimeSlotParams(date: date, startTime: startTime, endTime: endTime);
-    final failOrSlot = await addTimeSlotUseCase(params);
-    failOrSlot.fold(
+    emit(state.copyWith(addState: RequestState.loading));
+    final result = await repository.addTimeSlot(
+      date: date,
+      startTime: startTime,
+      endTime: endTime,
+    );
+    result.fold(
       (failure) {
-        emit(state.copyWith(state: RequestState.error, message: failure.message));
-        msgKey.currentState?.showSnackBar(
-          SnackBar(
-            behavior: SnackBarBehavior.floating,
-            content: Text(
-              failure.message,
-              style: TextStyles.textStyleNormal13.copyWith(color: white),
-            ),
-          ),
-        );
+        String msg = 'Something went wrong';
+        if (failure is ServerFailure) {
+          msg = failure.message;
+        } else if (failure is AuthFailure) {
+          msg = failure.message;
+        } else if (failure is StatusFailure) {
+          msg = failure.message;
+        }
+        emit(state.copyWith(addState: RequestState.error, message: msg));
       },
       (newSlot) {
-        final updatedSlots = List<TimeSlot>.from(state.timeSlots)..add(newSlot);
-        emit(state.copyWith(state: RequestState.loaded, timeSlots: updatedSlots));
-
-        msgKey.currentState?.showSnackBar(
-          SnackBar(
-            behavior: SnackBarBehavior.floating,
-            content: Text(
-              "Time slot added successfully.",
-              style: TextStyles.textStyleNormal13.copyWith(color: white),
-            ),
+        final displaySlot = TimeSlot(
+          id: newSlot.id,
+          teacherId: newSlot.teacherId,
+          date: DateTime.tryParse(date),
+          startTime: startTime,
+          endTime: endTime,
+          isBooked: newSlot.isBooked ?? false,
+          createdAt: newSlot.createdAt,
+          updatedAt: newSlot.updatedAt,
+        );
+        final updatedSlots = List<TimeSlot>.from(state.timeSlots)
+          ..add(displaySlot);
+        emit(
+          state.copyWith(
+            addState: RequestState.loaded,
+            timeSlots: updatedSlots,
+            message: 'Time slot created successfully',
           ),
         );
       },
@@ -107,68 +139,46 @@ class AppointmentsCubit extends Cubit<AppointmentsState> {
     required String startTime,
     required String endTime,
   }) async {
-    emit(state.copyWith(state: RequestState.loading));
-    final params = UpdateTimeSlotParams(id: id, date: date, startTime: startTime, endTime: endTime);
-    final failOrSlot = await updateTimeSlotUseCase(params);
-    failOrSlot.fold(
+    emit(state.copyWith(updateState: RequestState.loading));
+    final result = await repository.updateTimeSlot(
+      id: id,
+      date: date,
+      startTime: startTime,
+      endTime: endTime,
+    );
+    result.fold(
       (failure) {
-        emit(state.copyWith(state: RequestState.error, message: failure.message));
-        msgKey.currentState?.showSnackBar(
-          SnackBar(
-            behavior: SnackBarBehavior.floating,
-            content: Text(
-              failure.message,
-              style: TextStyles.textStyleNormal13.copyWith(color: white),
-            ),
-          ),
-        );
+        String msg = 'Something went wrong';
+        if (failure is ServerFailure) {
+          msg = failure.message;
+        } else if (failure is AuthFailure) {
+          msg = failure.message;
+        } else if (failure is StatusFailure) {
+          msg = failure.message;
+        }
+        emit(state.copyWith(updateState: RequestState.error, message: msg));
       },
       (updatedSlot) {
-        final updatedSlots = state.timeSlots.map((slot) {
-          return slot.id == id ? updatedSlot : slot;
-        }).toList();
-        emit(state.copyWith(state: RequestState.loaded, timeSlots: updatedSlots));
-
-        msgKey.currentState?.showSnackBar(
-          SnackBar(
-            behavior: SnackBarBehavior.floating,
-            content: Text(
-              "Time slot updated successfully.",
-              style: TextStyles.textStyleNormal13.copyWith(color: white),
-            ),
-          ),
+        final displaySlot = TimeSlot(
+          id: updatedSlot.id ?? id,
+          teacherId: updatedSlot.teacherId,
+          date: DateTime.tryParse(date),
+          startTime: startTime,
+          endTime: endTime,
+          isBooked: updatedSlot.isBooked ?? false,
+          createdAt: updatedSlot.createdAt,
+          updatedAt: updatedSlot.updatedAt,
         );
-      },
-    );
-  }
-
-  Future<void> deleteTimeSlot(int id) async {
-    emit(state.copyWith(state: RequestState.loading));
-    final failOrVoid = await deleteTimeSlotUseCase(id);
-    failOrVoid.fold(
-      (failure) {
-        emit(state.copyWith(state: RequestState.error, message: failure.message));
-        msgKey.currentState?.showSnackBar(
-          SnackBar(
-            behavior: SnackBarBehavior.floating,
-            content: Text(
-              failure.message,
-              style: TextStyles.textStyleNormal13.copyWith(color: white),
-            ),
-          ),
-        );
-      },
-      (_) {
-        final updatedSlots = state.timeSlots.where((slot) => slot.id != id).toList();
-        emit(state.copyWith(state: RequestState.loaded, timeSlots: updatedSlots));
-
-        msgKey.currentState?.showSnackBar(
-          SnackBar(
-            behavior: SnackBarBehavior.floating,
-            content: Text(
-              "Time slot deleted successfully.",
-              style: TextStyles.textStyleNormal13.copyWith(color: white),
-            ),
+        final updatedSlots = List<TimeSlot>.from(state.timeSlots);
+        final index = updatedSlots.indexWhere((slot) => slot.id == id);
+        if (index != -1) {
+          updatedSlots[index] = displaySlot;
+        }
+        emit(
+          state.copyWith(
+            updateState: RequestState.loaded,
+            timeSlots: updatedSlots,
+            message: 'Time slot updated successfully',
           ),
         );
       },

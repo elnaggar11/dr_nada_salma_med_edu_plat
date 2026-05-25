@@ -53,6 +53,49 @@ class ApiBaseHelper {
     }
   }
 
+  Future<dynamic> postJson({
+    required String url,
+    required Map<String, dynamic> body,
+    String? token,
+  }) async {
+    try {
+      Response response = await dio.post(url, data: body, options: options);
+      return _returnResponseJson(response);
+    } on DioException catch (e) {
+      throw ServerException(
+        message: e.response != null && e.response!.data != null
+            ? (e.response!.data["error"] ?? e.response!.data["message"] ?? "Something went wrong").toString()
+            : "Something went wrong",
+      );
+    } on SocketException {
+      throw ServerException(message: "No internet, please try again later");
+    } on IOException catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+  Future<dynamic> putJson({
+    required String url,
+    required Map<String, dynamic> body,
+    String? token,
+  }) async {
+    try {
+      Response response = await dio.put(url, data: body, options: options);
+      return _returnResponseJson(response);
+    } on DioException catch (e) {
+      throw ServerException(
+        message: e.response != null && e.response!.data != null
+            ? (e.response!.data["error"] ?? e.response!.data["message"] ?? "Something went wrong").toString()
+            : "Something went wrong",
+      );
+    } on SocketException {
+      throw ServerException(message: "No internet, please try again later");
+    } on IOException catch (e) {
+      throw ServerException(message: e.toString());
+    }
+  }
+
+
   Future<dynamic> get({
     required String url,
     String? token,
@@ -74,7 +117,6 @@ class ApiBaseHelper {
 
   Future<dynamic> delete({required String url, String? token}) async {
     try {
-      dio.interceptors.add(AuthInterceptor());
       debugPrint("url => $url");
       final Response response = await dio.delete(url, options: options);
 

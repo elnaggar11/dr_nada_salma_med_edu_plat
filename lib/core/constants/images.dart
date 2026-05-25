@@ -159,3 +159,5 @@ const String basket = "assets/images/basket.svg";
 const String splashLogo = "assets/images/splashlogo.gif";
 
 const String carrierRight = "assets/images/carrierright.svg";
+
+const String schedule = "assets/images/schedule.svg";

@@ -3,12 +3,13 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/fonts.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/custom_app_bar.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/appointments/model/time_slot.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/appointments/presentation/cubit/appointments_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/appointments/presentation/cubit/appointments_state.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/appointments/domain/entities/time_slot_response.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class AppointmentsView extends StatefulWidget {
   const AppointmentsView({super.key});
@@ -47,8 +48,6 @@ class _AppointmentsViewState extends State<AppointmentsView> {
       }
       _isUpdating = false;
     });
-
-    context.read<AppointmentsCubit>().fetchTimeSlots();
   }
 
   @override
@@ -58,121 +57,62 @@ class _AppointmentsViewState extends State<AppointmentsView> {
     super.dispose();
   }
 
-  TimeSlot? _findMatchingSlot(AppointmentsState state, DateTime cellDate, int hour) {
-    for (var slot in state.timeSlots) {
-      final localDate = slot.date.toLocal();
-      if (localDate.year == cellDate.year &&
-          localDate.month == cellDate.month &&
-          localDate.day == cellDate.day &&
-          int.parse(slot.startTime.split(':')[0]) == hour) {
-        return slot;
+  int _getHourFromTime(String? timeStr) {
+    if (timeStr == null) return 0;
+    final parts = timeStr.split(':');
+    if (parts.isNotEmpty) {
+      return int.tryParse(parts[0]) ?? 0;
+    }
+    return 0;
+  }
+
+  TimeSlot? _getSlotForCell(List<TimeSlot> slots, DateTime dayDate, int hour) {
+    for (final slot in slots) {
+      if (slot.date != null) {
+        if (slot.date!.year == dayDate.year &&
+            slot.date!.month == dayDate.month &&
+            slot.date!.day == dayDate.day) {
+          final startHour = _getHourFromTime(slot.startTime);
+          if (startHour == hour) {
+            return slot;
+          }
+        }
       }
     }
     return null;
   }
 
-  void _showEditSlotDialog(BuildContext context, TimeSlot slot) {
-    final cubit = context.read<AppointmentsCubit>();
-    String selectedStart = slot.startTime.substring(0, 5);
-    String selectedEnd = slot.endTime.substring(0, 5);
+  DateTime _cellStartDateTime(DateTime date, int hour) {
+    return DateTime(date.year, date.month, date.day, hour);
+  }
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              backgroundColor: white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              title: Text(
-                tr("edit_availability"),
-                style: TextStyles.textStyleBold16.copyWith(color: primary),
-                textAlign: TextAlign.center,
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(tr("from_hour"), style: TextStyles.textStyleBold13.copyWith(color: black)),
-                      DropdownButton<String>(
-                        dropdownColor: white,
-                        value: selectedStart,
-                        items: List.generate(13, (index) => 8 + index).map((h) {
-                          final label = "${h.toString().padLeft(2, '0')}:00";
-                          return DropdownMenuItem(value: label, child: Text(label, style: const TextStyle(fontFamily: poppins)));
-                        }).toList(),
-                        onChanged: (val) {
-                          if (val != null) {
-                            setState(() {
-                              selectedStart = val;
-                              int h = int.parse(val.split(':')[0]);
-                              selectedEnd = "${(h + 1).toString().padLeft(2, '0')}:00";
-                            });
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(tr("to_hour"), style: TextStyles.textStyleBold13.copyWith(color: black)),
-                      DropdownButton<String>(
-                        dropdownColor: white,
-                        value: selectedEnd,
-                        items: List.generate(13, (index) => 9 + index).map((h) {
-                          final label = "${h.toString().padLeft(2, '0')}:00";
-                          return DropdownMenuItem(value: label, child: Text(label, style: const TextStyle(fontFamily: poppins)));
-                        }).toList(),
-                        onChanged: (val) {
-                          if (val != null) {
-                            setState(() {
-                              selectedEnd = val;
-                            });
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text(tr("no"), style: const TextStyle(color: grey2)),
-                ),
-                MaterialButton(
-                  color: primary,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    final formattedDate = DateFormat('yyyy-MM-dd').format(slot.date);
-                    cubit.updateTimeSlot(
-                      id: slot.id,
-                      date: formattedDate,
-                      startTime: "$selectedStart:00",
-                      endTime: "$selectedEnd:00",
-                    );
-                  },
-                  child: Text(tr("save"), style: const TextStyle(color: white)),
-                ),
-              ],
-            );
-          },
-        );
-      },
+  bool _isPastCell(DateTime date, int hour) {
+    return !_cellStartDateTime(date, hour).isAfter(DateTime.now());
+  }
+
+  bool _isPastSelectedStart(String dateStr, String startTimeStr) {
+    final date = DateTime.tryParse(dateStr);
+    final timeParts = startTimeStr.split(':');
+    if (date == null || timeParts.length < 2) return true;
+
+    final hour = int.tryParse(timeParts[0]);
+    final minute = int.tryParse(timeParts[1]);
+    if (hour == null || minute == null) return true;
+
+    final selectedStart = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      hour,
+      minute,
     );
+    return !selectedStart.isAfter(DateTime.now());
   }
 
   @override
   Widget build(BuildContext context) {
     final double columnWidth = context.width / 3.2;
-    final double timeLabelWidth = context.width / 6.5;
+    final double timeLabelWidth = context.width / 5.5;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -183,28 +123,112 @@ class _AppointmentsViewState extends State<AppointmentsView> {
         appBarInd: 0,
         widget: const SizedBox.shrink(),
       ),
-      body: BlocBuilder<AppointmentsCubit, AppointmentsState>(
-        builder: (context, state) {
-          if (state.weekDays.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          return Column(
-            children: [
-              _buildStickyHeader(context, state, timeLabelWidth, columnWidth),
-              Expanded(
-                child: state.state == RequestState.loading
-                    ? const Center(child: CircularProgressIndicator())
-                    : _buildScrollableArea(
-                        context,
-                        state,
-                        timeLabelWidth,
-                        columnWidth,
-                      ),
+      body: BlocListener<AppointmentsCubit, AppointmentsState>(
+        listenWhen: (previous, current) =>
+            previous.deleteState != current.deleteState ||
+            previous.addState != current.addState ||
+            previous.updateState != current.updateState,
+        listener: (context, state) {
+          if (state.deleteState == RequestState.loaded) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(tr("time_slot_deleted_success")),
+                backgroundColor: Colors.green,
+                behavior: SnackBarBehavior.floating,
               ),
-              _buildLegend(context),
-            ],
-          );
+            );
+          } else if (state.deleteState == RequestState.error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          } else if (state.addState == RequestState.loaded) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(tr("time_slot_created_success")),
+                backgroundColor: Colors.green,
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          } else if (state.addState == RequestState.error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          } else if (state.updateState == RequestState.loaded) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(tr("time_slot_updated_success")),
+                backgroundColor: Colors.green,
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          } else if (state.updateState == RequestState.error) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message),
+                backgroundColor: Colors.red,
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
         },
+
+        child: BlocBuilder<AppointmentsCubit, AppointmentsState>(
+          builder: (context, state) {
+            if (state.state == RequestState.loading) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (state.state == RequestState.error) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      state.message,
+                      style: TextStyles.textStyleBold14.copyWith(color: red),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<AppointmentsCubit>().getTimeSlots();
+                      },
+                      style: ElevatedButton.styleFrom(backgroundColor: primary),
+                      child: Text(
+                        tr("retry"),
+                        style: const TextStyle(color: white),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            if (state.weekDays.isEmpty) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            return Column(
+              children: [
+                _buildStickyHeader(context, state, timeLabelWidth, columnWidth),
+                Expanded(
+                  child: _buildScrollableArea(
+                    context,
+                    state,
+                    timeLabelWidth,
+                    columnWidth,
+                  ),
+                ),
+                _buildLegend(context),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -249,15 +273,6 @@ class _AppointmentsViewState extends State<AppointmentsView> {
   }
 
   Widget _buildHeaderCell(AppointmentsState state, int index) {
-    final days = [
-      tr("saturday"),
-      tr("sunday"),
-      tr("monday"),
-      tr("tuesday"),
-      tr("wednesday"),
-      tr("thursday"),
-      tr("friday"),
-    ];
     final date = state.weekDays[index];
     final isToday =
         DateTime.now().day == date.day &&
@@ -269,22 +284,44 @@ class _AppointmentsViewState extends State<AppointmentsView> {
       child: Column(
         children: [
           Text(
-            days[index],
+            _weekdayLabel(date),
             style: TextStyles.textStyleBold14.copyWith(
               color: isToday ? orangeBold : primary,
+              fontSize: 13,
             ),
           ),
+          const SizedBox(height: 2),
           Text(
             DateFormat('MMM d').format(date),
             style: TextStyles.textStyleBold12.copyWith(
               color: grey1,
-              fontSize: 10,
+              fontSize: 11,
               fontFamily: poppins,
             ),
           ),
         ],
       ),
     );
+  }
+
+  String _weekdayLabel(DateTime date) {
+    switch (date.weekday) {
+      case DateTime.saturday:
+        return tr("saturday");
+      case DateTime.sunday:
+        return tr("sunday");
+      case DateTime.monday:
+        return tr("monday");
+      case DateTime.tuesday:
+        return tr("tuesday");
+      case DateTime.wednesday:
+        return tr("wednesday");
+      case DateTime.thursday:
+        return tr("thursday");
+      case DateTime.friday:
+        return tr("friday");
+    }
+    return "";
   }
 
   Widget _buildScrollableArea(
@@ -311,7 +348,14 @@ class _AppointmentsViewState extends State<AppointmentsView> {
                     width: colWidth,
                     child: Column(
                       children: times
-                          .map((hour) => _buildCell(context, state, dayIndex, hour))
+                          .map(
+                            (hour) => _buildCell(
+                              context,
+                              dayIndex,
+                              hour,
+                              state.timeSlots,
+                            ),
+                          )
                           .toList(),
                     ),
                   );
@@ -325,18 +369,25 @@ class _AppointmentsViewState extends State<AppointmentsView> {
   }
 
   Widget _buildTimeLabels(BuildContext context, List<int> times, double width) {
+    final double cellHeight = context.height / 9.5;
     return Column(
       children: times.map((hour) {
         return Container(
           width: width,
-          height: context.height / 12.5,
-          alignment: Alignment.topCenter,
-          padding: EdgeInsets.only(top: context.height / 160),
+          height: cellHeight,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            border: Border(
+              bottom: BorderSide(color: greyLight.withOpacity(0.5), width: 0.5),
+              right: BorderSide(color: greyLight.withOpacity(0.5), width: 0.5),
+              left: BorderSide(color: greyLight.withOpacity(0.5), width: 0.5),
+            ),
+          ),
           child: Text(
             "${hour.toString().padLeft(2, '0')}:00",
             style: TextStyles.textStyleBold12.copyWith(
               color: grey1,
-              fontSize: 11,
+              fontSize: 12,
               fontFamily: poppins,
             ),
           ),
@@ -345,156 +396,787 @@ class _AppointmentsViewState extends State<AppointmentsView> {
     );
   }
 
-  Widget _buildCell(BuildContext context, AppointmentsState state, int dayIndex, int hour) {
-    bool isHoliday = dayIndex == 6; // Friday
-    final cellDate = state.weekDays[dayIndex];
-    final matchingSlot = _findMatchingSlot(state, cellDate, hour);
-    final cubit = context.read<AppointmentsCubit>();
+  Widget _buildCell(
+    BuildContext context,
+    int dayIndex,
+    int hour,
+    List<TimeSlot> slots,
+  ) {
+    final double cellHeight = context.height / 9.5;
+    final dayDate = context.read<AppointmentsCubit>().state.weekDays[dayIndex];
+    final slot = _getSlotForCell(slots, dayDate, hour);
+    final isPastCell = _isPastCell(dayDate, hour);
 
-    if (isHoliday && hour == 13) {
+    if (dayDate.weekday == DateTime.friday) {
       return Container(
-        height: context.height / 12.5,
+        height: cellHeight,
         decoration: BoxDecoration(
+          color: greyLight.withOpacity(0.5),
           border: Border.all(color: greyLight.withOpacity(0.5), width: 0.5),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.access_time, color: grey1, size: 16),
-              Text(
-                tr("not_available") + "\n" + "يوم إجازة",
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: grey1, fontSize: 10),
-              ),
-            ],
+      );
+    }
+
+    if (slot == null) {
+      if (isPastCell) {
+        return Container(
+          height: cellHeight,
+          decoration: BoxDecoration(
+            color: greyLight.withOpacity(0.35),
+            border: Border.all(color: greyLight.withOpacity(0.5), width: 0.5),
+          ),
+        );
+      }
+
+      return GestureDetector(
+        onTap: () {
+          _showAddSlotDialog(context, dayDate, hour);
+        },
+        child: Container(
+          height: cellHeight,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            border: Border.all(color: greyLight.withOpacity(0.5), width: 0.5),
+          ),
+          child: const Center(
+            child: Icon(Icons.add, color: Colors.grey, size: 16),
           ),
         ),
       );
     }
 
-    if (matchingSlot != null) {
-      final isReserved = matchingSlot.isBooked;
+    final isBooked = slot.isBooked == true;
 
-      if (isReserved) {
-        return Container(
+    return Container(
+      height: cellHeight,
+      decoration: BoxDecoration(
+        border: Border.all(color: greyLight.withOpacity(0.5), width: 0.5),
+      ),
+      child: GestureDetector(
+        onTap: () {
+          if (!isBooked) {
+            _showEditSlotDialog(context, slot);
+          }
+        },
+        child: Container(
           margin: const EdgeInsets.all(4),
-          padding: const EdgeInsets.all(6),
-          height: context.height / 12.5 - 8,
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
           decoration: BoxDecoration(
-            color: orangeBold.withOpacity(0.08),
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: orangeBold.withOpacity(0.2)),
+            color: isBooked
+                ? orangeBold.withOpacity(0.1)
+                : greenLight.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: isBooked
+                  ? orangeBold.withOpacity(0.2)
+                  : greenLight.withOpacity(0.2),
+              width: 1,
+            ),
           ),
           child: Stack(
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "${matchingSlot.startTime.substring(0, 5)} - ${matchingSlot.endTime.substring(0, 5)}",
-                    style: const TextStyle(
-                      color: orangeBold,
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: poppins,
+              Align(
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "${slot.startTime?.substring(0, 5) ?? ''} - ${slot.endTime?.substring(0, 5) ?? ''}",
+                      style: TextStyle(
+                        color: isBooked ? orangeBold : Colors.green[800],
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: poppins,
+                      ),
                     ),
-                  ),
-                  Text(
-                    tr("reserved_appointment"),
-                    style: const TextStyle(color: grey1, fontSize: 9.5),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
+                    const SizedBox(height: 2),
+                    Text(
+                      isBooked
+                          ? tr("reserved_appointment")
+                          : tr("available_time"),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: isBooked ? orangeBold : Colors.green[800],
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
               ),
               Positioned(
-                top: -6,
-                right: -6,
-                child: IconButton(
-                  icon: const Icon(Icons.close, color: orangeBold, size: 16),
-                  onPressed: () => cubit.deleteTimeSlot(matchingSlot.id),
+                top: 0,
+                right: 0,
+                child: GestureDetector(
+                  onTap: () {
+                    _showDeleteConfirmationDialog(context, slot);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 11,
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
-        );
-      } else {
-        // Available Slot (Green)
-        return GestureDetector(
-          onTap: () => _showEditSlotDialog(context, matchingSlot),
-          child: Container(
-            margin: const EdgeInsets.all(4),
-            padding: const EdgeInsets.all(6),
-            height: context.height / 12.5 - 8,
-            decoration: BoxDecoration(
-              color: greenLight.withOpacity(0.08),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: greenLight.withOpacity(0.2)),
+        ),
+      ),
+    );
+  }
+
+  void _showDeleteConfirmationDialog(BuildContext context, TimeSlot slot) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(
+            tr("confirm_delete_time_slot"),
+            style: TextStyles.textStyleBold14.copyWith(color: primary),
+          ),
+          content: Text(
+            tr("delete_time_slot_prompt"),
+            style: TextStyles.textStyleBold12.copyWith(color: black),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: Text(
+                tr("cancel"),
+                style: const TextStyle(color: Colors.grey),
+              ),
             ),
-            child: Stack(
-              children: [
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                context.read<AppointmentsCubit>().deleteTimeSlot(slot.id!);
+              },
+              child: Text(
+                tr("delete"),
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showAddSlotDialog(BuildContext context, DateTime dayDate, int hour) {
+    final String initialDateStr = DateFormat('yyyy-MM-dd').format(dayDate);
+    final String initialStartStr = "${hour.toString().padLeft(2, '0')}:00";
+    final String initialEndStr = "${(hour + 1).toString().padLeft(2, '0')}:00";
+
+    String selectedDateStr = initialDateStr;
+    String selectedStartStr = initialStartStr;
+    String selectedEndStr = initialEndStr;
+
+    bool isSubmitting = false;
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (stContext, setState) {
+            final startHour = int.tryParse(selectedStartStr.split(':')[0]) ?? 0;
+            final startMin = int.tryParse(selectedStartStr.split(':')[1]) ?? 0;
+            final endHour = int.tryParse(selectedEndStr.split(':')[0]) ?? 0;
+            final endMin = int.tryParse(selectedEndStr.split(':')[1]) ?? 0;
+
+            final bool isValid =
+                (endHour > startHour) ||
+                (endHour == startHour && endMin > startMin);
+            final bool isFutureStart = !_isPastSelectedStart(
+              selectedDateStr,
+              selectedStartStr,
+            );
+
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: Row(
+                children: [
+                  const Icon(Icons.add_alarm, color: primary, size: 24),
+                  const SizedBox(width: 8),
+                  Text(
+                    tr("add_time_slot"),
+                    style: TextStyles.textStyleBold14.copyWith(
+                      color: primary,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    tr("select_date"),
+                    style: TextStyles.textStyleBold12.copyWith(color: grey1),
+                  ),
+                  const SizedBox(height: 6),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: greyLight,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: grey3, width: 0.5),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          selectedDateStr,
+                          style: TextStyles.textStyleBold12.copyWith(
+                            color: black,
+                            fontFamily: poppins,
+                          ),
+                        ),
+                        const Icon(
+                          Icons.calendar_today,
+                          color: grey1,
+                          size: 16,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
                     children: [
-                      Text(
-                        "${matchingSlot.startTime.substring(0, 5)} - ${matchingSlot.endTime.substring(0, 5)}",
-                        style: const TextStyle(
-                          color: greenLight,
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: poppins,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              tr("start_time"),
+                              style: TextStyles.textStyleBold12.copyWith(
+                                color: grey1,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            InkWell(
+                              onTap: () async {
+                                final time = await showTimePicker(
+                                  context: stContext,
+                                  initialTime: TimeOfDay(hour: hour, minute: 0),
+                                );
+                                if (time != null) {
+                                  setState(() {
+                                    selectedStartStr =
+                                        "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
+                                    selectedEndStr =
+                                        "${((time.hour + 1) % 24).toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
+                                  });
+                                }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: grey3, width: 1),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      selectedStartStr,
+                                      style: TextStyles.textStyleBold12
+                                          .copyWith(
+                                            color: black,
+                                            fontFamily: poppins,
+                                          ),
+                                    ),
+                                    const Icon(
+                                      Icons.access_time,
+                                      color: primary,
+                                      size: 16,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Text(
-                        tr("available_time"),
-                        style: const TextStyle(color: greenLight, fontSize: 9.5),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              tr("end_time"),
+                              style: TextStyles.textStyleBold12.copyWith(
+                                color: grey1,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            InkWell(
+                              onTap: () async {
+                                final initialEndHour = (hour + 1) % 24;
+                                final time = await showTimePicker(
+                                  context: stContext,
+                                  initialTime: TimeOfDay(
+                                    hour: initialEndHour,
+                                    minute: 0,
+                                  ),
+                                );
+                                if (time != null) {
+                                  setState(() {
+                                    selectedEndStr =
+                                        "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
+                                  });
+                                }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: grey3, width: 1),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      selectedEndStr,
+                                      style: TextStyles.textStyleBold12
+                                          .copyWith(
+                                            color: black,
+                                            fontFamily: poppins,
+                                          ),
+                                    ),
+                                    const Icon(
+                                      Icons.access_time,
+                                      color: primary,
+                                      size: 16,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                ),
-                Positioned(
-                  top: -8,
-                  right: -8,
-                  child: IconButton(
-                    icon: const Icon(Icons.close, color: Colors.red, size: 18),
-                    onPressed: () => cubit.deleteTimeSlot(matchingSlot.id),
+                  if (!isValid) ...[
+                    const SizedBox(height: 12),
+                    Text(
+                      tr("invalid_time_range"),
+                      style: TextStyles.textStyleBold12.copyWith(
+                        color: red,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                  if (!isFutureStart) ...[
+                    const SizedBox(height: 12),
+                    Text(
+                      tr("time_slot_must_be_future"),
+                      style: TextStyles.textStyleBold12.copyWith(
+                        color: red,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: isSubmitting
+                      ? null
+                      : () {
+                          Navigator.of(dialogContext).pop();
+                        },
+                  child: Text(
+                    tr("cancel"),
+                    style: const TextStyle(color: Colors.grey),
                   ),
                 ),
+                ElevatedButton(
+                  onPressed: (!isValid || !isFutureStart || isSubmitting)
+                      ? null
+                      : () async {
+                          setState(() {
+                            isSubmitting = true;
+                          });
+                          await context.read<AppointmentsCubit>().addTimeSlot(
+                            date: selectedDateStr,
+                            startTime: selectedStartStr,
+                            endTime: selectedEndStr,
+                          );
+                          Navigator.of(dialogContext).pop();
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: isSubmitting
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: white,
+                          ),
+                        )
+                      : Text(
+                          tr("save"),
+                          style: const TextStyle(
+                            color: white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                ),
               ],
-            ),
-          ),
-        );
-      }
-    }
-
-    // Empty Cell with Green "+" button to interactively add slot
-    return GestureDetector(
-      onTap: () {
-        final String formattedDate = DateFormat('yyyy-MM-dd').format(cellDate);
-        final String start = "${hour.toString().padLeft(2, '0')}:00";
-        final String end = "${(hour + 1).toString().padLeft(2, '0')}:00";
-        cubit.addTimeSlot(
-          date: formattedDate,
-          startTime: start,
-          endTime: end,
+            );
+          },
         );
       },
-      child: Container(
-        height: context.height / 12.5,
-        decoration: BoxDecoration(
-          border: Border.all(color: greyLight.withOpacity(0.5), width: 0.5),
-        ),
-        child: const Center(
-          child: Icon(
-            Icons.add_circle_outline,
-            color: greenLight,
-            size: 20,
-          ),
-        ),
-      ),
+    );
+  }
+
+  void _showEditSlotDialog(BuildContext context, TimeSlot slot) {
+    final String initialDateStr = slot.date != null
+        ? DateFormat('yyyy-MM-dd').format(slot.date!)
+        : '';
+    final String initialStartStr = slot.startTime?.substring(0, 5) ?? '08:00';
+    final String initialEndStr = slot.endTime?.substring(0, 5) ?? '09:00';
+
+    String selectedDateStr = initialDateStr;
+    String selectedStartStr = initialStartStr;
+    String selectedEndStr = initialEndStr;
+
+    bool isSubmitting = false;
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return StatefulBuilder(
+          builder: (stContext, setState) {
+            final startHour = int.tryParse(selectedStartStr.split(':')[0]) ?? 0;
+            final startMin = int.tryParse(selectedStartStr.split(':')[1]) ?? 0;
+            final endHour = int.tryParse(selectedEndStr.split(':')[0]) ?? 0;
+            final endMin = int.tryParse(selectedEndStr.split(':')[1]) ?? 0;
+
+            final bool isValid =
+                (endHour > startHour) ||
+                (endHour == startHour && endMin > startMin);
+            final bool isFutureStart = !_isPastSelectedStart(
+              selectedDateStr,
+              selectedStartStr,
+            );
+
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: Row(
+                children: [
+                  const Icon(Icons.edit_calendar, color: primary, size: 24),
+                  const SizedBox(width: 8),
+                  Text(
+                    tr("edit_time_slot"),
+                    style: TextStyles.textStyleBold14.copyWith(
+                      color: primary,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    tr("select_date"),
+                    style: TextStyles.textStyleBold12.copyWith(color: grey1),
+                  ),
+                  const SizedBox(height: 6),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: greyLight,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: grey3, width: 0.5),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          selectedDateStr,
+                          style: TextStyles.textStyleBold12.copyWith(
+                            color: black,
+                            fontFamily: poppins,
+                          ),
+                        ),
+                        const Icon(
+                          Icons.calendar_today,
+                          color: grey1,
+                          size: 16,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              tr("start_time"),
+                              style: TextStyles.textStyleBold12.copyWith(
+                                color: grey1,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            InkWell(
+                              onTap: () async {
+                                final initialStartHour =
+                                    int.tryParse(
+                                      initialStartStr.split(':')[0],
+                                    ) ??
+                                    8;
+                                final initialStartMin =
+                                    int.tryParse(
+                                      initialStartStr.split(':')[1],
+                                    ) ??
+                                    0;
+                                final time = await showTimePicker(
+                                  context: stContext,
+                                  initialTime: TimeOfDay(
+                                    hour: initialStartHour,
+                                    minute: initialStartMin,
+                                  ),
+                                );
+                                if (time != null) {
+                                  setState(() {
+                                    selectedStartStr =
+                                        "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
+                                    selectedEndStr =
+                                        "${((time.hour + 1) % 24).toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
+                                  });
+                                }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: grey3, width: 1),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      selectedStartStr,
+                                      style: TextStyles.textStyleBold12
+                                          .copyWith(
+                                            color: black,
+                                            fontFamily: poppins,
+                                          ),
+                                    ),
+                                    const Icon(
+                                      Icons.access_time,
+                                      color: primary,
+                                      size: 16,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              tr("end_time"),
+                              style: TextStyles.textStyleBold12.copyWith(
+                                color: grey1,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            InkWell(
+                              onTap: () async {
+                                final initialEndHour =
+                                    int.tryParse(initialEndStr.split(':')[0]) ??
+                                    9;
+                                final initialEndMin =
+                                    int.tryParse(initialEndStr.split(':')[1]) ??
+                                    0;
+                                final time = await showTimePicker(
+                                  context: stContext,
+                                  initialTime: TimeOfDay(
+                                    hour: initialEndHour,
+                                    minute: initialEndMin,
+                                  ),
+                                );
+                                if (time != null) {
+                                  setState(() {
+                                    selectedEndStr =
+                                        "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
+                                  });
+                                }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: grey3, width: 1),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      selectedEndStr,
+                                      style: TextStyles.textStyleBold12
+                                          .copyWith(
+                                            color: black,
+                                            fontFamily: poppins,
+                                          ),
+                                    ),
+                                    const Icon(
+                                      Icons.access_time,
+                                      color: primary,
+                                      size: 16,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (!isValid) ...[
+                    const SizedBox(height: 12),
+                    Text(
+                      tr("invalid_time_range"),
+                      style: TextStyles.textStyleBold12.copyWith(
+                        color: red,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                  if (!isFutureStart) ...[
+                    const SizedBox(height: 12),
+                    Text(
+                      tr("time_slot_must_be_future"),
+                      style: TextStyles.textStyleBold12.copyWith(
+                        color: red,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: isSubmitting
+                      ? null
+                      : () {
+                          Navigator.of(dialogContext).pop();
+                        },
+                  child: Text(
+                    tr("cancel"),
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: (!isValid || !isFutureStart || isSubmitting)
+                      ? null
+                      : () async {
+                          setState(() {
+                            isSubmitting = true;
+                          });
+                          await context
+                              .read<AppointmentsCubit>()
+                              .updateTimeSlot(
+                                id: slot.id!,
+                                date: selectedDateStr,
+                                startTime: selectedStartStr,
+                                endTime: selectedEndStr,
+                              );
+                          Navigator.of(dialogContext).pop();
+                        },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primary,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: isSubmitting
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: white,
+                          ),
+                        )
+                      : Text(
+                          tr("save"),
+                          style: const TextStyle(
+                            color: white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 
@@ -521,7 +1203,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
   Widget _legendItem(String label, Color color) {
     return Row(
       children: [
-        Text(label, style: const TextStyle(fontSize: 10, color: primary)),
+        Text(label, style: const TextStyle(fontSize: 12, color: primary)),
         const SizedBox(width: 5),
         Container(
           width: 8,

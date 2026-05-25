@@ -10,9 +10,13 @@ class CoursesStatusResponse {
     message = json['message'];
     if (json['data'] != null) {
       data = <Data>[];
-      json['data'].forEach((v) {
-        data!.add(Data.fromJson(v));
-      });
+      if (json['data'] is List) {
+        for (var v in json['data']) {
+          data!.add(Data.fromJson(v));
+        }
+      } else if (json['data'] is Map<String, dynamic>) {
+        data!.add(Data.fromJson(json['data']));
+      }
     }
   }
 
@@ -72,12 +76,12 @@ class Data {
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    title = json['title'];
+    title = json['title'] ?? json['name'];
     slug = json['slug'];
     totalHours = json['total_hours'];
     contentsCount = json['contents_count'];
     lecturesCount = json['lectures_count'];
-    semiDescription = json['semi_description'];
+    semiDescription = json['semi_description'] ?? json['description'];
     longDescription = json['long_description'];
     price = json['price'];
     priceAfterDiscount = json['price_after_discount'];
@@ -85,6 +89,17 @@ class Data {
     points = json['points'];
     reviewsCount = json['reviews_count'];
     categoryName = json['category_name'];
+    if (categoryName == null) {
+      if (json['specialty'] != null &&
+          json['specialty'] is Map &&
+          json['specialty']['name'] != null) {
+        categoryName = json['specialty']['name'];
+      } else if (json['specialties'] != null &&
+          json['specialties'] is List &&
+          (json['specialties'] as List).isNotEmpty) {
+        categoryName = json['specialties'][0]['name'];
+      }
+    }
     averageRating = json['average_rating'];
     favorited = json['favorited'];
     canWatchCourse = json['can_watch_course'];

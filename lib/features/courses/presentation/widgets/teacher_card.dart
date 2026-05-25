@@ -1,6 +1,7 @@
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/const.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/network_image_handler.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -202,7 +203,7 @@ class TeacherCard extends StatelessWidget {
                                 Text(
                                   "$price ${tr("sar")}",
                                   style: TextStyles.textStyleBold14.copyWith(
-                                    color: primary,
+                                    color: orangeBold,
                                   ),
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,
@@ -212,27 +213,28 @@ class TeacherCard extends StatelessWidget {
                           ),
                           SizedBox(width: 8),
                           // Booking Button
-                          SizedBox(
-                            height: 40,
-                            child: ElevatedButton(
-                              onPressed: onBookPressed,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: primary,
-                                shape: const StadiumBorder(),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 20,
+                          if (!Const.isTeacher)
+                            SizedBox(
+                              height: 40,
+                              child: ElevatedButton(
+                                onPressed: onBookPressed,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: orangeBold,
+                                  shape: const StadiumBorder(),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                  ),
                                 ),
-                              ),
-                              child: Text(
-                                tr("book_now"),
-                                style: TextStyles.textStyleBold12.copyWith(
-                                  color: white,
+                                child: Text(
+                                  tr("book_now"),
+                                  style: TextStyles.textStyleBold12.copyWith(
+                                    color: white,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
-                          ),
                         ],
                       ),
                     ],

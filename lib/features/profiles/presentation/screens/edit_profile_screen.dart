@@ -28,7 +28,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final TextEditingController whatsappController = TextEditingController();
   final TextEditingController alternativeController = TextEditingController();
   final TextEditingController bioController = TextEditingController();
-  
+
   // Teacher controllers
   final TextEditingController shortBioController = TextEditingController();
 
@@ -58,10 +58,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       whatsappController.text = ""; // Need WhatsApp from API if available
       alternativeController.text =
           data?.countryCode?.toString() ?? ""; // Placeholder or check API
-      bioController.text = data?.shortBio?.toString() ?? ""; // Need Bio from API if available
-      
+      bioController.text =
+          data?.shortBio?.toString() ?? ""; // Need Bio from API if available
+
       shortBioController.text = data?.shortBio?.toString() ?? "";
-      
+
       if (data?.specializationTitle != null) {
         selectedSpecialty = data?.specializationTitle?.toString();
       }
@@ -450,19 +451,24 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(horizontal: 40),
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (formKey.currentState!.validate()) {
-                          context.read<ProfileCubit>().updateProfile(
+                          await context.read<ProfileCubit>().updateProfile(
                             params: UpdateProfileParams(
                               fullName: fullNameController.text,
                               phoneNumber: phoneNumberController.text,
                               email: mailController.text,
                               password: passwordController.text,
                               img: context.read<ProfileCubit>().img,
-                              shortBio: Const.isTeacher ? shortBioController.text : null,
-                              specializationTitle: Const.isTeacher ? selectedSpecialty : null,
+                              shortBio: Const.isTeacher
+                                  ? shortBioController.text
+                                  : null,
+                              specializationTitle: Const.isTeacher
+                                  ? selectedSpecialty
+                                  : null,
                             ),
                           );
+                          Navigator.pop(context);
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -667,7 +673,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           controller: controller,
           maxLines: 4,
           decoration: InputDecoration(
-            hintText: hint ?? tr("bio_hint_text"),
+            hintText: hint,
             hintStyle: TextStyles.textStyleNormal12.copyWith(color: grey2),
             filled: true,
             fillColor: white,

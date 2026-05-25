@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/const.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/teacher_detail_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/teacher_detail/teacher_detail_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/teacher/teacher_booking_footer.dart';
@@ -37,6 +38,7 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
   );
 
   DateTime? selectedDate;
+  TeacherTimeSlot? selectedTimeSlot;
   int hoursCount = 1;
   String? countryCode = '+966';
   String? countrySymbol = 'SA';
@@ -99,22 +101,28 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
                         TeachingExperienceSection(
                           experiences: teacher.teachingExperiences!,
                         ),
-                      if (teacher.availability != null &&
+                      if (state.timeSlots.isNotEmpty)
+                        TeacherTimeSlotsSection(timeSlots: state.timeSlots)
+                      else if (teacher.availability != null &&
                           teacher.availability!.isNotEmpty)
                         AvailabilitySection(
                           availability: teacher.availability!,
                         ),
-                      if (teacher.reviews != null &&
-                          teacher.reviews!.isNotEmpty)
+                      if (state.reviews.isNotEmpty)
                         TeacherRatingsList(
                           overallRating: teacher.rating ?? 0.0,
-                          reviews: teacher.reviews!,
+                          reviews: state.reviews,
                         ),
-                      TeacherBookingFooter(
-                        price: teacher.hourlyPrice ?? 0.0,
-                        bookingPolicyHint: teacher.bookingPolicyHint,
-                        onBookNow: () => _showBookingSheet(context, teacher),
-                      ),
+                      if (!Const.isTeacher)
+                        TeacherBookingFooter(
+                          price: teacher.hourlyPrice ?? 0.0,
+                          bookingPolicyHint: teacher.bookingPolicyHint,
+                          onBookNow: () => _showBookingSheet(
+                            context,
+                            teacher,
+                            state.timeSlots,
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -157,8 +165,13 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
     );
   }
 
-  void _showBookingSheet(BuildContext context, TeacherDetail teacher) {
+  void _showBookingSheet(
+    BuildContext context,
+    TeacherDetail teacher,
+    List<TeacherTimeSlot> timeSlots,
+  ) {
     selectedDate = null;
+    selectedTimeSlot = null;
     hoursCount = 1;
     _hoursController.text = '1';
     _phoneController.clear();
@@ -248,20 +261,38 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
                             children: [
                               _bookingLabel(
                                 context,
-                                tr("choose_days"),
+                                tr("available_times"),
                                 Icons.calendar_month_outlined,
                               ),
                               const SizedBox(height: 10),
                               _bookingInput(
                                 context: context,
-                                hintText: tr("choose_days"),
-                                text: selectedDate == null
-                                    ? null
-                                    : DateFormat(
-                                        'yyyy/MM/dd',
-                                      ).format(selectedDate!),
+                                hintText: tr("available_times"),
+                                text: selectedTimeSlot == null
+                                    ? (selectedDate == null
+                                          ? null
+                                          : DateFormat(
+                                              'yyyy/MM/dd',
+                                            ).format(selectedDate!))
+                                    : _formatTimeSlot(selectedTimeSlot!),
                                 icon: Icons.calendar_month_outlined,
                                 onTap: () async {
+                                  if (timeSlots.isNotEmpty) {
+                                    final pickedSlot =
+                                        await _showTimeSlotsPicker(
+                                      context,
+                                      timeSlots,
+                                    );
+
+                                    if (pickedSlot != null) {
+                                      setModalState(() {
+                                        selectedTimeSlot = pickedSlot;
+                                        selectedDate = pickedSlot.date;
+                                      });
+                                    }
+                                    return;
+                                  }
+
                                   final pickedDate = await showDatePicker(
                                     context: context,
                                     initialDate: selectedDate ?? DateTime.now(),
@@ -331,7 +362,11 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
                               ),
                               SizedBox(height: context.height / 32),
                               GestureDetector(
-                                onTap: () => _confirmBooking(context, teacher),
+                                onTap: () => _confirmBooking(
+                                  context,
+                                  teacher,
+                                  timeSlots.isNotEmpty,
+                                ),
                                 child: Container(
                                   width: double.infinity,
                                   height: context.height / 13,
@@ -509,6 +544,125 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
     );
   }
 
+  Future<TeacherTimeSlot?> _showTimeSlotsPicker(
+    BuildContext context,
+    List<TeacherTimeSlot> timeSlots,
+  ) {
+    return showModalBottomSheet<TeacherTimeSlot>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Directionality(
+          textDirection: ui.TextDirection.rtl,
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: context.width / 25),
+            constraints: BoxConstraints(maxHeight: context.height * 0.65),
+            decoration: BoxDecoration(
+              color: white,
+              borderRadius: BorderRadius.circular(24),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.width / 16,
+                    vertical: context.height / 45,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        tr("available_times"),
+                        style: TextStyles.textStyleBold18.copyWith(
+                          color: primary,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Icon(Icons.access_time, color: orangeBold, size: 24),
+                    ],
+                  ),
+                ),
+                Flexible(
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    padding: EdgeInsets.fromLTRB(
+                      context.width / 16,
+                      0,
+                      context.width / 16,
+                      context.height / 35,
+                    ),
+                    itemCount: timeSlots.length,
+                    separatorBuilder: (_, __) => const SizedBox(height: 10),
+                    itemBuilder: (context, index) {
+                      final slot = timeSlots[index];
+                      final isSelected = selectedTimeSlot?.id == slot.id;
+
+                      return Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          onTap: () => Navigator.pop(context, slot),
+                          borderRadius: BorderRadius.circular(16),
+                          child: Container(
+                            padding: const EdgeInsets.all(14),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? orangeBold.withOpacity(0.08)
+                                  : greyLight,
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: isSelected
+                                    ? orangeBold
+                                    : black.withOpacity(0.05),
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  isSelected
+                                      ? Icons.check_circle
+                                      : Icons.radio_button_unchecked,
+                                  color: isSelected ? orangeBold : grey1,
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    _formatTimeSlot(slot),
+                                    style: TextStyles.textStyleBold16.copyWith(
+                                      color: primary,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  String _formatTimeSlot(TeacherTimeSlot slot) {
+    final dateText = slot.date == null
+        ? ""
+        : DateFormat('yyyy/MM/dd').format(slot.date!);
+    final startTime = slot.startTime ?? "";
+    final endTime = slot.endTime ?? "";
+    final timeText = "$startTime - $endTime";
+
+    if (dateText.isEmpty) return timeText;
+    if (startTime.isEmpty && endTime.isEmpty) return dateText;
+    return "$dateText | $timeText";
+  }
+
   Widget _totalPriceCard(
     BuildContext context, {
     required double hourlyPrice,
@@ -580,9 +734,18 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
     );
   }
 
-  void _confirmBooking(BuildContext context, TeacherDetail teacher) {
+  void _confirmBooking(
+    BuildContext context,
+    TeacherDetail teacher,
+    bool hasTimeSlots,
+  ) {
     if (selectedDate == null) {
       _showBookingValidation(context, tr("booking_validation_day"));
+      return;
+    }
+
+    if (hasTimeSlots && selectedTimeSlot == null) {
+      _showBookingValidation(context, tr("booking_validation_time"));
       return;
     }
 
@@ -601,13 +764,7 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
     }
 
     Navigator.pop(context);
-    _openWhatsAppBooking(
-      teacher,
-      bookingDate: selectedDate!,
-      hours: hoursCount,
-      studentPhone: "$countryCode${_phoneNumber ?? ""}",
-      notes: _notesController.text.trim(),
-    );
+    _openWhatsAppBooking(teacher);
   }
 
   void _showBookingValidation(BuildContext context, String message) {
@@ -622,14 +779,12 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
     );
   }
 
-  void _openWhatsAppBooking(
-    TeacherDetail teacher, {
-    required DateTime bookingDate,
-    required int hours,
-    required String studentPhone,
-    String? notes,
-  }) async {
+  void _openWhatsAppBooking(TeacherDetail teacher) async {
     const phoneNumber = '2001022370181';
+    final bookingDate = selectedDate!;
+    final hours = hoursCount;
+    final studentPhone = "$countryCode${_phoneNumber ?? ""}";
+    final notes = _notesController.text.trim();
     final totalPrice = (teacher.hourlyPrice ?? 0) * hours;
     final subjectsText =
         teacher.subjects != null && teacher.subjects!.isNotEmpty
@@ -651,9 +806,14 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
     message.writeln(
       'تاريخ الحجز: ${DateFormat('yyyy/MM/dd').format(bookingDate)}',
     );
+    if (selectedTimeSlot != null) {
+      message.writeln(
+        'وقت الحجز: ${selectedTimeSlot!.startTime ?? ''} - ${selectedTimeSlot!.endTime ?? ''}',
+      );
+    }
     message.writeln('عدد الساعات: $hours');
     message.writeln('رقم الهاتف: $studentPhone');
-    if (notes != null && notes.isNotEmpty) {
+    if (notes.isNotEmpty) {
       message.writeln('ملاحظات: $notes');
     }
     message.writeln('سعر الساعة: \$${teacher.hourlyPrice ?? 0}');

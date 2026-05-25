@@ -5,6 +5,7 @@ import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/cour
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/courses_status_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/teachers_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/subject_details_response.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/teacher_detail_response.dart';
 
 abstract class CoursesRepositories {
   Future<Either<Failure, CategoriesResponse>> getCategories();
@@ -20,5 +21,11 @@ abstract class CoursesRepositories {
   });
   Future<Either<Failure, SubjectDetailsResponse>> getSubjectDetails({
     required int subjectId,
+  });
+  Future<Either<Failure, List<TeacherReview>>> getTeacherReviews({
+    required int teacherId,
+  });
+  Future<Either<Failure, List<TeacherTimeSlot>>> getTeacherTimeSlots({
+    required int teacherId,
   });
 }

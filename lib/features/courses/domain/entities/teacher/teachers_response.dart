@@ -50,14 +50,21 @@ class TeacherItem {
   factory TeacherItem.fromJson(Map<String, dynamic> json) {
     return TeacherItem(
       id: json['id'],
-      name: json['name'],
+      name: json['full_name'],
       image: json['image'],
       specialty: json['specialty'] ?? json['specialization_title'],
       rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
-      experienceYears: json['experience_years'] ?? json['years_experience'] ?? 0,
+      experienceYears:
+          json['experience_years'] ?? json['years_experience'] ?? 0,
       studentsCount: json['students_count'] ?? 0,
-      hourlyPrice: (json['hourly_price'] as num?)?.toDouble() ?? 0.0,
+      hourlyPrice: _parseDouble(json['hourly_price'] ?? json['hourly_rate']),
       slug: json['slug'],
     );
+  }
+
+  static double _parseDouble(dynamic value) {
+    if (value is num) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? 0.0;
+    return 0.0;
   }
 }

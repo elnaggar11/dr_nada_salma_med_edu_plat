@@ -19,8 +19,8 @@ class TeacherDetailCubit extends Cubit<TeacherDetailState> {
       subjectId: subjectId,
     );
 
-    result.fold(
-      (failure) {
+    await result.fold<Future<void>>(
+      (failure) async {
         String msg = "Unknown error occurred";
         if (failure is ServerFailure) msg = failure.message;
         if (failure is AuthFailure) msg = failure.message;
@@ -28,15 +28,48 @@ class TeacherDetailCubit extends Cubit<TeacherDetailState> {
           state.copyWith(status: TeacherDetailRequestState.error, message: msg),
         );
       },
-      (response) {
-        // Log the complete raw data/JSON response to the console
+      (response) async {
+        final teacherDetail = TeacherDetail.fromJson(response['data']);
+
+        final reviewsResult = await _coursesRepository.getTeacherReviews(
+          teacherId: teacherId,
+        );
+        final timeSlotsResult = await _coursesRepository.getTeacherTimeSlots(
+          teacherId: teacherId,
+        );
+
+        List<TeacherReview> parsedReviews = [];
+        reviewsResult.fold(
+          (reviewFailure) {
+            log("Failed to fetch teacher reviews: $reviewFailure");
+          },
+          (reviewsList) {
+            parsedReviews = reviewsList;
+          },
+        );
+
+        List<TeacherTimeSlot> parsedTimeSlots = [];
+        timeSlotsResult.fold(
+          (timeSlotsFailure) {
+            log("Failed to fetch teacher time slots: $timeSlotsFailure");
+          },
+          (timeSlotsList) {
+            parsedTimeSlots = timeSlotsList;
+          },
+        );
+
         log("---------------- TEACHER GET DATA ----------------");
         log(response.toString());
+        log("Parsed reviews count: ${parsedReviews.length}");
+        log("Parsed time slots count: ${parsedTimeSlots.length}");
         log("--------------------------------------------------");
+
         emit(
           state.copyWith(
             status: TeacherDetailRequestState.success,
-            teacherDetail: TeacherDetail.fromJson(response['data']),
+            teacherDetail: teacherDetail,
+            reviews: parsedReviews,
+            timeSlots: parsedTimeSlots,
           ),
         );
       },

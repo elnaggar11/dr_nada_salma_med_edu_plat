@@ -6,6 +6,7 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/fonts.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/images.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/screens.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/const.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/custom_app_bar.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/network_image_handler.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/svg_handler.dart';
@@ -99,7 +100,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     SizedBox(width: context.width / 20),
                                     ClipOval(
                                       child: NetWorkImageHandler(
-                                        image: context
+                                        image:
+                                            context
                                                 .read<ProfileCubit>()
                                                 .profileResponse
                                                 ?.data
@@ -202,36 +204,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     SizedBox(height: context.height / 50),
-                    InkWell(
-                      onTap: () {
-                        context.pushNamed(name: coursesSc, args: "courses");
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(width: context.width / 15),
-                          Container(
-                            alignment: Alignment.center,
-                            child: customSvg(
-                              name: course1,
-                              width: context.width / 20,
-                              height: context.width / 20,
+
+                    if (!Const.isTeacher) ...[
+                      InkWell(
+                        onTap: () {
+                          context.pushNamed(name: coursesSc, args: "courses");
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(width: context.width / 15),
+                            Container(
+                              alignment: Alignment.center,
+                              child: customSvg(
+                                name: course1,
+                                width: context.width / 20,
+                                height: context.width / 20,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: context.width / 50),
-                          Text(
-                            tr("my_courses"),
-                            style: TextStyles.textStyleBold12.copyWith(
-                              color: primary,
+                            SizedBox(width: context.width / 50),
+                            Text(
+                              tr("my_courses"),
+                              style: TextStyles.textStyleBold12.copyWith(
+                                color: primary,
+                              ),
+                              textScaler: TextScaler.linear(1),
                             ),
-                            textScaler: TextScaler.linear(1),
-                          ),
-                          Spacer(),
-                          context.locale.languageCode == "ar"
-                              ? Transform.rotate(
-                                  angle: 180 * math.pi / 180,
-                                  child: Container(
+                            Spacer(),
+                            context.locale.languageCode == "ar"
+                                ? Transform.rotate(
+                                    angle: 180 * math.pi / 180,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      child: customSvg(
+                                        name: forward1,
+                                        width: context.width / 24,
+                                        height: context.width / 24,
+                                      ),
+                                    ),
+                                  )
+                                : Container(
                                     alignment: Alignment.center,
                                     child: customSvg(
                                       name: forward1,
@@ -239,20 +252,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       height: context.width / 24,
                                     ),
                                   ),
-                                )
-                              : Container(
-                                  alignment: Alignment.center,
-                                  child: customSvg(
-                                    name: forward1,
-                                    width: context.width / 24,
-                                    height: context.width / 24,
-                                  ),
-                                ),
-                          SizedBox(width: context.width / 12),
-                        ],
+                            SizedBox(width: context.width / 12),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: context.height / 30),
+                      SizedBox(height: context.height / 30),
+                    ],
+
                     InkWell(
                       onTap: () {
                         context.pushNamed(name: appointmentsSc);
@@ -265,9 +271,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Container(
                             alignment: Alignment.center,
                             child: customSvg(
-                              name: privateMenu,
-                              width: context.width / 20,
-                              height: context.width / 20,
+                              color: primary,
+                              name: schedule,
+                              width: context.width / 18,
+                              height: context.width / 18,
                             ),
                           ),
                           SizedBox(width: context.width / 30),
@@ -303,42 +310,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ],
                       ),
                     ),
+
                     SizedBox(height: context.height / 30),
 
-                    InkWell(
-                      onTap: () {
-                        context.pushNamed(
-                          name: privateLessons,
-                          args: "lessons",
-                        );
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(width: context.width / 15),
-                          Container(
-                            alignment: Alignment.center,
-                            child: customSvg(
-                              name: new2,
-                              width: context.width / 22,
-                              height: context.width / 22,
+                    if (!Const.isTeacher) ...[
+                      InkWell(
+                        onTap: () {
+                          context.pushNamed(
+                            name: privateLessons,
+                            args: "lessons",
+                          );
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(width: context.width / 15),
+                            Container(
+                              alignment: Alignment.center,
+                              child: customSvg(
+                                name: new2,
+                                width: context.width / 22,
+                                height: context.width / 22,
+                              ),
                             ),
-                          ),
 
-                          SizedBox(width: context.width / 30),
-                          Text(
-                            tr("my_private_lessons"),
-                            style: TextStyles.textStyleBold12.copyWith(
-                              color: primary,
+                            SizedBox(width: context.width / 30),
+                            Text(
+                              tr("my_private_lessons"),
+                              style: TextStyles.textStyleBold12.copyWith(
+                                color: primary,
+                              ),
+                              textScaler: TextScaler.linear(1),
                             ),
-                            textScaler: TextScaler.linear(1),
-                          ),
-                          Spacer(),
-                          context.locale.languageCode == "ar"
-                              ? Transform.rotate(
-                                  angle: 180 * math.pi / 180,
-                                  child: Container(
+                            Spacer(),
+                            context.locale.languageCode == "ar"
+                                ? Transform.rotate(
+                                    angle: 180 * math.pi / 180,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      child: customSvg(
+                                        name: forward1,
+                                        width: context.width / 24,
+                                        height: context.width / 24,
+                                      ),
+                                    ),
+                                  )
+                                : Container(
                                     alignment: Alignment.center,
                                     child: customSvg(
                                       name: forward1,
@@ -346,50 +364,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       height: context.width / 24,
                                     ),
                                   ),
-                                )
-                              : Container(
-                                  alignment: Alignment.center,
-                                  child: customSvg(
-                                    name: forward1,
-                                    width: context.width / 24,
-                                    height: context.width / 24,
-                                  ),
-                                ),
-                          SizedBox(width: context.width / 12),
-                        ],
+                            SizedBox(width: context.width / 12),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: context.height / 30),
-                    InkWell(
-                      onTap: () {
-                        context.pushNamed(name: certificateSc);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(width: context.width / 15),
-                          Container(
-                            alignment: Alignment.center,
-                            child: customSvg(
-                              name: certificate,
-                              width: context.width / 20,
-                              height: context.width / 20,
+                      SizedBox(height: context.height / 30),
+                    ],
+
+                    if (!Const.isTeacher) ...[
+                      InkWell(
+                        onTap: () {
+                          context.pushNamed(name: certificateSc);
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(width: context.width / 15),
+                            Container(
+                              alignment: Alignment.center,
+                              child: customSvg(
+                                name: certificate,
+                                width: context.width / 20,
+                                height: context.width / 20,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: context.width / 30),
-                          Text(
-                            tr("certificates"),
-                            style: TextStyles.textStyleBold12.copyWith(
-                              color: primary,
+                            SizedBox(width: context.width / 30),
+                            Text(
+                              tr("certificates"),
+                              style: TextStyles.textStyleBold12.copyWith(
+                                color: primary,
+                              ),
+                              textScaler: TextScaler.linear(1),
                             ),
-                            textScaler: TextScaler.linear(1),
-                          ),
-                          Spacer(),
-                          context.locale.languageCode == "ar"
-                              ? Transform.rotate(
-                                  angle: 180 * math.pi / 180,
-                                  child: Container(
+                            Spacer(),
+                            context.locale.languageCode == "ar"
+                                ? Transform.rotate(
+                                    angle: 180 * math.pi / 180,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      child: customSvg(
+                                        name: forward1,
+                                        width: context.width / 24,
+                                        height: context.width / 24,
+                                      ),
+                                    ),
+                                  )
+                                : Container(
                                     alignment: Alignment.center,
                                     child: customSvg(
                                       name: forward1,
@@ -397,20 +418,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       height: context.width / 24,
                                     ),
                                   ),
-                                )
-                              : Container(
-                                  alignment: Alignment.center,
-                                  child: customSvg(
-                                    name: forward1,
-                                    width: context.width / 24,
-                                    height: context.width / 24,
-                                  ),
-                                ),
-                          SizedBox(width: context.width / 12),
-                        ],
+                            SizedBox(width: context.width / 12),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: context.height / 60),
+                      SizedBox(height: context.height / 30),
+                    ],
                   ],
                 ),
               ),
@@ -443,37 +456,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     SizedBox(height: context.height / 45),
-                    InkWell(
-                      onTap: () {
-                        context.pushNamed(name: favouriteSc);
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(width: context.width / 15),
+                    if (!Const.isTeacher) ...[
+                      InkWell(
+                        onTap: () {
+                          context.pushNamed(name: favouriteSc);
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(width: context.width / 15),
 
-                          Container(
-                            alignment: Alignment.center,
-                            child: customSvg(
-                              name: heart2,
-                              width: context.width / 20,
-                              height: context.width / 20,
+                            Container(
+                              alignment: Alignment.center,
+                              child: customSvg(
+                                name: heart2,
+                                width: context.width / 20,
+                                height: context.width / 20,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: context.width / 30),
-                          Text(
-                            tr("favorites"),
-                            style: TextStyles.textStyleBold12.copyWith(
-                              color: primary,
+                            SizedBox(width: context.width / 30),
+                            Text(
+                              tr("favorites"),
+                              style: TextStyles.textStyleBold12.copyWith(
+                                color: primary,
+                              ),
+                              textScaler: TextScaler.linear(1),
                             ),
-                            textScaler: TextScaler.linear(1),
-                          ),
-                          Spacer(),
-                          context.locale.languageCode == "ar"
-                              ? Transform.rotate(
-                                  angle: 180 * math.pi / 180,
-                                  child: Container(
+                            Spacer(),
+                            context.locale.languageCode == "ar"
+                                ? Transform.rotate(
+                                    angle: 180 * math.pi / 180,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      child: customSvg(
+                                        name: forward1,
+                                        width: context.width / 24,
+                                        height: context.width / 24,
+                                      ),
+                                    ),
+                                  )
+                                : Container(
                                     alignment: Alignment.center,
                                     child: customSvg(
                                       name: forward1,
@@ -481,21 +504,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       height: context.width / 24,
                                     ),
                                   ),
-                                )
-                              : Container(
-                                  alignment: Alignment.center,
-                                  child: customSvg(
-                                    name: forward1,
-                                    width: context.width / 24,
-                                    height: context.width / 24,
-                                  ),
-                                ),
 
-                          SizedBox(width: context.width / 12),
-                        ],
+                            SizedBox(width: context.width / 12),
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: context.height / 30),
+                      SizedBox(height: context.height / 30),
+                    ],
+
                     InkWell(
                       onTap: () {
                         context.pushNamed(

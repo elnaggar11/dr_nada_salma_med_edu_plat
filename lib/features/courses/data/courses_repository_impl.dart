@@ -7,6 +7,7 @@ import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/cour
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/courses_status_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/teachers_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/subject_details_response.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/teacher_detail_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/repositories/courses_repositories.dart';
 
 class CoursesRepositoryImpl implements CoursesRepositories {
@@ -88,6 +89,42 @@ class CoursesRepositoryImpl implements CoursesRepositories {
   }) async {
     try {
       final response = await coursesRemoteDataSource.getSubjectDetails(subjectId: subjectId);
+      return Right(response);
+    } on ServerException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on UnAuthorizedException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on UnprocessableContentException catch (e) {
+      return left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<TeacherReview>>> getTeacherReviews({
+    required int teacherId,
+  }) async {
+    try {
+      final response = await coursesRemoteDataSource.getTeacherReviews(
+        teacherId: teacherId,
+      );
+      return Right(response);
+    } on ServerException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on UnAuthorizedException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on UnprocessableContentException catch (e) {
+      return left(ServerFailure(message: e.message));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<TeacherTimeSlot>>> getTeacherTimeSlots({
+    required int teacherId,
+  }) async {
+    try {
+      final response = await coursesRemoteDataSource.getTeacherTimeSlots(
+        teacherId: teacherId,
+      );
       return Right(response);
     } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));

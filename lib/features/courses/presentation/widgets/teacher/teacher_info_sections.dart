@@ -341,3 +341,103 @@ class AvailabilitySection extends StatelessWidget {
   }
 }
 
+class TeacherTimeSlotsSection extends StatelessWidget {
+  final List<TeacherTimeSlot> timeSlots;
+
+  const TeacherTimeSlotsSection({super.key, required this.timeSlots});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InfoSectionTitle(title: LocaleKeys.available_times.tr()),
+          const SizedBox(height: 16),
+          Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: timeSlots.map((slot) {
+              final dateText = slot.date == null
+                  ? ""
+                  : DateFormat('yyyy/MM/dd').format(slot.date!);
+              final timeText = "${slot.startTime ?? ""} - ${slot.endTime ?? ""}";
+
+              return Container(
+                width: (MediaQuery.of(context).size.width - 60) / 2,
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8F9FA),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: const Color(0xFFF9D0BA)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.calendar_month_outlined,
+                          color: Color(0xFFF06523),
+                          size: 18,
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            dateText,
+                            style: context.boldText.copyWith(
+                              fontSize: 13,
+                              color: const Color(0xFF355C7D),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.access_time_rounded,
+                          color: Color(0xFFF06523),
+                          size: 18,
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            timeText,
+                            style: context.mediumText.copyWith(
+                              fontSize: 13,
+                              color: const Color(0xFF666666),
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+

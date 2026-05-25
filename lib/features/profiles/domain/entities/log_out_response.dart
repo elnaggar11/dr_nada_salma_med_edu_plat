@@ -1,7 +1,7 @@
 class LogOutResponse {
   bool? status;
   String? message;
-  Null data;
+  dynamic data;
 
   LogOutResponse({this.status, this.message, this.data});
 

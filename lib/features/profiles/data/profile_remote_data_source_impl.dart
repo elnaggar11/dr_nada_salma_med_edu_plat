@@ -149,6 +149,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
           ? {
               "full_name": params.fullName,
               "phone_number": params.phoneNumber,
+              "country_code": "+966",
               "email": params.email,
               "image": params.img == null
                   ? ""
@@ -157,6 +158,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
           : {
               "full_name": params.fullName,
               "phone_number": params.phoneNumber,
+              "country_code": "+966",
               "email": params.email,
               "password": params.password,
               "image": params.img == null
@@ -166,20 +168,28 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
       if (Const.isTeacher) {
         body.addAll({
-          if (params.specializationTitle != null) "specialization_title": params.specializationTitle,
+          if (params.specializationTitle != null)
+            "specialization_title": params.specializationTitle,
           if (params.country != null) "country": params.country,
           if (params.city != null) "city": params.city,
           if (params.languages != null) "languages": params.languages,
-          if (params.studentsCount != null) "students_count": params.studentsCount,
-          if (params.yearsExperience != null) "years_experience": params.yearsExperience,
+          if (params.studentsCount != null)
+            "students_count": params.studentsCount,
+          if (params.yearsExperience != null)
+            "years_experience": params.yearsExperience,
           if (params.shortBio != null) "short_bio": params.shortBio,
           if (params.about != null) "about": params.about,
-          if (params.targetStudents != null) "target_students": params.targetStudents,
-          if (params.teachingExperience != null) "teaching_experience": params.teachingExperience,
-          if (params.introVideoUrl != null) "intro_video_url": params.introVideoUrl,
+          if (params.targetStudents != null)
+            "target_students": params.targetStudents,
+          if (params.teachingExperience != null)
+            "teaching_experience": params.teachingExperience,
+          if (params.introVideoUrl != null)
+            "intro_video_url": params.introVideoUrl,
           if (params.subjects != null) "subjects": jsonEncode(params.subjects),
-          if (params.timeSlots != null) "time_slots": jsonEncode(params.timeSlots),
-          if (params.removeTimeSlotIds != null) "remove_time_slot_ids": jsonEncode(params.removeTimeSlotIds),
+          if (params.timeSlots != null)
+            "time_slots": jsonEncode(params.timeSlots),
+          if (params.removeTimeSlotIds != null)
+            "remove_time_slot_ids": jsonEncode(params.removeTimeSlotIds),
         });
       }
 
@@ -217,7 +227,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   Future<LogOutResponse> logOut() async {
     try {
       final url = Const.isTeacher ? teacherLogOutApi : logOutApi;
-      final response = await helper.post(url: url, body: {});
+      final response = await helper.postJson(url: url, body: {});
 
       return LogOutResponse.fromJson(response);
     } on ServerException catch (e) {

@@ -262,11 +262,37 @@ class TeacherReview {
 
   factory TeacherReview.fromJson(Map<String, dynamic> json) {
     return TeacherReview(
-      userName: json['user_name'],
-      userImage: json['user_image'],
-      rating: (json['rating'] as num?)?.toDouble(),
-      comment: json['comment'],
-      date: json['date'],
+      userName: json['user_name'] ?? json['userName'] ?? json['student_name'] ?? (json['student'] is Map ? json['student']['full_name'] : null),
+      userImage: json['user_image'] ?? json['userImage'] ?? (json['student'] is Map ? json['student']['image'] : null),
+      rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
+      comment: json['comment'] ?? json['review'] ?? "",
+      date: json['date'] ?? json['created_at'] ?? "",
+    );
+  }
+}
+
+class TeacherTimeSlot {
+  final int? id;
+  final DateTime? date;
+  final String? startTime;
+  final String? endTime;
+  final bool? isBooked;
+
+  TeacherTimeSlot({
+    this.id,
+    this.date,
+    this.startTime,
+    this.endTime,
+    this.isBooked,
+  });
+
+  factory TeacherTimeSlot.fromJson(Map<String, dynamic> json) {
+    return TeacherTimeSlot(
+      id: json['id'],
+      date: json['date'] != null ? DateTime.tryParse(json['date'].toString()) : null,
+      startTime: json['start_time'],
+      endTime: json['end_time'],
+      isBooked: json['is_booked'] == true || json['is_booked'] == 1,
     );
   }
 }
