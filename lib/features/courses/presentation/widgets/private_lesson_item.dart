@@ -4,6 +4,7 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/fade_button.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/network_image_handler.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:dr_nada_salma_med_edu_plat/gen/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 
 class PrivateLessonItem extends StatelessWidget {
@@ -11,6 +12,7 @@ class PrivateLessonItem extends StatelessWidget {
   final String description;
   final String image;
   final List<String> tags;
+  final String? discount;
   final VoidCallback onDetailsPressed;
 
   const PrivateLessonItem({
@@ -19,6 +21,7 @@ class PrivateLessonItem extends StatelessWidget {
     required this.description,
     required this.image,
     required this.tags,
+    this.discount,
     required this.onDetailsPressed,
   });
 
@@ -54,32 +57,33 @@ class PrivateLessonItem extends StatelessWidget {
           SizedBox(height: 16),
 
           // Discount Badge Row (Example)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: primary.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.percent, size: 16, color: primary),
-                    SizedBox(width: 4),
-                    Text(
-                      "خصم 25%",
-                      style: TextStyles.textStyleBold12.copyWith(
-                        color: primary,
+          if (discount != null && discount!.isNotEmpty) ...[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.percent, size: 16, color: primary),
+                      SizedBox(width: 4),
+                      Text(
+                        discount!,
+                        style: TextStyles.textStyleBold12.copyWith(
+                          color: primary,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-
-          SizedBox(height: 16),
+              ],
+            ),
+            SizedBox(height: 16),
+          ],
 
           // Title
           Text(
@@ -113,7 +117,7 @@ class PrivateLessonItem extends StatelessWidget {
 
           // Detail Button
           FadeColorButton(
-            btnTitle: tr("view_details"),
+            btnTitle: LocaleKeys.view_details.tr(),
             buttonColor: primary,
             onButtonPressed: onDetailsPressed,
           ),

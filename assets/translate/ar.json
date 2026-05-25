@@ -199,7 +199,10 @@
   "join_as_teacher": "انضم كمعلم",
   "teacher_application": "تقديم طلب معلم",
   "basic_info": "البيانات الأساسية",
-  "choose_subject": "اختر المواد",
+  "choose_subject": "المواد الدراسية",
+  "choose_subjects": "اختر المواد الدراسية",
+  "choose_specialty": "اختر التخصص",
+  "specialty": "التخصص",
   "about_you": "نبذة عنك",
   "about_you_hint": "اكتب نبذة مختصرة عن خبراتك في التدريس ومؤهلاتك...",
   "whatsapp_required": "رقم واتساب (مطلوب)",
@@ -265,5 +268,6 @@
   "total_price": "إجمالي السعر",
   "select_booking_day": "اختر يوم الحجز",
   "booking_validation_day": "يرجى اختيار يوم الحجز",
-  "booking_validation_phone": "يرجى إدخال رقم الهاتف"
+  "booking_validation_phone": "يرجى إدخال رقم الهاتف",
+  "view_details": "عرض التفاصيل"
 }

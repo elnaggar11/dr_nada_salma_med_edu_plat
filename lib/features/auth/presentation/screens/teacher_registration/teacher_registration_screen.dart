@@ -60,22 +60,22 @@ class _TeacherRegistrationScreenState extends State<TeacherRegistrationScreen> {
                       SizedBox(height: context.height / 50),
 
                       // 1. Basic Info
-                      const TeacherBasicInfoSection(),
+                      TeacherBasicInfoSection(),
 
                       SizedBox(height: context.height / 35),
 
                       // 2. Subjects
-                      const TeacherSubjectsSection(),
+                      TeacherSubjectsSection(),
 
                       SizedBox(height: context.height / 35),
 
                       // 3. Contact Details
-                      const TeacherContactSection(),
+                      TeacherContactSection(),
 
                       SizedBox(height: context.height / 35),
 
                       // 4. Availability
-                      const TeacherAvailabilitySection(),
+                      TeacherAvailabilitySection(),
 
                       SizedBox(height: context.height / 35),
 
