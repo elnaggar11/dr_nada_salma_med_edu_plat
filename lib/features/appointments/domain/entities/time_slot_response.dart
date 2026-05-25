@@ -36,6 +36,9 @@ class TimeSlot {
   bool? isBooked;
   String? createdAt;
   String? updatedAt;
+  String? studentName;
+  String? teacherName;
+  String? subjectName;
 
   TimeSlot({
     this.id,
@@ -46,6 +49,9 @@ class TimeSlot {
     this.isBooked,
     this.createdAt,
     this.updatedAt,
+    this.studentName,
+    this.teacherName,
+    this.subjectName,
   });
 
   TimeSlot.fromJson(Map<String, dynamic> json) {
@@ -57,6 +63,9 @@ class TimeSlot {
     isBooked = json['is_booked'] == 1 || json['is_booked'] == true;
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
+    studentName = json['student_name'];
+    teacherName = json['teacher_name'];
+    subjectName = json['subject_name'];
   }
 
   Map<String, dynamic> toJson() {
@@ -71,6 +80,9 @@ class TimeSlot {
     data['is_booked'] = this.isBooked;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['student_name'] = this.studentName;
+    data['teacher_name'] = this.teacherName;
+    data['subject_name'] = this.subjectName;
     return data;
   }
 }

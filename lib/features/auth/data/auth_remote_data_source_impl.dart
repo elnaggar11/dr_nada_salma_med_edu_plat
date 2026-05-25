@@ -280,7 +280,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     TeacherApplicationParams? params,
   }) async {
     try {
-      final response = await helper.post(
+      final response = await helper.postJson(
         url: teacherApplicationApi,
         body: params!.toMap(),
       );

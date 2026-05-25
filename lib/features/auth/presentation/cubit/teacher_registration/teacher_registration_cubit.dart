@@ -182,10 +182,15 @@ class TeacherRegistrationCubit extends Cubit<TeacherRegistrationState> {
     emit(TeacherRegistrationSubmitLoadingState());
 
     try {
+      final selectedSpec = specialties.firstWhere(
+        (e) => e.id == selectedSpecialtyId,
+      );
+      final specialtyName = selectedSpec.name ?? "";
+
       final params = TeacherApplicationParams(
         name: nameController.text.trim(),
         email: emailController.text.trim(),
-        specialtyId: selectedSpecialtyId!,
+        specialty: specialtyName,
         bio: bioController.text.trim(),
         subjectIds: selectedSubjectIds,
         whatsapp: whatsappController.text.trim(),

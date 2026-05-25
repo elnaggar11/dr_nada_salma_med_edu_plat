@@ -8,6 +8,8 @@ class TeacherDetailState {
   final TeacherDetail? teacherDetail;
   final List<TeacherReview> reviews;
   final List<TeacherTimeSlot> timeSlots;
+  final TeacherDetailRequestState bookingStatus;
+  final String? bookingMessage;
 
   TeacherDetailState({
     this.status = TeacherDetailRequestState.initial,
@@ -15,6 +17,8 @@ class TeacherDetailState {
     this.teacherDetail,
     this.reviews = const [],
     this.timeSlots = const [],
+    this.bookingStatus = TeacherDetailRequestState.initial,
+    this.bookingMessage,
   });
 
   TeacherDetailState copyWith({
@@ -23,6 +27,8 @@ class TeacherDetailState {
     TeacherDetail? teacherDetail,
     List<TeacherReview>? reviews,
     List<TeacherTimeSlot>? timeSlots,
+    TeacherDetailRequestState? bookingStatus,
+    String? bookingMessage,
   }) {
     return TeacherDetailState(
       status: status ?? this.status,
@@ -30,6 +36,8 @@ class TeacherDetailState {
       teacherDetail: teacherDetail ?? this.teacherDetail,
       reviews: reviews ?? this.reviews,
       timeSlots: timeSlots ?? this.timeSlots,
+      bookingStatus: bookingStatus ?? this.bookingStatus,
+      bookingMessage: bookingMessage ?? this.bookingMessage,
     );
   }
 }

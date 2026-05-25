@@ -145,7 +145,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   }) async {
     try {
       print("password :${params!.password}");
-      Map<String, dynamic> body = params.password == null
+      Map<String, dynamic> body = (params.password == null || params.password!.isEmpty)
           ? {
               "full_name": params.fullName,
               "phone_number": params.phoneNumber,

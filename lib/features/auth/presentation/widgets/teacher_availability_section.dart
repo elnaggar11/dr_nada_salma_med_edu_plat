@@ -161,7 +161,9 @@ class TeacherAvailabilitySection extends StatelessWidget {
       initialTime: TimeOfDay.now(),
     );
     if (picked != null && context.mounted) {
-      final formattedTime = picked.format(context);
+      final hour = picked.hour.toString().padLeft(2, '0');
+      final minute = picked.minute.toString().padLeft(2, '0');
+      final formattedTime = "$hour:$minute";
       if (isFromTime) {
         cubit.selectFromTime(formattedTime);
       } else {

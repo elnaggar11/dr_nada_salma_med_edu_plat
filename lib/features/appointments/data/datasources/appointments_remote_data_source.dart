@@ -1,5 +1,6 @@
 import 'package:dr_nada_salma_med_edu_plat/core/errors/exceptions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/utils/api_base_helper.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/const.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/appointments/domain/entities/time_slot_response.dart';
 
 const String getTimeSlotsApi = "/teacher/time-slots";
@@ -29,8 +30,36 @@ class AppointmentsRemoteDataSourceImpl implements AppointmentsRemoteDataSource {
   @override
   Future<TimeSlotResponse> getTimeSlots() async {
     try {
-      final response = await helper.get(url: getTimeSlotsApi);
-      return TimeSlotResponse.fromJson(response);
+      if (Const.isTeacher) {
+        final response = await helper.get(url: getTimeSlotsApi);
+        return TimeSlotResponse.fromJson(response);
+      } else {
+        final response = await helper.get(url: "/tutoring/bookings");
+        final List<TimeSlot> slots = [];
+        if (response['data'] != null && response['data'] is List) {
+          for (var booking in response['data']) {
+            final session = booking['session'];
+            if (session != null) {
+              slots.add(TimeSlot(
+                id: booking['id'] ?? (session['time_slot_id'] ?? 0),
+                teacherId: session['time_slot_id'],
+                date: session['date'] != null ? DateTime.tryParse(session['date'].toString()) : null,
+                startTime: session['start_time'],
+                endTime: session['end_time'],
+                isBooked: true,
+                studentName: booking['student'],
+                teacherName: booking['teacher'],
+                subjectName: booking['subject'],
+              ));
+            }
+          }
+        }
+        return TimeSlotResponse(
+          status: response['status'] is bool ? response['status'] : true,
+          message: response['message'],
+          data: slots,
+        );
+      }
     } on ServerException catch (e) {
       throw ServerException(message: e.message);
     } on UnAuthorizedException catch (e) {

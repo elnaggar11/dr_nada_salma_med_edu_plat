@@ -4,6 +4,7 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/fonts.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/custom_app_bar.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/appointments/presentation/cubit/appointments_cubit.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/const.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/appointments/presentation/cubit/appointments_state.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/appointments/domain/entities/time_slot_response.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -428,6 +429,16 @@ class _AppointmentsViewState extends State<AppointmentsView> {
         );
       }
 
+      if (!Const.isTeacher) {
+        return Container(
+          height: cellHeight,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            border: Border.all(color: greyLight.withOpacity(0.5), width: 0.5),
+          ),
+        );
+      }
+
       return GestureDetector(
         onTap: () {
           _showAddSlotDialog(context, dayDate, hour);
@@ -454,7 +465,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
       ),
       child: GestureDetector(
         onTap: () {
-          if (!isBooked) {
+          if (Const.isTeacher && !isBooked) {
             _showEditSlotDialog(context, slot);
           }
         },
@@ -492,7 +503,13 @@ class _AppointmentsViewState extends State<AppointmentsView> {
                     const SizedBox(height: 2),
                     Text(
                       isBooked
-                          ? tr("reserved_appointment")
+                          ? (Const.isTeacher
+                              ? (slot.studentName != null && slot.studentName!.isNotEmpty
+                                  ? "حجز: ${slot.studentName}"
+                                  : tr("reserved_appointment"))
+                              : (slot.teacherName != null && slot.teacherName!.isNotEmpty
+                                  ? "حجز مع: ${slot.teacherName}"
+                                  : tr("reserved_appointment")))
                           : tr("available_time"),
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -505,27 +522,28 @@ class _AppointmentsViewState extends State<AppointmentsView> {
                   ],
                 ),
               ),
-              Positioned(
-                top: 0,
-                right: 0,
-                child: GestureDetector(
-                  onTap: () {
-                    _showDeleteConfirmationDialog(context, slot);
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: 11,
+              if (Const.isTeacher && !isBooked)
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: () {
+                      _showDeleteConfirmationDialog(context, slot);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: 11,
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
         ),

@@ -24,6 +24,7 @@ abstract class CoursesRemoteDataSource {
   Future<SubjectDetailsResponse> getSubjectDetails({required int subjectId});
   Future<List<TeacherReview>> getTeacherReviews({required int teacherId});
   Future<List<TeacherTimeSlot>> getTeacherTimeSlots({required int teacherId});
+  Future<Map<String, dynamic>> bookTeacher({required Map<String, dynamic> body});
 }
 
 class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
@@ -170,6 +171,25 @@ class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
       }
 
       return [];
+    } on ServerException catch (e) {
+      throw ServerException(message: e.message);
+    } on UnAuthorizedException catch (e) {
+      throw UnAuthorizedException(message: e.message);
+    } on UnprocessableContentException catch (e) {
+      throw UnprocessableContentException(message: e.message);
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> bookTeacher({
+    required Map<String, dynamic> body,
+  }) async {
+    try {
+      final response = await helper.postJson(
+        url: "/tutoring/bookings",
+        body: body,
+      );
+      return response;
     } on ServerException catch (e) {
       throw ServerException(message: e.message);
     } on UnAuthorizedException catch (e) {

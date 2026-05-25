@@ -144,4 +144,20 @@ class CoursesRepositoryImpl implements CoursesRepositories {
       return left(ServerFailure(message: e.message));
     }
   }
+
+  @override
+  Future<Either<Failure, Map<String, dynamic>>> bookTeacher({
+    required Map<String, dynamic> body,
+  }) async {
+    try {
+      final response = await coursesRemoteDataSource.bookTeacher(body: body);
+      return Right(response);
+    } on ServerException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on UnAuthorizedException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on UnprocessableContentException catch (e) {
+      return left(ServerFailure(message: e.message));
+    }
+  }
 }

@@ -75,4 +75,50 @@ class TeacherDetailCubit extends Cubit<TeacherDetailState> {
       },
     );
   }
+
+  Future<bool> bookTeacher({
+    required int teacherId,
+    required int subjectId,
+    required int timeSlotId,
+    required int totalHours,
+    required String notes,
+  }) async {
+    emit(state.copyWith(bookingStatus: TeacherDetailRequestState.loading));
+
+    final body = {
+      "teacher_id": teacherId,
+      "subject_id": subjectId,
+      "time_slot_id": timeSlotId,
+      "total_hours": totalHours,
+      "notes": notes,
+    };
+
+    final result = await _coursesRepository.bookTeacher(body: body);
+    bool isSuccess = false;
+
+    result.fold(
+      (failure) {
+        String msg = "Failed to book session";
+        if (failure is ServerFailure) msg = failure.message;
+        emit(
+          state.copyWith(
+            bookingStatus: TeacherDetailRequestState.error,
+            bookingMessage: msg,
+          ),
+        );
+      },
+      (response) {
+        emit(
+          state.copyWith(
+            bookingStatus: TeacherDetailRequestState.success,
+            bookingMessage:
+                response['message'] ?? "Session booked successfully",
+          ),
+        );
+        isSuccess = true;
+      },
+    );
+
+    return isSuccess;
+  }
 }

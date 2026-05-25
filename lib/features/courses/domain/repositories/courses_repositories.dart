@@ -28,4 +28,7 @@ abstract class CoursesRepositories {
   Future<Either<Failure, List<TeacherTimeSlot>>> getTeacherTimeSlots({
     required int teacherId,
   });
+  Future<Either<Failure, Map<String, dynamic>>> bookTeacher({
+    required Map<String, dynamic> body,
+  });
 }

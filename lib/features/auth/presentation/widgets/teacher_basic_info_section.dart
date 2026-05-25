@@ -2,10 +2,12 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/custom_text_field.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/extensions.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/presentation/cubit/teacher_registration/teacher_registration_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/presentation/widgets/register_section_header.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TeacherBasicInfoSection extends StatelessWidget {
@@ -29,6 +31,7 @@ class TeacherBasicInfoSection extends StatelessWidget {
           obscure: false,
           labelTxt: tr("full_name"),
           hintText: tr("full_name"),
+          inputFormatters: [EnglishNumbersFormatter()],
           validation: (val) {
             if (val == null || val.trim().isEmpty) {
               return tr("this_field_required");
@@ -46,6 +49,7 @@ class TeacherBasicInfoSection extends StatelessWidget {
           labelTxt: tr("email"),
           hintText: tr("email"),
           textInputType: TextInputType.emailAddress,
+          inputFormatters: [EnglishNumbersFormatter()],
           validation: (val) {
             if (val == null || val.trim().isEmpty) {
               return tr("this_field_required");
@@ -221,6 +225,7 @@ class _BioField extends StatelessWidget {
             maxLines: 4,
             minLines: 3,
             keyboardType: TextInputType.multiline,
+            inputFormatters: [EnglishNumbersFormatter()],
             style: TextStyles.textStyleNormal13.copyWith(
               color: grey2,
               fontWeight: FontWeight.w500,

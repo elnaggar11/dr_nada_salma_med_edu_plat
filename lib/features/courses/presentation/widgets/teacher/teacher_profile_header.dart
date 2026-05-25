@@ -187,7 +187,7 @@ class TeacherProfileHeader extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "\$${teacher.hourlyPrice ?? 0.0}",
+                          text: " ${tr("sar")} ${teacher.hourlyPrice ?? 0.0}",
                           style: context.boldText.copyWith(
                             fontSize: 18,
                             color: const Color(0xFF355C7D),

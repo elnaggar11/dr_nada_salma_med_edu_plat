@@ -126,7 +126,9 @@ class _MyCoursesState extends State<MyCourses>
                 try {
                   final userId = sharedPreferences.getInt("user_id");
                   final userEmail = sharedPreferences.getString("user_email");
-                  final userFullName = sharedPreferences.getString("user_fullName");
+                  final userFullName = sharedPreferences.getString(
+                    "user_fullName",
+                  );
                   if (userId == 311 ||
                       userEmail == "abdoshams2005@gmail.com" ||
                       userFullName == "Abdo Shamss") {
@@ -215,35 +217,29 @@ class _MyCoursesState extends State<MyCourses>
                                   .favorited,
                               id: null,
                               status: 'completed',
-                              totalHours:
-                                  context
-                                      .read<CoursesStatusCubit>()
-                                      .coursesStatusResponse!
-                                      .data![index]
-                                      .totalHours
-                                      .toString() ??
-                                  "",
+                              totalHours: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .totalHours
+                                  .toString(),
                               categoryName: context
                                   .read<CoursesStatusCubit>()
                                   .coursesStatusResponse!
                                   .data![index]
                                   .categoryName,
-                              lectureNum:
-                                  context
-                                      .read<CoursesStatusCubit>()
-                                      .coursesStatusResponse!
-                                      .data![index]
-                                      .lecturesCount
-                                      .toString() ??
-                                  "",
-                              sectionNum:
-                                  context
-                                      .read<CoursesStatusCubit>()
-                                      .coursesStatusResponse!
-                                      .data![index]
-                                      .contentsCount
-                                      .toString() ??
-                                  "",
+                              lectureNum: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .lecturesCount
+                                  .toString(),
+                              sectionNum: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .contentsCount
+                                  .toString(),
                             ),
                           ),
 
@@ -311,14 +307,12 @@ class _MyCoursesState extends State<MyCourses>
                                   .data![index]
                                   .id,
                               status: 'completed',
-                              totalHours:
-                                  context
-                                      .read<CoursesStatusCubit>()
-                                      .coursesStatusResponse!
-                                      .data![index]
-                                      .totalHours
-                                      .toString() ??
-                                  "",
+                              totalHours: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .totalHours
+                                  .toString(),
                               categoryName:
                                   context
                                       .read<CoursesStatusCubit>()
@@ -326,22 +320,18 @@ class _MyCoursesState extends State<MyCourses>
                                       .data![index]
                                       .categoryName ??
                                   "",
-                              lectureNum:
-                                  context
-                                      .read<CoursesStatusCubit>()
-                                      .coursesStatusResponse!
-                                      .data![index]
-                                      .lecturesCount
-                                      .toString() ??
-                                  "",
-                              sectionNum:
-                                  context
-                                      .read<CoursesStatusCubit>()
-                                      .coursesStatusResponse!
-                                      .data![index]
-                                      .contentsCount
-                                      .toString() ??
-                                  "",
+                              lectureNum: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .lecturesCount
+                                  .toString(),
+                              sectionNum: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .contentsCount
+                                  .toString(),
                             ),
                           ),
                     isTargetUser
@@ -450,38 +440,30 @@ class _MyCoursesState extends State<MyCourses>
                                             .data![index]
                                             .id,
                                         status: 'completed',
-                                        totalHours:
-                                            context
-                                                .read<CoursesStatusCubit>()
-                                                .coursesStatusResponse!
-                                                .data![index]
-                                                .totalHours
-                                                .toString() ??
-                                            "",
-                                        categoryName:
-                                            context
-                                                .read<CoursesStatusCubit>()
-                                                .coursesStatusResponse!
-                                                .data![index]
-                                                .categoryName
-                                                .toString() ??
-                                            "",
-                                        lectureNum:
-                                            context
-                                                .read<CoursesStatusCubit>()
-                                                .coursesStatusResponse!
-                                                .data![index]
-                                                .lecturesCount
-                                                .toString() ??
-                                            "",
-                                        sectionNum:
-                                            context
-                                                .read<CoursesStatusCubit>()
-                                                .coursesStatusResponse!
-                                                .data![index]
-                                                .contentsCount
-                                                .toString() ??
-                                            "",
+                                        totalHours: context
+                                            .read<CoursesStatusCubit>()
+                                            .coursesStatusResponse!
+                                            .data![index]
+                                            .totalHours
+                                            .toString(),
+                                        categoryName: context
+                                            .read<CoursesStatusCubit>()
+                                            .coursesStatusResponse!
+                                            .data![index]
+                                            .categoryName
+                                            .toString(),
+                                        lectureNum: context
+                                            .read<CoursesStatusCubit>()
+                                            .coursesStatusResponse!
+                                            .data![index]
+                                            .lecturesCount
+                                            .toString(),
+                                        sectionNum: context
+                                            .read<CoursesStatusCubit>()
+                                            .coursesStatusResponse!
+                                            .data![index]
+                                            .contentsCount
+                                            .toString(),
                                       ),
                                 )),
                   ],

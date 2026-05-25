@@ -42,8 +42,9 @@ class TeacherDetail {
   final List<TeachingExperience>? teachingExperiences;
   final Map<String, List<String>>? availability;
   final List<TeacherReview>? reviews;
-
   final List<TeacherSubject>? subjects;
+  final List<TeacherTimeSlot>? availableTimeSlots;
+  final Map<String, List<TeacherTimeSlot>>? availableTimeSlotsByDate;
 
   // New raw fields in case they are used directly
   final String? fullName;
@@ -81,6 +82,8 @@ class TeacherDetail {
     this.availability,
     this.reviews,
     this.subjects,
+    this.availableTimeSlots,
+    this.availableTimeSlotsByDate,
     this.fullName,
     this.specializationTitle,
     this.location,
@@ -116,13 +119,15 @@ class TeacherDetail {
       name: json['full_name'] ?? json['name'],
       image: json['image'],
       isVerified: json['is_verified'],
-      rating: (json['average_rating'] as num?)?.toDouble() ??
+      rating:
+          (json['average_rating'] as num?)?.toDouble() ??
           (json['rating'] as num?)?.toDouble(),
       reviewsCount: json['reviews_count'],
       city: cityPart ?? json['city'],
       country: countryPart ?? json['country'],
       countryFlag: json['country_flag'],
-      hourlyPrice: (json['hourly_rate'] as num?)?.toDouble() ??
+      hourlyPrice:
+          (json['hourly_rate'] as num?)?.toDouble() ??
           (json['hourly_price'] as num?)?.toDouble(),
       languages: json['languages'] != null
           ? List<String>.from(json['languages'])
@@ -130,8 +135,9 @@ class TeacherDetail {
       studentsCount: json['students_count'],
       experienceYears: json['years_experience'] ?? json['experience_years'],
       bio: json['about'] ?? json['short_bio'] ?? json['bio'],
-      videoUrl: json['intro_video_url'] ?? json['intro_video'] ?? json['video_url'],
-      
+      videoUrl:
+          json['intro_video_url'] ?? json['intro_video'] ?? json['video_url'],
+
       // Adapt target_students to TargetAudience object structure
       targetAudience: json['target_students'] != null
           ? TargetAudience(
@@ -139,9 +145,9 @@ class TeacherDetail {
               levels: [json['target_students'] as String],
             )
           : (json['target_audience'] != null
-              ? TargetAudience.fromJson(json['target_audience'])
-              : null),
-              
+                ? TargetAudience.fromJson(json['target_audience'])
+                : null),
+
       // Adapt teaching_experience string to TeachingExperience list structure
       teachingExperiences: json['teaching_experience'] != null
           ? [
@@ -150,14 +156,14 @@ class TeacherDetail {
                 countryFlag: null,
                 duration: "",
                 description: json['teaching_experience'] as String,
-              )
+              ),
             ]
           : (json['teaching_experiences'] != null
-              ? (json['teaching_experiences'] as List)
-                    .map((i) => TeachingExperience.fromJson(i))
-                    .toList()
-              : null),
-              
+                ? (json['teaching_experiences'] as List)
+                      .map((i) => TeachingExperience.fromJson(i))
+                      .toList()
+                : null),
+
       availability: json['availability'] != null
           ? (json['availability'] as Map<String, dynamic>).map(
               (key, value) => MapEntry(key, List<String>.from(value)),
@@ -172,6 +178,23 @@ class TeacherDetail {
           ? (json['subjects'] as List)
                 .map((i) => TeacherSubject.fromJson(i))
                 .toList()
+          : null,
+      availableTimeSlots: json['available_time_slots'] != null &&
+              json['available_time_slots'] is List
+          ? (json['available_time_slots'] as List)
+                .map((i) => TeacherTimeSlot.fromJson(i))
+                .toList()
+          : null,
+      availableTimeSlotsByDate: json['available_time_slots_by_date'] != null &&
+              json['available_time_slots_by_date'] is Map
+          ? (json['available_time_slots_by_date'] as Map<String, dynamic>).map(
+              (key, value) => MapEntry(
+                key,
+                value is List
+                    ? value.map((i) => TeacherTimeSlot.fromJson(i)).toList()
+                    : [],
+              ),
+            )
           : null,
 
       // Raw new fields
@@ -262,8 +285,15 @@ class TeacherReview {
 
   factory TeacherReview.fromJson(Map<String, dynamic> json) {
     return TeacherReview(
-      userName: json['user_name'] ?? json['userName'] ?? json['student_name'] ?? (json['student'] is Map ? json['student']['full_name'] : null),
-      userImage: json['user_image'] ?? json['userImage'] ?? (json['student'] is Map ? json['student']['image'] : null),
+      userName:
+          json['user_name'] ??
+          json['userName'] ??
+          json['student_name'] ??
+          (json['student'] is Map ? json['student']['full_name'] : null),
+      userImage:
+          json['user_image'] ??
+          json['userImage'] ??
+          (json['student'] is Map ? json['student']['image'] : null),
       rating: (json['rating'] as num?)?.toDouble() ?? 0.0,
       comment: json['comment'] ?? json['review'] ?? "",
       date: json['date'] ?? json['created_at'] ?? "",
@@ -272,26 +302,31 @@ class TeacherReview {
 }
 
 class TeacherTimeSlot {
-  final int? id;
+  final int id;
   final DateTime? date;
   final String? startTime;
   final String? endTime;
+  final String? displayLabel;
   final bool? isBooked;
 
   TeacherTimeSlot({
-    this.id,
+    required this.id,
     this.date,
     this.startTime,
     this.endTime,
+    this.displayLabel,
     this.isBooked,
   });
 
   factory TeacherTimeSlot.fromJson(Map<String, dynamic> json) {
     return TeacherTimeSlot(
       id: json['id'],
-      date: json['date'] != null ? DateTime.tryParse(json['date'].toString()) : null,
+      date: json['date'] != null
+          ? DateTime.tryParse(json['date'].toString())
+          : null,
       startTime: json['start_time'],
       endTime: json['end_time'],
+      displayLabel: json['display_label'],
       isBooked: json['is_booked'] == true || json['is_booked'] == 1,
     );
   }

@@ -102,7 +102,16 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
                           experiences: teacher.teachingExperiences!,
                         ),
                       if (state.timeSlots.isNotEmpty)
-                        TeacherTimeSlotsSection(timeSlots: state.timeSlots)
+                        TeacherTimeSlotsSection(
+                          timeSlots: state.timeSlots,
+                          selectedSlot: selectedTimeSlot,
+                          onSlotSelected: (slot) {
+                            setState(() {
+                              selectedTimeSlot = slot;
+                              selectedDate = slot.date;
+                            });
+                          },
+                        )
                       else if (teacher.availability != null &&
                           teacher.availability!.isNotEmpty)
                         AvailabilitySection(
@@ -170,8 +179,6 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
     TeacherDetail teacher,
     List<TeacherTimeSlot> timeSlots,
   ) {
-    selectedDate = null;
-    selectedTimeSlot = null;
     hoursCount = 1;
     _hoursController.text = '1';
     _phoneController.clear();
@@ -280,9 +287,9 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
                                   if (timeSlots.isNotEmpty) {
                                     final pickedSlot =
                                         await _showTimeSlotsPicker(
-                                      context,
-                                      timeSlots,
-                                    );
+                                          context,
+                                          timeSlots,
+                                        );
 
                                     if (pickedSlot != null) {
                                       setModalState(() {
@@ -738,7 +745,7 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
     BuildContext context,
     TeacherDetail teacher,
     bool hasTimeSlots,
-  ) {
+  ) async {
     if (selectedDate == null) {
       _showBookingValidation(context, tr("booking_validation_day"));
       return;
@@ -763,8 +770,35 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
       hoursCount = parsedHours;
     }
 
-    Navigator.pop(context);
-    _openWhatsAppBooking(teacher);
+    // Show loading indicator
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) =>
+          const Center(child: CircularProgressIndicator(color: orangeBold)),
+    );
+
+    // Call the Cubit booking API
+    final cubit = this.context.read<TeacherDetailCubit>();
+    final isSuccess = await cubit.bookTeacher(
+      teacherId: widget.teacherId,
+      subjectId: widget.subjectId,
+      timeSlotId: selectedTimeSlot!.id,
+      totalHours: hoursCount,
+      notes: _notesController.text.trim(),
+    );
+
+    if (isSuccess) {
+      _openWhatsAppBooking(teacher);
+    } else {
+      // Show error message
+      if (context.mounted) {
+        _showBookingValidation(
+          context,
+          cubit.state.bookingMessage ?? "Failed to book session",
+        );
+      }
+    }
   }
 
   void _showBookingValidation(BuildContext context, String message) {

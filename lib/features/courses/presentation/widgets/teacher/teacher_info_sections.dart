@@ -343,8 +343,15 @@ class AvailabilitySection extends StatelessWidget {
 
 class TeacherTimeSlotsSection extends StatelessWidget {
   final List<TeacherTimeSlot> timeSlots;
+  final TeacherTimeSlot? selectedSlot;
+  final ValueChanged<TeacherTimeSlot>? onSlotSelected;
 
-  const TeacherTimeSlotsSection({super.key, required this.timeSlots});
+  const TeacherTimeSlotsSection({
+    super.key,
+    required this.timeSlots,
+    this.selectedSlot,
+    this.onSlotSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -371,66 +378,77 @@ class TeacherTimeSlotsSection extends StatelessWidget {
             spacing: 10,
             runSpacing: 10,
             children: timeSlots.map((slot) {
+              final isSelected = selectedSlot?.id == slot.id;
               final dateText = slot.date == null
                   ? ""
                   : DateFormat('yyyy/MM/dd').format(slot.date!);
               final timeText = "${slot.startTime ?? ""} - ${slot.endTime ?? ""}";
 
-              return Container(
-                width: (MediaQuery.of(context).size.width - 60) / 2,
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF8F9FA),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: const Color(0xFFF9D0BA)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.calendar_month_outlined,
-                          color: Color(0xFFF06523),
-                          size: 18,
-                        ),
-                        const SizedBox(width: 6),
-                        Expanded(
-                          child: Text(
-                            dateText,
-                            style: context.boldText.copyWith(
-                              fontSize: 13,
-                              color: const Color(0xFF355C7D),
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
+              return GestureDetector(
+                onTap: () => onSlotSelected?.call(slot),
+                child: Container(
+                  width: (MediaQuery.of(context).size.width - 60) / 2,
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? const Color(0xFFF06523).withOpacity(0.08)
+                        : const Color(0xFFF8F9FA),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: isSelected
+                          ? const Color(0xFFF06523)
+                          : const Color(0xFFF9D0BA),
+                      width: isSelected ? 1.5 : 1,
                     ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.access_time_rounded,
-                          color: Color(0xFFF06523),
-                          size: 18,
-                        ),
-                        const SizedBox(width: 6),
-                        Expanded(
-                          child: Text(
-                            timeText,
-                            style: context.mediumText.copyWith(
-                              fontSize: 13,
-                              color: const Color(0xFF666666),
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.calendar_month_outlined,
+                            color: Color(0xFFF06523),
+                            size: 18,
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              dateText,
+                              style: context.boldText.copyWith(
+                                fontSize: 13,
+                                color: const Color(0xFF355C7D),
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.access_time_rounded,
+                            color: Color(0xFFF06523),
+                            size: 18,
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              timeText,
+                              style: context.mediumText.copyWith(
+                                fontSize: 13,
+                                color: const Color(0xFF666666),
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               );
             }).toList(),

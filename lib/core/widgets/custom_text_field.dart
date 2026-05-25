@@ -2,6 +2,7 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -17,6 +18,8 @@ class CustomTextField extends StatefulWidget {
   bool? isRegistered;
   String? Function(String?)? validation;
   String? Function(String?)? onChange;
+  final List<TextInputFormatter>? inputFormatters;
+
   CustomTextField({
     super.key,
     required this.controller,
@@ -32,6 +35,7 @@ class CustomTextField extends StatefulWidget {
     this.prefixIcon,
     this.labelColor = black,
     this.isRegistered = true,
+    this.inputFormatters,
   });
 
   @override
@@ -51,6 +55,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         data: MediaQueryData(textScaler: TextScaler.linear(1)),
         child: TextFormField(
           controller: widget.controller,
+          inputFormatters: widget.inputFormatters,
           style: TextStyles.textStyleNormal13.copyWith(
             color: grey2,
             letterSpacing: -0.408,
