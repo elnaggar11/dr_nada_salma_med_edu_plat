@@ -26,6 +26,10 @@ class CoursesRepositoryImpl implements CoursesRepositories {
       return left(ServerFailure(message: e.message));
     } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
+    } on ForbiddenException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on NotFoundException catch (e) {
+      return left(ServerFailure(message: e.message));
     }
   }
 
@@ -43,6 +47,10 @@ class CoursesRepositoryImpl implements CoursesRepositories {
     } on UnAuthorizedException catch (e) {
       return left(ServerFailure(message: e.message));
     } on UnprocessableContentException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on ForbiddenException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on NotFoundException catch (e) {
       return left(ServerFailure(message: e.message));
     }
   }
@@ -88,7 +96,9 @@ class CoursesRepositoryImpl implements CoursesRepositories {
     required int subjectId,
   }) async {
     try {
-      final response = await coursesRemoteDataSource.getSubjectDetails(subjectId: subjectId);
+      final response = await coursesRemoteDataSource.getSubjectDetails(
+        subjectId: subjectId,
+      );
       return Right(response);
     } on ServerException catch (e) {
       return left(ServerFailure(message: e.message));

@@ -1,5 +1,5 @@
 class CoursesStatusResponse {
-  bool? status;
+  dynamic status;
   String? message;
   List<Data>? data;
 
@@ -49,6 +49,10 @@ class Data {
   dynamic averageRating;
   dynamic favorited;
   dynamic canWatchCourse;
+  dynamic discountPercentage;
+  dynamic hasDiscount;
+  dynamic teachersCount;
+  dynamic minHourlyRate;
   ButtonActions? buttonActions;
   dynamic progress;
 
@@ -70,6 +74,10 @@ class Data {
     this.averageRating,
     this.favorited,
     this.canWatchCourse,
+    this.discountPercentage,
+    this.hasDiscount,
+    this.teachersCount,
+    this.minHourlyRate,
     this.buttonActions,
     this.progress,
   });
@@ -103,6 +111,10 @@ class Data {
     averageRating = json['average_rating'];
     favorited = json['favorited'];
     canWatchCourse = json['can_watch_course'];
+    discountPercentage = json['discount_percentage'];
+    hasDiscount = json['has_discount'];
+    teachersCount = json['teachers_count'];
+    minHourlyRate = json['min_hourly_rate'];
     buttonActions = json['button_actions'] != null
         ? ButtonActions.fromJson(json['button_actions'])
         : null;
@@ -128,6 +140,10 @@ class Data {
     data['average_rating'] = averageRating;
     data['favorited'] = favorited;
     data['can_watch_course'] = canWatchCourse;
+    data['discount_percentage'] = discountPercentage;
+    data['has_discount'] = hasDiscount;
+    data['teachers_count'] = teachersCount;
+    data['min_hourly_rate'] = minHourlyRate;
     if (buttonActions != null) {
       data['button_actions'] = buttonActions!.toJson();
     }

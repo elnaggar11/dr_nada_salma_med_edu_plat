@@ -1,9 +1,11 @@
-import 'package:bloc/bloc.dart';
+import 'dart:convert';
+
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/screens.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/errors/failure.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/local/auth_local_data_source.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/utils/const.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/login/login_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/login/login_response.dart';
@@ -12,6 +14,7 @@ import 'package:dr_nada_salma_med_edu_plat/injection_container/injection_contain
 import 'package:dr_nada_salma_med_edu_plat/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
@@ -85,9 +88,27 @@ class LoginCubit extends Cubit<LoginState> {
           Const.isTeacher = params.isTeacher;
           if (user.data != null) {
             await sharedPreferences.setInt("user_id", user.data!.id ?? 0);
-            await sharedPreferences.setString("user_email", user.data!.email ?? "");
-            await sharedPreferences.setString("user_fullName", user.data!.fullName ?? "");
+            await sharedPreferences.setString(
+              "user_email",
+              user.data!.email ?? "",
+            );
+            await sharedPreferences.setString(
+              "user_fullName",
+              user.data!.fullName ?? "",
+            );
+            await sharedPreferences.setString(
+              "user_phone",
+              user.data!.phoneNumber ?? "",
+            );
+            await sharedPreferences.setString(
+              "user_image",
+              user.data!.image ?? "",
+            );
           }
+          await sharedPreferences.setString(
+            userInfoConst,
+            jsonEncode(user.toJson()),
+          );
 
           emit(LoginSuccessState(loginResponse: user));
         },
@@ -125,6 +146,6 @@ class LoginCubit extends Cubit<LoginState> {
 
   Future<void> getFcmToken() async {
     fcmToken = await FirebaseMessaging.instance.getToken();
-    print('fcm Token :$fcmToken');
+    debugPrint('fcm Token :$fcmToken');
   }
 }

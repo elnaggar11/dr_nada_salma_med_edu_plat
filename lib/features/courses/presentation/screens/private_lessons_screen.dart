@@ -23,30 +23,25 @@ class PrivateLessonsScreen extends StatefulWidget {
 
 class _PrivateLessonsScreenState extends State<PrivateLessonsScreen>
     with SingleTickerProviderStateMixin {
-  TabController? tabController;
+  late final TabController tabController;
+
   @override
   void initState() {
-    tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 1, vsync: this);
     _fetchData();
     super.initState();
   }
 
+  @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
+  }
+
   void _fetchData() {
-    if (tabController!.index == 0) {
-      context.read<CoursesStatusCubit>().getCoursesStatus(
-        params: CoursesStatusParams(
-          courseStatus: "coming_soon",
-          coursesType: "my-private-courses/",
-        ),
-      );
-    } else if (tabController!.index == 1) {
-      context.read<CoursesStatusCubit>().getCoursesStatus(
-        params: CoursesStatusParams(
-          courseStatus: "completed",
-          coursesType: "my-private-courses/",
-        ),
-      );
-    }
+    context.read<CoursesStatusCubit>().getCoursesStatus(
+      params: CoursesStatusParams(coursesType: "/tutoring/subjects"),
+    );
   }
 
   @override
@@ -87,10 +82,7 @@ class _PrivateLessonsScreenState extends State<PrivateLessonsScreen>
               },
               textScaler: const TextScaler.linear(1),
               indicatorColor: primary,
-              tabs: [
-                Tab(text: tr("lessons")),
-                Tab(text: tr("completed")),
-              ],
+              tabs: [Tab(text: tr("lessons"))],
             ),
           ),
           Expanded(
@@ -98,58 +90,10 @@ class _PrivateLessonsScreenState extends State<PrivateLessonsScreen>
               controller: tabController,
               physics: const NeverScrollableScrollPhysics(),
               children: [
-                // Coming Soon Tab
                 BlocBuilder<CoursesStatusCubit, CoursesStatusState>(
                   builder: (context, state) {
                     final cubit = context.read<CoursesStatusCubit>();
-                    final hasRealData =
-                        cubit.coursesStatusResponse?.data?.isNotEmpty ?? false;
 
-                    return cubit.loading == true
-                        ? const InProgressShimmerList()
-                        : (cubit.coursesStatusResponse?.data == null ||
-                              cubit.coursesStatusResponse!.data!.isEmpty)
-                        ? const EmptyPrivateLessonsWidget()
-                        : ListView.builder(
-                            shrinkWrap: true,
-                            padding: EdgeInsets.only(
-                              top: context.height / 90,
-                              bottom: 0,
-                            ),
-                            itemCount: cubit.coursesStatusResponse!.data!.length,
-                            itemBuilder: (context, index) {
-                              final data =
-                                  cubit.coursesStatusResponse!.data![index];
-                              final description = (data.semiDescription != null && data.semiDescription!.toString().isNotEmpty)
-                                  ? data.semiDescription!.toString()
-                                  : tr("working_launching");
-                              final image = (data.image != null && data.image!.toString().isNotEmpty)
-                                  ? data.image!.toString()
-                                  : "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=300&auto=format&fit=crop";
-                              return PrivateLessonItem(
-                                title: data.title ?? "",
-                                description: description,
-                                image: image,
-                                tags: [data.categoryName ?? tr("medicine")],
-                                onDetailsPressed: () {
-                                  context.pushNamed(
-                                    name: teachersListSc,
-                                    args: {
-                                      "subject_id": data.id ?? 1,
-                                      "category_name": data.categoryName,
-                                    },
-                                  );
-                                },
-                              );
-                            },
-                          );
-                  },
-                ),
-
-                // Completed Tab
-                BlocBuilder<CoursesStatusCubit, CoursesStatusState>(
-                  builder: (context, state) {
-                    final cubit = context.read<CoursesStatusCubit>();
                     return cubit.loading == true
                         ? const InProgressShimmerList()
                         : (cubit.coursesStatusResponse?.data == null ||
@@ -166,10 +110,16 @@ class _PrivateLessonsScreenState extends State<PrivateLessonsScreen>
                             itemBuilder: (context, index) {
                               final data =
                                   cubit.coursesStatusResponse!.data![index];
-                              final description = (data.semiDescription != null && data.semiDescription!.toString().isNotEmpty)
+                              final description =
+                                  (data.semiDescription != null &&
+                                      data.semiDescription!
+                                          .toString()
+                                          .isNotEmpty)
                                   ? data.semiDescription!.toString()
                                   : tr("working_launching");
-                              final image = (data.image != null && data.image!.toString().isNotEmpty)
+                              final image =
+                                  (data.image != null &&
+                                      data.image!.toString().isNotEmpty)
                                   ? data.image!.toString()
                                   : "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=300&auto=format&fit=crop";
                               return PrivateLessonItem(
@@ -177,11 +127,16 @@ class _PrivateLessonsScreenState extends State<PrivateLessonsScreen>
                                 description: description,
                                 image: image,
                                 tags: [data.categoryName ?? tr("medicine")],
+                                discount:
+                                    data.hasDiscount == true &&
+                                        data.discountPercentage != null
+                                    ? "${data.discountPercentage}%"
+                                    : null,
                                 onDetailsPressed: () {
                                   context.pushNamed(
                                     name: teachersListSc,
                                     args: {
-                                      "subject_id": data.id ?? 3,
+                                      "subject_id": data.id ?? 1,
                                       "category_name":
                                           data.categoryName ?? tr("medicine"),
                                     },

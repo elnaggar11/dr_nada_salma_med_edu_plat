@@ -50,10 +50,12 @@ class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
     CoursesStatusParams? params,
   }) async {
     try {
-      final response = await helper.get(
-        url: coursesTypesApi + params!.coursesType! + params.courseStatus!,
-      );
-      print("response :$response");
+      final coursesType = params!.coursesType ?? "";
+      final courseStatus = params.courseStatus ?? "";
+      final url = coursesType.startsWith("/")
+          ? "$coursesType$courseStatus"
+          : "$coursesTypesApi$coursesType$courseStatus";
+      final response = await helper.get(url: url);
       return CoursesStatusResponse.fromJson(response);
     } on ServerException catch (e) {
       throw ServerException(message: e.message);
@@ -84,12 +86,11 @@ class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
   }
 
   @override
-  Future<TeachersResponse> getTeachers({required Map<String, dynamic> query}) async {
+  Future<TeachersResponse> getTeachers({
+    required Map<String, dynamic> query,
+  }) async {
     try {
-      final response = await helper.get(
-        url: tutoringTeachersApi,
-        query: query,
-      );
+      final response = await helper.get(url: tutoringTeachersApi, query: query);
       return TeachersResponse.fromJson(response);
     } on ServerException catch (e) {
       throw ServerException(message: e.message);
@@ -101,11 +102,11 @@ class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
   }
 
   @override
-  Future<SubjectDetailsResponse> getSubjectDetails({required int subjectId}) async {
+  Future<SubjectDetailsResponse> getSubjectDetails({
+    required int subjectId,
+  }) async {
     try {
-      final response = await helper.get(
-        url: "$tutoringSubjectsApi$subjectId",
-      );
+      final response = await helper.get(url: "$tutoringSubjectsApi$subjectId");
       return SubjectDetailsResponse.fromJson(response);
     } on ServerException catch (e) {
       throw ServerException(message: e.message);
@@ -117,7 +118,9 @@ class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
   }
 
   @override
-  Future<List<TeacherTimeSlot>> getTeacherTimeSlots({required int teacherId}) async {
+  Future<List<TeacherTimeSlot>> getTeacherTimeSlots({
+    required int teacherId,
+  }) async {
     try {
       final response = await helper.get(
         url: "/tutoring/teachers/$teacherId/time-slots?limit=40",
@@ -146,24 +149,26 @@ class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
   }
 
   @override
-  Future<List<TeacherReview>> getTeacherReviews({required int teacherId}) async {
+  Future<List<TeacherReview>> getTeacherReviews({
+    required int teacherId,
+  }) async {
     try {
       final response = await helper.get(
         url: "/tutoring/teachers/$teacherId/reviews?per_page=10",
       );
-      
+
       if (response['data'] is List) {
         return (response['data'] as List)
             .map((i) => TeacherReview.fromJson(i))
             .toList();
       }
-      
+
       if (response['data'] is Map && response['data']['data'] is List) {
         return (response['data']['data'] as List)
             .map((i) => TeacherReview.fromJson(i))
             .toList();
       }
-      
+
       return [];
     } on ServerException catch (e) {
       throw ServerException(message: e.message);

@@ -1,8 +1,8 @@
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/const.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/custom_app_bar.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/courses_status_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/courses_status_cubit/courses_status_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/my_courses.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/screens/private_lessons_screen.dart';
@@ -28,31 +28,27 @@ class _CoursesLessonsScreenState extends State<CoursesLessonsScreen>
     with TickerProviderStateMixin {
   @override
   void initState() {
+    final isTeacher = Const.isTeacher;
+    final initialIndex = isTeacher ? 0 : widget.index.clamp(0, 1);
     context.read<CoursesStatusCubit>().tabController = TabController(
-      length: 2,
+      length: isTeacher ? 1 : 2,
+      initialIndex: initialIndex,
       vsync: this,
     );
-    if (context.read<CoursesStatusCubit>().tabController!.index == 0) {
-      context.read<CoursesStatusCubit>().getCoursesStatus(
-        params: CoursesStatusParams(
-          courseStatus: 'in_progress',
-          coursesType: "my-public-courses/",
-        ),
-      );
-    } else {
-      context.read<CoursesStatusCubit>().getCoursesStatus(
-        params: CoursesStatusParams(
-          courseStatus: 'in_progress',
-          coursesType: "my-private-courses/",
-        ),
-      );
-    }
 
     super.initState();
   }
 
   @override
+  void dispose() {
+    context.read<CoursesStatusCubit>().tabController?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final isTeacher = Const.isTeacher;
+
     return Scaffold(
       backgroundColor: white,
       appBar: customAppBar(
@@ -82,55 +78,46 @@ class _CoursesLessonsScreenState extends State<CoursesLessonsScreen>
                     right: context.width / 90,
                   ),
                   onTap: (int? ind) {
-                    if (ind == 0) {
-                      context.read<CoursesStatusCubit>().getCoursesStatus(
-                        params: CoursesStatusParams(
-                          courseStatus: 'in_progress',
-                          coursesType: "my-public-courses/",
-                        ),
-                      );
-                    } else if (ind == 1) {
-                      context.read<CoursesStatusCubit>().getCoursesStatus(
-                        params: CoursesStatusParams(
-                          courseStatus: 'in_progress',
-                          coursesType: "my-private-courses/",
-                        ),
-                      );
-                    }
+                    context.read<CoursesStatusCubit>().updateTabState(
+                      type: !isTeacher && ind == 0
+                          ? "courses"
+                          : "private_lessons",
+                    );
                   },
                   textScaler: TextScaler.linear(1),
                   indicatorColor: Colors.transparent,
                   tabs: [
-                    Container(
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.only(top: 16, bottom: 16),
-                      decoration: BoxDecoration(
-                        color:
-                            context
-                                    .read<CoursesStatusCubit>()
-                                    .tabController!
-                                    .index ==
-                                0
-                            ? orangeBold
-                            : greyLight, // background color
-                        borderRadius: BorderRadius.circular(38),
-                      ),
-                      child: Text(
-                        tr("my_courses"),
-                        style: TextStyles.textStyleNormal12.copyWith(
+                    if (!isTeacher)
+                      Container(
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.only(top: 16, bottom: 16),
+                        decoration: BoxDecoration(
                           color:
                               context
                                       .read<CoursesStatusCubit>()
                                       .tabController!
                                       .index ==
                                   0
-                              ? white
-                              : grey1,
-                          fontWeight: FontWeight.w600,
+                              ? orangeBold
+                              : greyLight, // background color
+                          borderRadius: BorderRadius.circular(38),
                         ),
-                        textScaler: TextScaler.linear(1),
+                        child: Text(
+                          tr("my_courses"),
+                          style: TextStyles.textStyleNormal12.copyWith(
+                            color:
+                                context
+                                        .read<CoursesStatusCubit>()
+                                        .tabController!
+                                        .index ==
+                                    0
+                                ? white
+                                : grey1,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textScaler: TextScaler.linear(1),
+                        ),
                       ),
-                    ),
                     Container(
                       alignment: Alignment.center,
                       padding: EdgeInsets.only(top: 16, bottom: 16),
@@ -140,7 +127,7 @@ class _CoursesLessonsScreenState extends State<CoursesLessonsScreen>
                                     .read<CoursesStatusCubit>()
                                     .tabController!
                                     .index ==
-                                1
+                                (isTeacher ? 0 : 1)
                             ? orangeBold
                             : greyLight, // background color
                         borderRadius: BorderRadius.circular(38),
@@ -153,7 +140,7 @@ class _CoursesLessonsScreenState extends State<CoursesLessonsScreen>
                                       .read<CoursesStatusCubit>()
                                       .tabController!
                                       .index ==
-                                  1
+                                  (isTeacher ? 0 : 1)
                               ? white
                               : grey1,
                           fontWeight: FontWeight.w600,
@@ -174,7 +161,7 @@ class _CoursesLessonsScreenState extends State<CoursesLessonsScreen>
                   physics: NeverScrollableScrollPhysics(),
                   controller: context.read<CoursesStatusCubit>().tabController,
                   children: [
-                    MyCourses(type: 'in_progress'),
+                    if (!isTeacher) MyCourses(type: 'in_progress'),
                     PrivateLessonsScreen(type: ''),
                   ],
                 );

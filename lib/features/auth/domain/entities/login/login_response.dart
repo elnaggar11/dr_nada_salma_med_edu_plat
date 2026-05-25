@@ -28,6 +28,7 @@ class Data {
   dynamic phoneNumber;
   dynamic email;
   dynamic image;
+  List<String>? roles;
   dynamic accessToken;
 
   Data({
@@ -36,6 +37,7 @@ class Data {
     this.phoneNumber,
     this.email,
     this.image,
+    this.roles,
     this.accessToken,
   });
 
@@ -45,6 +47,9 @@ class Data {
     phoneNumber = json['phone_number'];
     email = json['email'];
     image = json['image'];
+    if (json['roles'] != null) {
+      roles = List<String>.from(json['roles'].map((role) => role.toString()));
+    }
     accessToken = json['access_token'];
   }
 
@@ -55,6 +60,7 @@ class Data {
     data['phone_number'] = phoneNumber;
     data['email'] = email;
     data['image'] = image;
+    data['roles'] = roles;
     data['access_token'] = accessToken;
     return data;
   }
