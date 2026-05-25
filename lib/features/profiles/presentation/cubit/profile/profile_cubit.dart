@@ -258,6 +258,9 @@ class ProfileCubit extends Cubit<ProfileState> {
             ),
           );
           sharedPreferences.remove("saveUser");
+          sharedPreferences.remove("cache_token");
+          sharedPreferences.remove("isTeacher");
+          Const.isTeacher = false;
           navKey.currentContext!.pushNamedAndRemoveUntil(name: splash);
           emit(LogOutSuccess(logOutResponse: response));
         },
@@ -314,6 +317,9 @@ class ProfileCubit extends Cubit<ProfileState> {
             ),
           );
           sharedPreferences.remove("saveUser");
+          sharedPreferences.remove("cache_token");
+          sharedPreferences.remove("isTeacher");
+          Const.isTeacher = false;
           navKey.currentContext!.pushNamedAndRemoveUntil(name: splash);
           emit(DeleteAccountSuccess(deleteAccountResponse: response));
         },

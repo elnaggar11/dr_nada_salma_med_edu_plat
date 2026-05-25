@@ -225,21 +225,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
 
                 SizedBox(height: context.height / 60),
-
-                Container(
-                  margin: EdgeInsets.only(
-                    left: context.width / 40,
-                    right: context.width / 40,
+                if (Const.isTeacher)
+                  Container(
+                    margin: EdgeInsets.only(
+                      left: context.width / 40,
+                      right: context.width / 40,
+                    ),
+                    child: FadeColorButton(
+                      onButtonPressed: () {
+                        context.pushNamed(name: teacherRegistrationSc);
+                      },
+                      buttonColor: primary,
+                      isPressed: false,
+                      btnTitle: tr("join_as_teacher"),
+                    ),
                   ),
-                  child: FadeColorButton(
-                    onButtonPressed: () {
-                      context.pushNamed(name: teacherRegistrationSc);
-                    },
-                    buttonColor: primary,
-                    isPressed: false,
-                    btnTitle: tr("join_as_teacher"),
-                  ),
-                ),
                 SizedBox(height: context.height / 30),
 
                 Row(
