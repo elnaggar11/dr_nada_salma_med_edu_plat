@@ -264,5 +264,6 @@
   "total_price": "Total Price",
   "select_booking_day": "Select Booking Day",
   "booking_validation_day": "Please select the booking day",
-  "booking_validation_phone": "Please enter the phone number"
+  "booking_validation_phone": "Please enter the phone number",
+  "view_details": "View Details"
 }

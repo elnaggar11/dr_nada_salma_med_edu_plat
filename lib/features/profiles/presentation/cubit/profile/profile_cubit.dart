@@ -95,6 +95,17 @@ class ProfileCubit extends Cubit<ProfileState> {
           success = true;
           profileResponse = response;
           print('fullName :${response.data!.fullName}');
+          if (response.data != null) {
+            sharedPreferences.setInt("user_id", response.data!.id ?? 0);
+            sharedPreferences.setString(
+              "user_email",
+              response.data!.email ?? "",
+            );
+            sharedPreferences.setString(
+              "user_fullName",
+              response.data!.fullName ?? "",
+            );
+          }
           emit(ProfileSuccessState(profileResponse: response));
         },
       );

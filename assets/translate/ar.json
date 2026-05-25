@@ -265,5 +265,6 @@
   "total_price": "إجمالي السعر",
   "select_booking_day": "اختر يوم الحجز",
   "booking_validation_day": "يرجى اختيار يوم الحجز",
-  "booking_validation_phone": "يرجى إدخال رقم الهاتف"
+  "booking_validation_phone": "يرجى إدخال رقم الهاتف",
+  "view_details": "عرض التفاصيل"
 }

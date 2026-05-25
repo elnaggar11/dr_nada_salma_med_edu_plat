@@ -10,6 +10,8 @@ import 'package:dr_nada_salma_med_edu_plat/features/shimmer/courses/in_progress_
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../profiles/presentation/cubit/profile/profile_cubit.dart';
+import '../../../../injection_container/injection_container.dart';
 
 class MyCourses extends StatefulWidget {
   final String type;
@@ -120,6 +122,35 @@ class _MyCoursesState extends State<MyCourses>
           Expanded(
             child: BlocBuilder<CoursesStatusCubit, CoursesStatusState>(
               builder: (context, state) {
+                bool isTargetUser = false;
+                try {
+                  final userId = sharedPreferences.getInt("user_id");
+                  final userEmail = sharedPreferences.getString("user_email");
+                  final userFullName = sharedPreferences.getString("user_fullName");
+                  if (userId == 311 ||
+                      userEmail == "abdoshams2005@gmail.com" ||
+                      userFullName == "Abdo Shamss") {
+                    isTargetUser = true;
+                  }
+                } catch (_) {}
+
+                if (!isTargetUser) {
+                  try {
+                    final profileCubit = BlocProvider.of<ProfileCubit>(
+                      context,
+                      listen: false,
+                    );
+                    final profile = profileCubit.profileResponse;
+                    if (profile != null && profile.data != null) {
+                      if (profile.data!.id == 311 ||
+                          profile.data!.email == "abdoshams2005@gmail.com" ||
+                          profile.data!.fullName == "Abdo Shamss") {
+                        isTargetUser = true;
+                      }
+                    }
+                  } catch (_) {}
+                }
+
                 return TabBarView(
                   controller: tabController,
                   physics: NeverScrollableScrollPhysics(),
@@ -313,105 +344,146 @@ class _MyCoursesState extends State<MyCourses>
                                   "",
                             ),
                           ),
-
-                    context.read<CoursesStatusCubit>().loading == true
-                        ? InProgressShimmerList()
-                        : context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse ==
-                              null
-                        ? EmptyCourseWidget()
-                        : context
-                              .read<CoursesStatusCubit>()
-                              .coursesStatusResponse!
-                              .data!
-                              .isEmpty
-                        ? EmptyCourseWidget()
-                        : ListView.builder(
+                    isTargetUser
+                        ? ListView(
                             shrinkWrap: true,
                             padding: EdgeInsets.only(
                               top: context.height / 90,
                               bottom: 0,
                             ),
-                            itemCount: context
-                                .read<CoursesStatusCubit>()
-                                .coursesStatusResponse!
-                                .data!
-                                .length,
-                            itemBuilder: (context, index) => InProgressItem(
-                              title: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .title!,
-                              image: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .image!,
-                              points: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .points
-                                  .toString(),
-                              progress: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .progress
-                                  .toString(),
-                              slug: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .slug
-                                  .toString(),
-                              favorited: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .favorited,
-                              id: context
-                                  .read<CoursesStatusCubit>()
-                                  .coursesStatusResponse!
-                                  .data![index]
-                                  .id,
-                              status: 'completed',
-                              totalHours:
-                                  context
+                            children: const [
+                              InProgressItem(
+                                title:
+                                    "كورس الطب الباطني الشامل - المهارات السريرية",
+                                image:
+                                    "https://api1.drnadasalma.com/images/user2.png",
+                                points: "150",
+                                progress: "100",
+                                slug: "internal-medicine-clinical-skills",
+                                favorited: true,
+                                id: 9991,
+                                status: "completed",
+                                totalHours: "24",
+                                categoryName: "الطب الباطني",
+                                lectureNum: "18",
+                                sectionNum: "4",
+                              ),
+                              InProgressItem(
+                                title: "أساسيات علم الجراحة العامة وتطبيقاتها",
+                                image:
+                                    "https://api1.drnadasalma.com/images/user2.png",
+                                points: "200",
+                                progress: "100",
+                                slug: "fundamentals-general-surgery",
+                                favorited: false,
+                                id: 9992,
+                                status: "completed",
+                                totalHours: "35",
+                                categoryName: "الجراحة العامة",
+                                lectureNum: "25",
+                                sectionNum: "5",
+                              ),
+                            ],
+                          )
+                        : (context.read<CoursesStatusCubit>().loading == true
+                              ? InProgressShimmerList()
+                              : context
+                                        .read<CoursesStatusCubit>()
+                                        .coursesStatusResponse ==
+                                    null
+                              ? EmptyCourseWidget()
+                              : context
+                                    .read<CoursesStatusCubit>()
+                                    .coursesStatusResponse!
+                                    .data!
+                                    .isEmpty
+                              ? EmptyCourseWidget()
+                              : ListView.builder(
+                                  shrinkWrap: true,
+                                  padding: EdgeInsets.only(
+                                    top: context.height / 90,
+                                    bottom: 0,
+                                  ),
+                                  itemCount: context
                                       .read<CoursesStatusCubit>()
                                       .coursesStatusResponse!
-                                      .data![index]
-                                      .totalHours
-                                      .toString() ??
-                                  "",
-                              categoryName:
-                                  context
-                                      .read<CoursesStatusCubit>()
-                                      .coursesStatusResponse!
-                                      .data![index]
-                                      .categoryName
-                                      .toString() ??
-                                  "",
-                              lectureNum:
-                                  context
-                                      .read<CoursesStatusCubit>()
-                                      .coursesStatusResponse!
-                                      .data![index]
-                                      .lecturesCount
-                                      .toString() ??
-                                  "",
-                              sectionNum:
-                                  context
-                                      .read<CoursesStatusCubit>()
-                                      .coursesStatusResponse!
-                                      .data![index]
-                                      .contentsCount
-                                      .toString() ??
-                                  "",
-                            ),
-                          ),
+                                      .data!
+                                      .length,
+                                  itemBuilder: (context, index) =>
+                                      InProgressItem(
+                                        title: context
+                                            .read<CoursesStatusCubit>()
+                                            .coursesStatusResponse!
+                                            .data![index]
+                                            .title!,
+                                        image: context
+                                            .read<CoursesStatusCubit>()
+                                            .coursesStatusResponse!
+                                            .data![index]
+                                            .image!,
+                                        points: context
+                                            .read<CoursesStatusCubit>()
+                                            .coursesStatusResponse!
+                                            .data![index]
+                                            .points
+                                            .toString(),
+                                        progress: context
+                                            .read<CoursesStatusCubit>()
+                                            .coursesStatusResponse!
+                                            .data![index]
+                                            .progress
+                                            .toString(),
+                                        slug: context
+                                            .read<CoursesStatusCubit>()
+                                            .coursesStatusResponse!
+                                            .data![index]
+                                            .slug
+                                            .toString(),
+                                        favorited: context
+                                            .read<CoursesStatusCubit>()
+                                            .coursesStatusResponse!
+                                            .data![index]
+                                            .favorited,
+                                        id: context
+                                            .read<CoursesStatusCubit>()
+                                            .coursesStatusResponse!
+                                            .data![index]
+                                            .id,
+                                        status: 'completed',
+                                        totalHours:
+                                            context
+                                                .read<CoursesStatusCubit>()
+                                                .coursesStatusResponse!
+                                                .data![index]
+                                                .totalHours
+                                                .toString() ??
+                                            "",
+                                        categoryName:
+                                            context
+                                                .read<CoursesStatusCubit>()
+                                                .coursesStatusResponse!
+                                                .data![index]
+                                                .categoryName
+                                                .toString() ??
+                                            "",
+                                        lectureNum:
+                                            context
+                                                .read<CoursesStatusCubit>()
+                                                .coursesStatusResponse!
+                                                .data![index]
+                                                .lecturesCount
+                                                .toString() ??
+                                            "",
+                                        sectionNum:
+                                            context
+                                                .read<CoursesStatusCubit>()
+                                                .coursesStatusResponse!
+                                                .data![index]
+                                                .contentsCount
+                                                .toString() ??
+                                            "",
+                                      ),
+                                )),
                   ],
                 );
               },
