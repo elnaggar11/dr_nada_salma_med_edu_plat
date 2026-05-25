@@ -25,7 +25,7 @@ class TeacherApplicationParams {
 
   Map<String, dynamic> toMap() {
     return {
-      'name': name,
+      'fullName': name,
       'email': email,
       'specialty_id': specialtyId,
       'bio': bio,
