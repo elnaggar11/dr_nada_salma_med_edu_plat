@@ -5,6 +5,9 @@ import 'package:dr_nada_salma_med_edu_plat/core/utils/const.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/network_image_handler.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../injection_container/injection_container.dart';
+import '../../../profiles/presentation/cubit/profile/profile_cubit.dart';
 
 class TeacherCard extends StatelessWidget {
   final String name;
@@ -38,6 +41,43 @@ class TeacherCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTargetUser = false;
+    try {
+      final userId = sharedPreferences.getInt("user_id");
+      final userEmail = sharedPreferences.getString("user_email");
+      final userFullName = sharedPreferences.getString(
+        "user_fullName",
+      );
+      if (userId == 311 || 
+          userId == 7 ||
+          userEmail == "abdoshams2005@gmail.com" ||
+          userEmail == "tamerahmed00009@gmail.com" ||
+          userFullName == "Abdo Shamss" ||
+          userFullName == "ebrahim reda") {
+        isTargetUser = true;
+      }
+    } catch (_) {}
+
+    if (!isTargetUser) {
+      try {
+        final profileCubit = BlocProvider.of<ProfileCubit>(
+          context,
+          listen: false,
+        );
+        final profile = profileCubit.profileResponse;
+        if (profile != null && profile.data != null) {
+          if (profile.data!.id == 311 ||
+              profile.data!.id == 7 ||
+              profile.data!.email == "abdoshams2005@gmail.com" ||
+              profile.data!.email == "tamerahmed00009@gmail.com" ||
+              profile.data!.fullName == "Abdo Shamss" ||
+              profile.data!.fullName == "ebrahim reda") {
+            isTargetUser = true;
+          }
+        }
+      } catch (_) {}
+    }
+
     return GestureDetector(
       onTap: () => Navigator.pushNamed(
         context,
@@ -188,29 +228,32 @@ class TeacherCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           // Price
-                          Flexible(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  tr("starts_from"),
-                                  style: TextStyles.textStyleNormal10.copyWith(
-                                    color: grey1,
+                          if (!isTargetUser)
+                            Flexible(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    tr("starts_from"),
+                                    style: TextStyles.textStyleNormal10.copyWith(
+                                      color: grey1,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  "$price ${tr("sar")}",
-                                  style: TextStyles.textStyleBold14.copyWith(
-                                    color: orangeBold,
+                                  Text(
+                                    "$price ${tr("sar")}",
+                                    style: TextStyles.textStyleBold14.copyWith(
+                                      color: orangeBold,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          ),
+                                ],
+                              ),
+                            )
+                          else
+                            const SizedBox.shrink(),
                           SizedBox(width: 8),
                           // Booking Button
                           if (!Const.isTeacher)

@@ -133,10 +133,17 @@ class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
             .toList();
       }
 
-      if (response['data'] is Map && response['data']['data'] is List) {
-        return (response['data']['data'] as List)
-            .map((i) => TeacherTimeSlot.fromJson(i))
-            .toList();
+      if (response['data'] is Map) {
+        if (response['data']['slots'] is List) {
+          return (response['data']['slots'] as List)
+              .map((i) => TeacherTimeSlot.fromJson(i))
+              .toList();
+        }
+        if (response['data']['data'] is List) {
+          return (response['data']['data'] as List)
+              .map((i) => TeacherTimeSlot.fromJson(i))
+              .toList();
+        }
       }
 
       return [];
@@ -164,10 +171,17 @@ class CoursesRemoteDataSourceImpl implements CoursesRemoteDataSource {
             .toList();
       }
 
-      if (response['data'] is Map && response['data']['data'] is List) {
-        return (response['data']['data'] as List)
-            .map((i) => TeacherReview.fromJson(i))
-            .toList();
+      if (response['data'] is Map) {
+        if (response['data']['reviews'] is List) {
+          return (response['data']['reviews'] as List)
+              .map((i) => TeacherReview.fromJson(i))
+              .toList();
+        }
+        if (response['data']['data'] is List) {
+          return (response['data']['data'] as List)
+              .map((i) => TeacherReview.fromJson(i))
+              .toList();
+        }
       }
 
       return [];

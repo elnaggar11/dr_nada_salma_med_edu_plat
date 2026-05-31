@@ -79,7 +79,7 @@ class TeacherDetailCubit extends Cubit<TeacherDetailState> {
   Future<bool> bookTeacher({
     required int teacherId,
     required int subjectId,
-    required int timeSlotId,
+    int? timeSlotId,
     required int totalHours,
     required String notes,
   }) async {
@@ -88,7 +88,7 @@ class TeacherDetailCubit extends Cubit<TeacherDetailState> {
     final body = {
       "teacher_id": teacherId,
       "subject_id": subjectId,
-      "time_slot_id": timeSlotId,
+      if (timeSlotId != null) "time_slot_id": timeSlotId,
       "total_hours": totalHours,
       "notes": notes,
     };

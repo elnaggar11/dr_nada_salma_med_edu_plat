@@ -12,6 +12,8 @@ import 'features/notifications/notifications_handler.dart';
 import 'firebase_options.dart';
 import 'injection_container/injection_container.dart' as di;
 
+// 50 34 36
+
 GlobalKey<NavigatorState> navKey = GlobalKey();
 GlobalKey<ScaffoldMessengerState> msgKey = GlobalKey();
 
@@ -70,7 +72,8 @@ void main() async {
       builder: (context) => EasyLocalization(
         supportedLocales: const [Locale('ar'), Locale('en')],
         path: "assets/translate",
-        startLocale: Locale("ar"),
+        // startLocale: Locale("ar"),
+        startLocale: Locale("en"),
         saveLocale: true,
         useOnlyLangCode: true,
         child: MyApp(appRoutes: AppRoutes()),

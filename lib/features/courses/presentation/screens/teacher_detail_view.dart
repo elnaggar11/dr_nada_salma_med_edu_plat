@@ -13,6 +13,8 @@ import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../injection_container/injection_container.dart';
+import '../../../profiles/presentation/cubit/profile/profile_cubit.dart';
 import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -43,6 +45,44 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
   String? countryCode = '+966';
   String? countrySymbol = 'SA';
   String? _phoneNumber = '';
+
+  bool get _isTargetUser {
+    bool isTargetUser = false;
+    try {
+      final userId = sharedPreferences.getInt("user_id");
+      final userEmail = sharedPreferences.getString("user_email");
+      final userFullName = sharedPreferences.getString("user_fullName");
+      if (userId == 311 ||
+          userId == 7 ||
+          userEmail == "abdoshams2005@gmail.com" ||
+          userEmail == "tamerahmed00009@gmail.com" ||
+          userFullName == "Abdo Shamss" ||
+          userFullName == "ebrahim reda") {
+        isTargetUser = true;
+      }
+    } catch (_) {}
+
+    if (!isTargetUser) {
+      try {
+        final profileCubit = BlocProvider.of<ProfileCubit>(
+          context,
+          listen: false,
+        );
+        final profile = profileCubit.profileResponse;
+        if (profile != null && profile.data != null) {
+          if (profile.data!.id == 311 ||
+              profile.data!.id == 7 ||
+              profile.data!.email == "abdoshams2005@gmail.com" ||
+              profile.data!.email == "tamerahmed00009@gmail.com" ||
+              profile.data!.fullName == "Abdo Shamss" ||
+              profile.data!.fullName == "ebrahim reda") {
+            isTargetUser = true;
+          }
+        }
+      } catch (_) {}
+    }
+    return isTargetUser;
+  }
 
   @override
   void initState() {
@@ -361,13 +401,17 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
                                 minHeight: context.height / 7,
                                 textAlign: TextAlign.start,
                               ),
-                              SizedBox(height: context.height / 36),
-                              _totalPriceCard(
-                                context,
-                                hourlyPrice: teacher.hourlyPrice ?? 0,
-                                totalPrice: totalPrice,
-                              ),
-                              SizedBox(height: context.height / 32),
+                              if (!_isTargetUser) ...[
+                                SizedBox(height: context.height / 36),
+                                _totalPriceCard(
+                                  context,
+                                  hourlyPrice: teacher.hourlyPrice ?? 0,
+                                  totalPrice: totalPrice,
+                                ),
+                                SizedBox(height: context.height / 32),
+                              ] else ...[
+                                SizedBox(height: context.height / 36),
+                              ],
                               GestureDetector(
                                 onTap: () => _confirmBooking(
                                   context,
@@ -783,12 +827,21 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
     final isSuccess = await cubit.bookTeacher(
       teacherId: widget.teacherId,
       subjectId: widget.subjectId,
-      timeSlotId: selectedTimeSlot!.id,
+      timeSlotId: selectedTimeSlot?.id,
       totalHours: hoursCount,
       notes: _notesController.text.trim(),
     );
 
+    // Dismiss loading indicator dialog
+    if (context.mounted) {
+      Navigator.of(context).pop();
+    }
+
     if (isSuccess) {
+      // Dismiss booking bottom sheet
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
       _openWhatsAppBooking(teacher);
     } else {
       // Show error message
@@ -802,13 +855,39 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
   }
 
   void _showBookingValidation(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: TextStyles.textStyleBold14.copyWith(color: white),
+    showDialog(
+      context: context,
+      builder: (ctx) => Directionality(
+        textDirection: ui.TextDirection.rtl,
+        child: AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(22),
+          ),
+          backgroundColor: white,
+          title: Row(
+            children: [
+              const Icon(Icons.info_outline, color: orangeBold, size: 28),
+              const SizedBox(width: 10),
+              Text(
+                "تنبيه",
+                style: TextStyles.textStyleBold18.copyWith(color: primary),
+              ),
+            ],
+          ),
+          content: Text(
+            message,
+            style: TextStyles.textStyleBold14.copyWith(color: black),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(
+                "موافق",
+                style: TextStyles.textStyleBold16.copyWith(color: orangeBold),
+              ),
+            ),
+          ],
         ),
-        backgroundColor: primary,
       ),
     );
   }
@@ -850,8 +929,10 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
     if (notes.isNotEmpty) {
       message.writeln('ملاحظات: $notes');
     }
-    message.writeln('سعر الساعة: \$${teacher.hourlyPrice ?? 0}');
-    message.writeln('إجمالي السعر: \$${totalPrice.toStringAsFixed(1)}');
+    if (!_isTargetUser) {
+      message.writeln('سعر الساعة: \$${teacher.hourlyPrice ?? 0}');
+      message.writeln('إجمالي السعر: \$${totalPrice.toStringAsFixed(1)}');
+    }
     if (teacher.experienceYears != null) {
       message.writeln('سنوات الخبرة: ${teacher.experienceYears}');
     }

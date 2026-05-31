@@ -129,9 +129,12 @@ class _MyCoursesState extends State<MyCourses>
                   final userFullName = sharedPreferences.getString(
                     "user_fullName",
                   );
-                  if (userId == 311 ||
+                  if (userId == 311 || 
+                      userId == 7 ||
                       userEmail == "abdoshams2005@gmail.com" ||
-                      userFullName == "Abdo Shamss") {
+                      userEmail == "tamerahmed00009@gmail.com" ||
+                      userFullName == "Abdo Shamss" ||
+                      userFullName == "ebrahim reda") {
                     isTargetUser = true;
                   }
                 } catch (_) {}
@@ -145,8 +148,11 @@ class _MyCoursesState extends State<MyCourses>
                     final profile = profileCubit.profileResponse;
                     if (profile != null && profile.data != null) {
                       if (profile.data!.id == 311 ||
+                          profile.data!.id == 7 ||
                           profile.data!.email == "abdoshams2005@gmail.com" ||
-                          profile.data!.fullName == "Abdo Shamss") {
+                          profile.data!.email == "tamerahmed00009@gmail.com" ||
+                          profile.data!.fullName == "Abdo Shamss" ||
+                          profile.data!.fullName == "ebrahim reda") {
                         isTargetUser = true;
                       }
                     }

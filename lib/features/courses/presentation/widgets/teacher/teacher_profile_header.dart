@@ -4,6 +4,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/utils/extensions.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/teacher_detail_response.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../injection_container/injection_container.dart';
+import '../../../../profiles/presentation/cubit/profile/profile_cubit.dart';
 
 class TeacherProfileHeader extends StatelessWidget {
   final TeacherDetail teacher;
@@ -12,6 +15,43 @@ class TeacherProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTargetUser = false;
+    try {
+      final userId = sharedPreferences.getInt("user_id");
+      final userEmail = sharedPreferences.getString("user_email");
+      final userFullName = sharedPreferences.getString(
+        "user_fullName",
+      );
+      if (userId == 311 || 
+          userId == 7 ||
+          userEmail == "abdoshams2005@gmail.com" ||
+          userEmail == "tamerahmed00009@gmail.com" ||
+          userFullName == "Abdo Shamss" ||
+          userFullName == "ebrahim reda") {
+        isTargetUser = true;
+      }
+    } catch (_) {}
+
+    if (!isTargetUser) {
+      try {
+        final profileCubit = BlocProvider.of<ProfileCubit>(
+          context,
+          listen: false,
+        );
+        final profile = profileCubit.profileResponse;
+        if (profile != null && profile.data != null) {
+          if (profile.data!.id == 311 ||
+              profile.data!.id == 7 ||
+              profile.data!.email == "abdoshams2005@gmail.com" ||
+              profile.data!.email == "tamerahmed00009@gmail.com" ||
+              profile.data!.fullName == "Abdo Shamss" ||
+              profile.data!.fullName == "ebrahim reda") {
+            isTargetUser = true;
+          }
+        }
+      } catch (_) {}
+    }
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       padding: const EdgeInsets.all(20),
@@ -163,51 +203,52 @@ class TeacherProfileHeader extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          // Price Box (aligned to the left in RTL, which is left side of card)
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF7F8FA),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    LocaleKeys.hourly_rate.tr(),
-                    style: context.regularText.copyWith(
-                      fontSize: 12,
-                      color: Colors.grey,
+          if (!isTargetUser) ...[
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF7F8FA),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      LocaleKeys.hourly_rate.tr(),
+                      style: context.regularText.copyWith(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 16),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: " ${tr("sar")} ${teacher.hourlyPrice ?? 0.0}",
-                          style: context.boldText.copyWith(
-                            fontSize: 18,
-                            color: const Color(0xFF355C7D),
+                    const SizedBox(width: 16),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: " ${tr("sar")} ${teacher.hourlyPrice ?? 0.0}",
+                            style: context.boldText.copyWith(
+                              fontSize: 18,
+                              color: const Color(0xFF355C7D),
+                            ),
                           ),
-                        ),
-                        TextSpan(
-                          text: LocaleKeys.per_hour.tr(),
-                          style: context.mediumText.copyWith(
-                            fontSize: 13,
-                            color: const Color(0xFFF06523),
+                          TextSpan(
+                            text: LocaleKeys.per_hour.tr(),
+                            style: context.mediumText.copyWith(
+                              fontSize: 13,
+                              color: const Color(0xFFF06523),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 20),
+            const SizedBox(height: 20),
+          ],
           const Divider(color: Color(0xFFF0F0F0)),
           const SizedBox(height: 16),
           // Statistics Row

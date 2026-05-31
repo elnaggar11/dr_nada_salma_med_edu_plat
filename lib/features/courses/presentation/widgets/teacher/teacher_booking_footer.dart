@@ -4,6 +4,9 @@ import 'package:easy_localization/easy_localization.dart';
 import '../../../../../gen/locale_keys.g.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/utils/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../injection_container/injection_container.dart';
+import '../../../../profiles/presentation/cubit/profile/profile_cubit.dart';
 
 class TeacherBookingFooter extends StatelessWidget {
   final double price;
@@ -19,6 +22,43 @@ class TeacherBookingFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isTargetUser = false;
+    try {
+      final userId = sharedPreferences.getInt("user_id");
+      final userEmail = sharedPreferences.getString("user_email");
+      final userFullName = sharedPreferences.getString(
+        "user_fullName",
+      );
+      if (userId == 311 || 
+          userId == 7 ||
+          userEmail == "abdoshams2005@gmail.com" ||
+          userEmail == "tamerahmed00009@gmail.com" ||
+          userFullName == "Abdo Shamss" ||
+          userFullName == "ebrahim reda") {
+        isTargetUser = true;
+      }
+    } catch (_) {}
+
+    if (!isTargetUser) {
+      try {
+        final profileCubit = BlocProvider.of<ProfileCubit>(
+          context,
+          listen: false,
+        );
+        final profile = profileCubit.profileResponse;
+        if (profile != null && profile.data != null) {
+          if (profile.data!.id == 311 ||
+              profile.data!.id == 7 ||
+              profile.data!.email == "abdoshams2005@gmail.com" ||
+              profile.data!.email == "tamerahmed00009@gmail.com" ||
+              profile.data!.fullName == "Abdo Shamss" ||
+              profile.data!.fullName == "ebrahim reda") {
+            isTargetUser = true;
+          }
+        }
+      } catch (_) {}
+    }
+
     return Container(
       padding: const EdgeInsets.all(20),
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -40,70 +80,72 @@ class TeacherBookingFooter extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Cost Title
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  LocaleKeys.cost.tr(),
-                  style: context.boldText.copyWith(
-                    fontSize: 18,
-                    color: const Color(0xFF355C7D),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFF06523),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            // Cost Card
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              decoration: BoxDecoration(
-                border: Border.all(color: const Color(0xFFF9D0BA), width: 1.5),
-                borderRadius: BorderRadius.circular(16),
-                color: Colors.white,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            if (!isTargetUser) ...[
+              // Cost Title
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    "\$$price",
+                    LocaleKeys.cost.tr(),
                     style: context.boldText.copyWith(
-                      fontSize: 20,
+                      fontSize: 18,
                       color: const Color(0xFF355C7D),
                     ),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        LocaleKeys.normal_session.tr(),
-                        style: context.boldText.copyWith(
-                          fontSize: 16,
-                          color: const Color(0xFF355C7D),
-                        ),
-                      ),
-                      Text(
-                        LocaleKeys.session_duration.tr(args: ['60']),
-                        style: context.mediumText.copyWith(
-                          fontSize: 14,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
+                  const SizedBox(width: 8),
+                  Container(
+                    width: 8,
+                    height: 8,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFF06523),
+                      shape: BoxShape.circle,
+                    ),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 24),
+              const SizedBox(height: 12),
+              // Cost Card
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xFFF9D0BA), width: 1.5),
+                  borderRadius: BorderRadius.circular(16),
+                  color: Colors.white,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "\$$price",
+                      style: context.boldText.copyWith(
+                        fontSize: 20,
+                        color: const Color(0xFF355C7D),
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          LocaleKeys.normal_session.tr(),
+                          style: context.boldText.copyWith(
+                            fontSize: 16,
+                            color: const Color(0xFF355C7D),
+                          ),
+                        ),
+                        Text(
+                          LocaleKeys.session_duration.tr(args: ['60']),
+                          style: context.mediumText.copyWith(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
             // Verified Badge
             Container(
               width: double.infinity,
