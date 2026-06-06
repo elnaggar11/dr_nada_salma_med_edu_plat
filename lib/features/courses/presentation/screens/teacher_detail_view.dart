@@ -3,8 +3,10 @@ import 'dart:ui' as ui;
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/utils/const.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/target_user.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/teacher_detail_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/teacher_detail/teacher_detail_cubit.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/in_person_training_info_card.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/teacher/teacher_booking_footer.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/teacher/teacher_info_sections.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/teacher/teacher_profile_header.dart';
@@ -13,8 +15,6 @@ import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../injection_container/injection_container.dart';
-import '../../../profiles/presentation/cubit/profile/profile_cubit.dart';
 import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -45,44 +45,6 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
   String? countryCode = '+966';
   String? countrySymbol = 'SA';
   String? _phoneNumber = '';
-
-  bool get _isTargetUser {
-    bool isTargetUser = false;
-    try {
-      final userId = sharedPreferences.getInt("user_id");
-      final userEmail = sharedPreferences.getString("user_email");
-      final userFullName = sharedPreferences.getString("user_fullName");
-      if (userId == 311 ||
-          userId == 7 ||
-          userEmail == "abdoshams2005@gmail.com" ||
-          userEmail == "tamerahmed00009@gmail.com" ||
-          userFullName == "Abdo Shamss" ||
-          userFullName == "ebrahim reda") {
-        isTargetUser = true;
-      }
-    } catch (_) {}
-
-    if (!isTargetUser) {
-      try {
-        final profileCubit = BlocProvider.of<ProfileCubit>(
-          context,
-          listen: false,
-        );
-        final profile = profileCubit.profileResponse;
-        if (profile != null && profile.data != null) {
-          if (profile.data!.id == 311 ||
-              profile.data!.id == 7 ||
-              profile.data!.email == "abdoshams2005@gmail.com" ||
-              profile.data!.email == "tamerahmed00009@gmail.com" ||
-              profile.data!.fullName == "Abdo Shamss" ||
-              profile.data!.fullName == "ebrahim reda") {
-            isTargetUser = true;
-          }
-        }
-      } catch (_) {}
-    }
-    return isTargetUser;
-  }
 
   @override
   void initState() {
@@ -130,6 +92,10 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
                         thumbnail: teacher.image,
                       ),
                       TeacherProfileHeader(teacher: teacher),
+                      if (isTargetUser(context)) ...[
+                        const SizedBox(height: 16),
+                        const InPersonTrainingInfoCard(),
+                      ],
                       if (teacher.bio != null)
                         TeacherAboutSection(bio: teacher.bio!),
                       if (teacher.targetAudience != null)
@@ -401,7 +367,7 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
                                 minHeight: context.height / 7,
                                 textAlign: TextAlign.start,
                               ),
-                              if (!_isTargetUser) ...[
+                              if (!isTargetUser(context)) ...[
                                 SizedBox(height: context.height / 36),
                                 _totalPriceCard(
                                   context,
@@ -929,7 +895,7 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
     if (notes.isNotEmpty) {
       message.writeln('ملاحظات: $notes');
     }
-    if (!_isTargetUser) {
+    if (!isTargetUser(context)) {
       message.writeln('سعر الساعة: \$${teacher.hourlyPrice ?? 0}');
       message.writeln('إجمالي السعر: \$${totalPrice.toStringAsFixed(1)}');
     }

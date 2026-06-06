@@ -8,6 +8,7 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/favourite_button/favourite_button.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/network_image_handler.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/svg_handler.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/in_person_training_info_card.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/favourite/presentation/cubit/favourite_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/courses_details_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/injection_container/injection_container.dart';
@@ -29,6 +30,7 @@ class InProgressItem extends StatelessWidget {
   final String categoryName;
   final String lectureNum;
   final String sectionNum;
+  final bool showTrainingInfo;
 
   const InProgressItem({
     super.key,
@@ -44,6 +46,7 @@ class InProgressItem extends StatelessWidget {
     required this.categoryName,
     required this.lectureNum,
     required this.sectionNum,
+    this.showTrainingInfo = false,
   });
 
   @override
@@ -153,6 +156,7 @@ class InProgressItem extends StatelessWidget {
                               maxLines: 1,
                             ),
                           ),
+
                           customSvg(name: elipse),
                           Flexible(
                             child: Text(
@@ -186,6 +190,10 @@ class InProgressItem extends StatelessWidget {
                 ),
               ],
             ),
+            if (showTrainingInfo) ...[
+              SizedBox(height: context.height / 60),
+              const InPersonTrainingInfoCard(),
+            ],
             SizedBox(height: context.height / 50),
             Row(
               children: [
@@ -267,7 +275,6 @@ class InProgressItem extends StatelessWidget {
                         ),
                         child: LinearPercentIndicator(
                           percent: double.parse(progress.toString()) / 100,
-                          linearStrokeCap: LinearStrokeCap.round,
                           barRadius: Radius.circular(6.0),
                           progressColor: primary,
                         ),

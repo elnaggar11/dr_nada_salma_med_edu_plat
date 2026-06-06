@@ -2,9 +2,11 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/images.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/target_user.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/custom_app_bar.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/network_image_handler.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/svg_handler.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/in_person_training_info_card.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/courses_details_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/cubit/courses_details_cubit/courses_details_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/widgets/course_content_item.dart';
@@ -15,8 +17,6 @@ import 'package:dr_nada_salma_med_edu_plat/main.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../injection_container/injection_container.dart';
-import '../../../profiles/presentation/cubit/profile/profile_cubit.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:share_plus/share_plus.dart';
@@ -31,44 +31,6 @@ class CourseDetailsScreen extends StatefulWidget {
 
 class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   final box = navKey.currentContext!.findRenderObject() as RenderBox?;
-
-  bool get _isTargetUser {
-    bool isTargetUser = false;
-    try {
-      final userId = sharedPreferences.getInt("user_id");
-      final userEmail = sharedPreferences.getString("user_email");
-      final userFullName = sharedPreferences.getString("user_fullName");
-      if (userId == 311 ||
-          userId == 7 ||
-          userEmail == "abdoshams2005@gmail.com" ||
-          userEmail == "tamerahmed00009@gmail.com" ||
-          userFullName == "Abdo Shamss" ||
-          userFullName == "ebrahim reda") {
-        isTargetUser = true;
-      }
-    } catch (_) {}
-
-    if (!isTargetUser) {
-      try {
-        final profileCubit = BlocProvider.of<ProfileCubit>(
-          context,
-          listen: false,
-        );
-        final profile = profileCubit.profileResponse;
-        if (profile != null && profile.data != null) {
-          if (profile.data!.id == 311 ||
-              profile.data!.id == 7 ||
-              profile.data!.email == "abdoshams2005@gmail.com" ||
-              profile.data!.email == "tamerahmed00009@gmail.com" ||
-              profile.data!.fullName == "Abdo Shamss" ||
-              profile.data!.fullName == "ebrahim reda") {
-            isTargetUser = true;
-          }
-        }
-      } catch (_) {}
-    }
-    return isTargetUser;
-  }
 
   @override
   void initState() {
@@ -272,6 +234,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                         ],
                       ),
                     ),
+                    if (isTargetUser(context)) ...[
+                      SizedBox(height: context.height / 40),
+                      const InPersonTrainingInfoCard(),
+                    ],
                     SizedBox(height: context.height / 40),
                     Container(
                       margin: EdgeInsets.only(
@@ -345,15 +311,17 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                           SizedBox(width: context.width / 40),
                           RatingBarIndicator(
                             itemCount: 5,
-                            rating: double.parse(
-                              context
-                                      .read<CoursesDetailsCubit>()
-                                      .coursesDetailsResponse!
-                                      .data!
-                                      .averageRating
-                                      .toString() ??
-                                  '0.0',
-                            ),
+                            rating:
+                                double.tryParse(
+                                  context
+                                          .read<CoursesDetailsCubit>()
+                                          .coursesDetailsResponse!
+                                          .data!
+                                          .averageRating
+                                          ?.toString() ??
+                                      '0.0',
+                                ) ??
+                                0.0,
                             itemPadding: EdgeInsets.only(left: 3, right: 3),
                             itemSize: 15,
                             itemBuilder: (context, index) =>

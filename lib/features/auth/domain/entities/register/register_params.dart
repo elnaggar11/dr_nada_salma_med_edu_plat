@@ -20,10 +20,11 @@ class RegisterParams {
   Map<String, dynamic> toMap() {
     return {
       "full_name": fullName,
-      "phone_number": phoneNumber,
+      if (phoneNumber != null && phoneNumber!.isNotEmpty)
+        "phone_number": phoneNumber,
       "email": email,
-      "country_code": countryCode.toString(),
-      "country_symbol": countrySymbol.toString(),
+      // "country_code": countryCode.toString(),
+      // "country_symbol": countrySymbol.toString(),
       "password": password,
       "password_confirmation": passwordConfirmation,
     };
