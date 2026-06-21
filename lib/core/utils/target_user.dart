@@ -39,7 +39,7 @@ bool _matchesTargetUser({
   return id == 311 ||
       id == 7 ||
       email == "abdoshams2005@gmail.com" ||
-      email == "tamerahmed00009@gmail.com" ||
+      email == "tamer005@gmail.com" ||
       fullName == "Abdo Shamss" ||
       fullName == "ebrahim reda";
 }

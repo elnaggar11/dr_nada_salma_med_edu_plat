@@ -1,18 +1,12 @@
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:dr_nada_salma_med_edu_plat/gen/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 
 class InPersonTrainingInfoCard extends StatelessWidget {
   const InPersonTrainingInfoCard({super.key});
-
-  static const String trainingPlace = "Dr Nada Salma Medical Training Center";
-  static const String attendanceTimes =
-      "السبت والثلاثاء من 5:00 مساءً إلى 8:00 مساءً";
-  static const String hallAddress =
-      "قاعة التدريب الرئيسية، 12 شارع التحرير، الدقي، الجيزة";
-  static const String deliveryMode =
-      "هذا الكورس يقدم حضورياً داخل القاعة وليس عبر الإنترنت فقط.";
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +26,7 @@ class InPersonTrainingInfoCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "بيانات التدريب الحضوري",
+            LocaleKeys.in_person_training_info.tr(),
             style: TextStyles.textStyleBold16.copyWith(
               color: primary,
               fontWeight: FontWeight.w800,
@@ -42,26 +36,32 @@ class InPersonTrainingInfoCard extends StatelessWidget {
           const SizedBox(height: 12),
           _InfoRow(
             icon: Icons.business_outlined,
-            title: "اسم مكان التدريب",
-            value: trainingPlace,
+            title: LocaleKeys.training_place_name.tr(),
+            value: LocaleKeys.dr_nada_salma_training_center.tr(),
           ),
           const SizedBox(height: 10),
           _InfoRow(
             icon: Icons.schedule_outlined,
-            title: "مواعيد الحضور",
-            value: attendanceTimes,
+            title: LocaleKeys.attendance_times.tr(),
+            value: LocaleKeys.saturday_tuesday_times.tr(),
           ),
           const SizedBox(height: 10),
           _InfoRow(
             icon: Icons.location_on_outlined,
-            title: "عنوان القاعة أو المركز",
-            value: hallAddress,
+            title: LocaleKeys.hall_or_center_address.tr(),
+            value: LocaleKeys.main_training_hall_address.tr(),
           ),
           const SizedBox(height: 10),
           _InfoRow(
             icon: Icons.groups_outlined,
-            title: "طريقة تقديم الكورس",
-            value: deliveryMode,
+            title: LocaleKeys.course_delivery_method.tr(),
+            value: LocaleKeys.in_person_delivery_only.tr(),
+          ),
+          const SizedBox(height: 10),
+          _InfoRow(
+            icon: Icons.info_outline_rounded,
+            title: LocaleKeys.booking_info.tr(),
+            value: LocaleKeys.free_booking_via_app.tr(),
           ),
         ],
       ),

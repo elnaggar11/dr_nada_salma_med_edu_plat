@@ -276,7 +276,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: tr("don’t_have_account"),
+                        text: tr("dont_have_account"),
                         style: TextStyles.textStyleNormal14.copyWith(
                           color: black,
                         ),

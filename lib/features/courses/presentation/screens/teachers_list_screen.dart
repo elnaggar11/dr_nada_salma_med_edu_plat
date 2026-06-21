@@ -41,7 +41,7 @@ class _TeachersListScreenState extends State<TeachersListScreen> {
       if (userId == 311 ||
           userId == 7 ||
           userEmail == "abdoshams2005@gmail.com" ||
-          userEmail == "tamerahmed00009@gmail.com" ||
+          userEmail == "tamer005@gmail.com" ||
           userFullName == "Abdo Shamss" ||
           userFullName == "ebrahim reda") {
         isTargetUser = true;
@@ -59,7 +59,7 @@ class _TeachersListScreenState extends State<TeachersListScreen> {
           if (profile.data!.id == 311 ||
               profile.data!.id == 7 ||
               profile.data!.email == "abdoshams2005@gmail.com" ||
-              profile.data!.email == "tamerahmed00009@gmail.com" ||
+              profile.data!.email == "tamer005@gmail.com" ||
               profile.data!.fullName == "Abdo Shamss" ||
               profile.data!.fullName == "ebrahim reda") {
             isTargetUser = true;

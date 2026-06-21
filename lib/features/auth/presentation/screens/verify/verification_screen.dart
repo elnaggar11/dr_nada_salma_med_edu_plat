@@ -182,7 +182,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: tr("n’t_receive_code"),
+                          text: tr("nt_receive_code"),
                           style: TextStyles.textStyleNormal14.copyWith(
                             color: black,
                           ),

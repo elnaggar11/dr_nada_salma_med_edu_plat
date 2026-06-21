@@ -34,7 +34,7 @@ class EmptyCourseWidget extends StatelessWidget {
               right: context.width / 20,
             ),
             child: Text(
-              tr("haven’t_registered_any_course"),
+              tr("havent_registered_any_course"),
               style: TextStyles.textStyleBold19.copyWith(
                 color: primary,
                 fontWeight: FontWeight.w800,
