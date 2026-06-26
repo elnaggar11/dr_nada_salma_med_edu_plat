@@ -1,6 +1,7 @@
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/target_user.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/custom_app_bar.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/courses_status_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/courses_status_cubit/courses_status_cubit.dart';
@@ -10,8 +11,6 @@ import 'package:dr_nada_salma_med_edu_plat/features/shimmer/courses/in_progress_
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../profiles/presentation/cubit/profile/profile_cubit.dart';
-import '../../../../injection_container/injection_container.dart';
 
 class MyCourses extends StatefulWidget {
   final String type;
@@ -122,36 +121,7 @@ class _MyCoursesState extends State<MyCourses>
           Expanded(
             child: BlocBuilder<CoursesStatusCubit, CoursesStatusState>(
               builder: (context, state) {
-                bool isTargetUser = false;
-                try {
-                  final userId = sharedPreferences.getInt("user_id");
-                  final userEmail = sharedPreferences.getString("user_email");
-                  final userFullName = sharedPreferences.getString(
-                    "user_fullName",
-                  );
-                  if (userId == 311 ||
-                      userEmail == "abdoshams2005@gmail.com" ||
-                      userFullName == "Abdo Shamss") {
-                    isTargetUser = true;
-                  }
-                } catch (_) {}
-
-                if (!isTargetUser) {
-                  try {
-                    final profileCubit = BlocProvider.of<ProfileCubit>(
-                      context,
-                      listen: false,
-                    );
-                    final profile = profileCubit.profileResponse;
-                    if (profile != null && profile.data != null) {
-                      if (profile.data!.id == 311 ||
-                          profile.data!.email == "abdoshams2005@gmail.com" ||
-                          profile.data!.fullName == "Abdo Shamss") {
-                        isTargetUser = true;
-                      }
-                    }
-                  } catch (_) {}
-                }
+                final targetUser = isTargetUser(context);
 
                 return TabBarView(
                   controller: tabController,
@@ -334,7 +304,7 @@ class _MyCoursesState extends State<MyCourses>
                                   .toString(),
                             ),
                           ),
-                    isTargetUser
+                    targetUser
                         ? ListView(
                             shrinkWrap: true,
                             padding: EdgeInsets.only(
@@ -357,6 +327,7 @@ class _MyCoursesState extends State<MyCourses>
                                 categoryName: "الطب الباطني",
                                 lectureNum: "18",
                                 sectionNum: "4",
+                                showTrainingInfo: true,
                               ),
                               InProgressItem(
                                 title: "أساسيات علم الجراحة العامة وتطبيقاتها",
@@ -372,6 +343,7 @@ class _MyCoursesState extends State<MyCourses>
                                 categoryName: "الجراحة العامة",
                                 lectureNum: "25",
                                 sectionNum: "5",
+                                showTrainingInfo: true,
                               ),
                             ],
                           )

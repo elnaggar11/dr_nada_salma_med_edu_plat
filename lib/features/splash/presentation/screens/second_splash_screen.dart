@@ -83,7 +83,7 @@ class SecondSplash extends StatelessWidget {
                               bottom: 5.5,
                             ),
                             child: Text(
-                              tr("new"),
+                              tr("new_word"),
                               style: TextStyles.textStyleNormal10.copyWith(
                                 fontWeight: FontWeight.w600,
                               ),

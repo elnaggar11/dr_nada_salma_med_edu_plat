@@ -70,9 +70,9 @@ class _TeacherRegistrationScreenState extends State<TeacherRegistrationScreen> {
                       SizedBox(height: context.height / 35),
 
                       // 3. Contact Details
-                      TeacherContactSection(),
+                      // TeacherContactSection(),
 
-                      SizedBox(height: context.height / 35),
+                      // SizedBox(height: context.height / 35),
 
                       // 4. Availability
                       TeacherAvailabilitySection(),

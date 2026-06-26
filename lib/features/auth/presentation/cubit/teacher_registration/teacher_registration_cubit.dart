@@ -148,7 +148,7 @@ class TeacherRegistrationCubit extends Cubit<TeacherRegistrationState> {
         selectedSpecialtyId == null ||
         bioController.text.trim().isEmpty ||
         selectedSubjectIds.isEmpty ||
-        whatsappController.text.trim().isEmpty ||
+        // whatsappController.text.trim().isEmpty ||
         selectedDays.isEmpty ||
         fromTime.isEmpty ||
         toTime.isEmpty) {

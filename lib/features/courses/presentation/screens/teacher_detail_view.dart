@@ -3,8 +3,10 @@ import 'dart:ui' as ui;
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/utils/const.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/target_user.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/teacher_detail_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/teacher_detail/teacher_detail_cubit.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/in_person_training_info_card.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/teacher/teacher_booking_footer.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/teacher/teacher_info_sections.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/teacher/teacher_profile_header.dart';
@@ -90,6 +92,10 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
                         thumbnail: teacher.image,
                       ),
                       TeacherProfileHeader(teacher: teacher),
+                      if (isTargetUser(context)) ...[
+                        const SizedBox(height: 16),
+                        const InPersonTrainingInfoCard(),
+                      ],
                       if (teacher.bio != null)
                         TeacherAboutSection(bio: teacher.bio!),
                       if (teacher.targetAudience != null)
@@ -361,13 +367,17 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
                                 minHeight: context.height / 7,
                                 textAlign: TextAlign.start,
                               ),
-                              SizedBox(height: context.height / 36),
-                              _totalPriceCard(
-                                context,
-                                hourlyPrice: teacher.hourlyPrice ?? 0,
-                                totalPrice: totalPrice,
-                              ),
-                              SizedBox(height: context.height / 32),
+                              if (!isTargetUser(context)) ...[
+                                SizedBox(height: context.height / 36),
+                                _totalPriceCard(
+                                  context,
+                                  hourlyPrice: teacher.hourlyPrice ?? 0,
+                                  totalPrice: totalPrice,
+                                ),
+                                SizedBox(height: context.height / 32),
+                              ] else ...[
+                                SizedBox(height: context.height / 36),
+                              ],
                               GestureDetector(
                                 onTap: () => _confirmBooking(
                                   context,
@@ -783,12 +793,21 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
     final isSuccess = await cubit.bookTeacher(
       teacherId: widget.teacherId,
       subjectId: widget.subjectId,
-      timeSlotId: selectedTimeSlot!.id,
+      timeSlotId: selectedTimeSlot?.id,
       totalHours: hoursCount,
       notes: _notesController.text.trim(),
     );
 
+    // Dismiss loading indicator dialog
+    if (context.mounted) {
+      Navigator.of(context).pop();
+    }
+
     if (isSuccess) {
+      // Dismiss booking bottom sheet
+      if (context.mounted) {
+        Navigator.of(context).pop();
+      }
       _openWhatsAppBooking(teacher);
     } else {
       // Show error message
@@ -802,13 +821,39 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
   }
 
   void _showBookingValidation(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: TextStyles.textStyleBold14.copyWith(color: white),
+    showDialog(
+      context: context,
+      builder: (ctx) => Directionality(
+        textDirection: ui.TextDirection.rtl,
+        child: AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(22),
+          ),
+          backgroundColor: white,
+          title: Row(
+            children: [
+              const Icon(Icons.info_outline, color: orangeBold, size: 28),
+              const SizedBox(width: 10),
+              Text(
+                "تنبيه",
+                style: TextStyles.textStyleBold18.copyWith(color: primary),
+              ),
+            ],
+          ),
+          content: Text(
+            message,
+            style: TextStyles.textStyleBold14.copyWith(color: black),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(
+                "موافق",
+                style: TextStyles.textStyleBold16.copyWith(color: orangeBold),
+              ),
+            ),
+          ],
         ),
-        backgroundColor: primary,
       ),
     );
   }
@@ -850,8 +895,10 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
     if (notes.isNotEmpty) {
       message.writeln('ملاحظات: $notes');
     }
-    message.writeln('سعر الساعة: \$${teacher.hourlyPrice ?? 0}');
-    message.writeln('إجمالي السعر: \$${totalPrice.toStringAsFixed(1)}');
+    if (!isTargetUser(context)) {
+      message.writeln('سعر الساعة: \$${teacher.hourlyPrice ?? 0}');
+      message.writeln('إجمالي السعر: \$${totalPrice.toStringAsFixed(1)}');
+    }
     if (teacher.experienceYears != null) {
       message.writeln('سنوات الخبرة: ${teacher.experienceYears}');
     }

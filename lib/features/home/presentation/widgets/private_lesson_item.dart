@@ -4,12 +4,12 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/images.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/screens.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/favourite_button/favourite_button.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/target_user.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/network_image_handler.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/svg_handler.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/bottom_bar/presentation/cubit/bottom_bar_cubit.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/in_person_training_info_card.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/favourite/presentation/cubit/favourite_cubit.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/courses_details_params.dart';
-
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/public_courses_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/injection_container/injection_container.dart';
 import 'package:flutter/material.dart';
@@ -23,14 +23,12 @@ class PrivateLessonsItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final targetUser = isTargetUser(context);
+
     return BlocBuilder<BottomBarCubit, BottomBarState>(
       builder: (context, state) {
         return InkWell(
           onTap: () {
-            CoursesDetailsParams params = CoursesDetailsParams(
-              slug: data.slug,
-              status: "",
-            );
             context.pushNamed(name: emptyPrivateLessons);
           },
           child: Container(
@@ -135,28 +133,33 @@ class PrivateLessonsItem extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: context.height / 80),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "\$${data.price}",
-                      style: TextStyles.textStyleBold16.copyWith(
-                        color: orangeBold,
+                if (targetUser) ...[
+                  SizedBox(height: context.height / 80),
+                  const InPersonTrainingInfoCard(),
+                ],
+                if (!targetUser)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "\$${data.price}",
+                        style: TextStyles.textStyleBold16.copyWith(
+                          color: orangeBold,
+                        ),
+                        textScaler: TextScaler.linear(1),
                       ),
-                      textScaler: TextScaler.linear(1),
-                    ),
-                    SizedBox(width: context.width / 20),
-                    Text(
-                      "\$${data.priceAfterDiscount ?? 0}",
-                      style: TextStyles.textStyleNormal12.copyWith(
-                        color: grey1,
-                        fontWeight: FontWeight.w500,
+                      SizedBox(width: context.width / 20),
+                      Text(
+                        "\$${data.priceAfterDiscount ?? 0}",
+                        style: TextStyles.textStyleNormal12.copyWith(
+                          color: grey1,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textScaler: TextScaler.linear(1),
                       ),
-                      textScaler: TextScaler.linear(1),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
               ],
             ),
           ),

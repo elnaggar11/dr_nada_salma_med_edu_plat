@@ -1,9 +1,11 @@
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/fonts.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/constants/screens.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/presentation/cubit/register/register_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -69,7 +71,12 @@ class _CheckboxListTileWidgetState extends State<CheckboxListTileWidget> {
                   style: TextStyles.textStyleNormal13.copyWith(
                     fontFamily: lamaSans,
                     color: orangeBold,
+                    decoration: TextDecoration.underline,
                   ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      context.pushNamed(name: termsAndConditions);
+                    },
                 ),
               ],
             ),

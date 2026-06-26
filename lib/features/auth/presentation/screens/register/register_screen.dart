@@ -110,105 +110,105 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     }
                   },
                 ),
-                SizedBox(height: context.height / 20),
-                Container(
-                  margin: EdgeInsets.only(
-                    left: context.width / 30,
-                    right: context.width / 30,
-                  ),
-                  child: IntlPhoneField(
-                    controller: phoneController,
-                    style: TextStyles.textStyleNormal14.copyWith(color: grey2),
-                    dropdownDecoration: BoxDecoration(color: white),
-                    dropdownTextStyle: TextStyles.textStyleNormal14.copyWith(
-                      color: black,
-                    ),
-                    validator: (val) {
-                      if (val!.number.isEmpty) {
-                        return tr("this_field_required");
-                      } else if (val.number.length < 8) {
-                        return tr("the_phone_number");
-                      } else {
-                        return null;
-                      }
-                    },
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(
-                        top: context.width / 20,
-                        bottom: context.width / 20,
-                      ),
-                      prefix: VerticalDivider(
-                        thickness: 1,
-                        color: Colors.black,
-                      ),
-                      label: RichText(
-                        textScaler: TextScaler.linear(1.0),
-                        textAlign: TextAlign.start,
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: tr("phone_number"),
-                              style: TextStyles.textStyleBold12.copyWith(
-                                color: black,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            TextSpan(
-                              text: " *",
-                              style: TextStyles.textStyleBold13.copyWith(
-                                color: red,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      labelStyle: TextStyles.textStyleNormal13.copyWith(
-                        color: black,
-                      ),
+                // SizedBox(height: context.height / 20),
+                // Container(
+                //   margin: EdgeInsets.only(
+                //     left: context.width / 30,
+                //     right: context.width / 30,
+                //   ),
+                //   child: IntlPhoneField(
+                //     controller: phoneController,
+                //     style: TextStyles.textStyleNormal14.copyWith(color: grey2),
+                //     dropdownDecoration: BoxDecoration(color: white),
+                //     dropdownTextStyle: TextStyles.textStyleNormal14.copyWith(
+                //       color: black,
+                //     ),
+                //     validator: (val) {
+                //       if (val!.number.isEmpty) {
+                //         return tr("this_field_required");
+                //       } else if (val.number.length < 8) {
+                //         return tr("the_phone_number");
+                //       } else {
+                //         return null;
+                //       }
+                //     },
+                //     decoration: InputDecoration(
+                //       contentPadding: EdgeInsets.only(
+                //         top: context.width / 20,
+                //         bottom: context.width / 20,
+                //       ),
+                //       prefix: VerticalDivider(
+                //         thickness: 1,
+                //         color: Colors.black,
+                //       ),
+                //       label: RichText(
+                //         textScaler: TextScaler.linear(1.0),
+                //         textAlign: TextAlign.start,
+                //         text: TextSpan(
+                //           children: [
+                //             TextSpan(
+                //               text: tr("phone_number"),
+                //               style: TextStyles.textStyleBold12.copyWith(
+                //                 color: black,
+                //                 fontWeight: FontWeight.w500,
+                //               ),
+                //             ),
+                //             TextSpan(
+                //               text: " *",
+                //               style: TextStyles.textStyleBold13.copyWith(
+                //                 color: red,
+                //               ),
+                //             ),
+                //           ],
+                //         ),
+                //       ),
+                //       labelStyle: TextStyles.textStyleNormal13.copyWith(
+                //         color: black,
+                //       ),
 
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(38)),
-                        borderSide: BorderSide(color: black.withOpacity(.1)),
-                      ),
-                      errorStyle: TextStyles.textStyleNormal11.copyWith(
-                        color: grey1,
-                      ),
-                      suffixIcon: Container(
-                        width: context.width / 25,
-                        alignment: Alignment.center,
-                        child: customSvg(name: call),
-                      ),
+                //       floatingLabelBehavior: FloatingLabelBehavior.always,
+                //       errorBorder: OutlineInputBorder(
+                //         borderRadius: BorderRadius.all(Radius.circular(38)),
+                //         borderSide: BorderSide(color: black.withOpacity(.1)),
+                //       ),
+                //       errorStyle: TextStyles.textStyleNormal11.copyWith(
+                //         color: grey1,
+                //       ),
+                //       suffixIcon: Container(
+                //         width: context.width / 25,
+                //         alignment: Alignment.center,
+                //         child: customSvg(name: call),
+                //       ),
 
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(38)),
-                        borderSide: BorderSide(color: black.withOpacity(.1)),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(38)),
-                        borderSide: BorderSide(color: black.withOpacity(.1)),
-                      ),
-                      disabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(38)),
-                        borderSide: BorderSide(color: black.withOpacity(.1)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(38)),
-                        borderSide: BorderSide(color: black.withOpacity(.1)),
-                      ),
-                      focusedErrorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(38)),
-                        borderSide: BorderSide(color: black.withOpacity(.1)),
-                      ),
-                    ),
-                    initialCountryCode: 'SA',
-                    onChanged: (phone) {
-                      phoneNum = phone.number;
-                      countryCode = phone.countryCode;
-                      countrySymbol = phone.countryISOCode;
-                    },
-                  ),
-                ),
+                //       border: OutlineInputBorder(
+                //         borderRadius: BorderRadius.all(Radius.circular(38)),
+                //         borderSide: BorderSide(color: black.withOpacity(.1)),
+                //       ),
+                //       enabledBorder: OutlineInputBorder(
+                //         borderRadius: BorderRadius.all(Radius.circular(38)),
+                //         borderSide: BorderSide(color: black.withOpacity(.1)),
+                //       ),
+                //       disabledBorder: OutlineInputBorder(
+                //         borderRadius: BorderRadius.all(Radius.circular(38)),
+                //         borderSide: BorderSide(color: black.withOpacity(.1)),
+                //       ),
+                //       focusedBorder: OutlineInputBorder(
+                //         borderRadius: BorderRadius.all(Radius.circular(38)),
+                //         borderSide: BorderSide(color: black.withOpacity(.1)),
+                //       ),
+                //       focusedErrorBorder: OutlineInputBorder(
+                //         borderRadius: BorderRadius.all(Radius.circular(38)),
+                //         borderSide: BorderSide(color: black.withOpacity(.1)),
+                //       ),
+                //     ),
+                //     initialCountryCode: 'SA',
+                //     onChanged: (phone) {
+                //       phoneNum = phone.number;
+                //       countryCode = phone.countryCode;
+                //       countrySymbol = phone.countryISOCode;
+                //     },
+                //   ),
+                // ),
                 SizedBox(height: context.height / 28),
                 CustomTextField(
                   controller: emailController,

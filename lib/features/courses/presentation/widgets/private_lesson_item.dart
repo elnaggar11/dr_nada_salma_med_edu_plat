@@ -1,8 +1,10 @@
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/target_user.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/fade_button.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/network_image_handler.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/in_person_training_info_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:dr_nada_salma_med_edu_plat/gen/locale_keys.g.dart';
 import 'package:flutter/material.dart';
@@ -102,6 +104,11 @@ class PrivateLessonItem extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
+
+          if (isTargetUser(context)) ...[
+            SizedBox(height: 16),
+            const InPersonTrainingInfoCard(),
+          ],
 
           SizedBox(height: 16),
 

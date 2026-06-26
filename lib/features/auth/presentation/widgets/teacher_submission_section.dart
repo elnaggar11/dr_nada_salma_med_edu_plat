@@ -1,5 +1,6 @@
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/constants/screens.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/fade_button.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/presentation/cubit/teacher_registration/teacher_registration_cubit.dart';
@@ -31,9 +32,17 @@ class TeacherSubmissionSection extends StatelessWidget {
                 onChanged: cubit.toggleTermsCheck,
               ),
               Expanded(
-                child: Text(
-                  tr("accept_terms"),
-                  style: TextStyles.textStyleNormal12.copyWith(color: grey2),
+                child: GestureDetector(
+                  onTap: () {
+                    context.pushNamed(name: termsAndConditions);
+                  },
+                  child: Text(
+                    tr("accept_terms"),
+                    style: TextStyles.textStyleNormal12.copyWith(
+                      color: grey2,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
                 ),
               ),
             ],

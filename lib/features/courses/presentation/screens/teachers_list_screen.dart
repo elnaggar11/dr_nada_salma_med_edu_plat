@@ -9,7 +9,8 @@ import 'package:dr_nada_salma_med_edu_plat/core/widgets/svg_handler.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/teachers/teachers_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/teacher_card.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/subject_details_response.dart';
-import 'package:dr_nada_salma_med_edu_plat/injection_container/injection_container.dart';
+import '../../../../injection_container/injection_container.dart';
+import '../../../profiles/presentation/cubit/profile/profile_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,6 +31,44 @@ class TeachersListScreen extends StatefulWidget {
 
 class _TeachersListScreenState extends State<TeachersListScreen> {
   final TextEditingController _searchController = TextEditingController();
+
+  bool get _isTargetUser {
+    bool isTargetUser = false;
+    try {
+      final userId = sharedPreferences.getInt("user_id");
+      final userEmail = sharedPreferences.getString("user_email");
+      final userFullName = sharedPreferences.getString("user_fullName");
+      if (userId == 311 ||
+          userId == 7 ||
+          userEmail == "abdoshams2005@gmail.com" ||
+          userEmail == "tamer005@gmail.com" ||
+          userFullName == "Abdo Shamss" ||
+          userFullName == "ebrahim reda") {
+        isTargetUser = true;
+      }
+    } catch (_) {}
+
+    if (!isTargetUser) {
+      try {
+        final profileCubit = BlocProvider.of<ProfileCubit>(
+          context,
+          listen: false,
+        );
+        final profile = profileCubit.profileResponse;
+        if (profile != null && profile.data != null) {
+          if (profile.data!.id == 311 ||
+              profile.data!.id == 7 ||
+              profile.data!.email == "abdoshams2005@gmail.com" ||
+              profile.data!.email == "tamer005@gmail.com" ||
+              profile.data!.fullName == "Abdo Shamss" ||
+              profile.data!.fullName == "ebrahim reda") {
+            isTargetUser = true;
+          }
+        }
+      } catch (_) {}
+    }
+    return isTargetUser;
+  }
 
   int _getSubjectId(String categoryName) {
     switch (categoryName.toLowerCase()) {
@@ -338,79 +377,80 @@ class _TeachersListScreenState extends State<TeachersListScreen> {
                           ),
                           const SizedBox(height: 24),
 
-                          // Price range
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: white,
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.04),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Icon(
-                                      Icons.keyboard_arrow_up,
-                                      color: primary,
-                                      size: 20,
-                                    ),
-                                    Text(
-                                      tr("cost"),
-                                      style: TextStyles.textStyleBold16
-                                          .copyWith(color: primary),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 20),
-                                RangeSlider(
-                                  values: RangeValues(
-                                    localMinPrice,
-                                    localMaxPrice,
+                          if (!_isTargetUser) ...[
+                            // Price range
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: white,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.04),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
                                   ),
-                                  min: 0.0,
-                                  max: 500.0,
-                                  divisions: 50,
-                                  activeColor: orangeBold,
-                                  inactiveColor: grey1.withOpacity(0.2),
-                                  labels: RangeLabels(
-                                    "${localMinPrice.toStringAsFixed(0)} ${tr("sar")}",
-                                    "${localMaxPrice.toStringAsFixed(0)} ${tr("sar")}",
+                                ],
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Icon(
+                                        Icons.keyboard_arrow_up,
+                                        color: primary,
+                                        size: 20,
+                                      ),
+                                      Text(
+                                        tr("cost"),
+                                        style: TextStyles.textStyleBold16
+                                            .copyWith(color: primary),
+                                      ),
+                                    ],
                                   ),
-                                  onChanged: (RangeValues values) {
-                                    setLocalState(() {
-                                      localMinPrice = values.start;
-                                      localMaxPrice = values.end;
-                                    });
-                                  },
-                                ),
-                                const SizedBox(height: 12),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    _priceBox(
+                                  const SizedBox(height: 20),
+                                  RangeSlider(
+                                    values: RangeValues(
+                                      localMinPrice,
+                                      localMaxPrice,
+                                    ),
+                                    min: 0.0,
+                                    max: 500.0,
+                                    divisions: 50,
+                                    activeColor: orangeBold,
+                                    inactiveColor: grey1.withOpacity(0.2),
+                                    labels: RangeLabels(
+                                      "${localMinPrice.toStringAsFixed(0)} ${tr("sar")}",
                                       "${localMaxPrice.toStringAsFixed(0)} ${tr("sar")}",
                                     ),
-                                    _priceBox(
-                                      "${localMinPrice.toStringAsFixed(0)} ${tr("sar")}",
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    onChanged: (RangeValues values) {
+                                      setLocalState(() {
+                                        localMinPrice = values.start;
+                                        localMaxPrice = values.end;
+                                      });
+                                    },
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      _priceBox(
+                                        "${localMaxPrice.toStringAsFixed(0)} ${tr("sar")}",
+                                      ),
+                                      _priceBox(
+                                        "${localMinPrice.toStringAsFixed(0)} ${tr("sar")}",
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-
-                          const SizedBox(height: 20),
+                            const SizedBox(height: 20),
+                          ],
 
                           // Specialties
                           Container(

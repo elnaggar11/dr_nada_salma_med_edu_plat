@@ -142,7 +142,7 @@ class Features {
   Features.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     courseId = json['course_id'];
-    feature = json['feature'];
+    feature = json['feature']?.toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -174,9 +174,9 @@ class Contents {
   Contents.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     courseId = json['course_id'];
-    title = json['title'];
+    title = json['title']?.toString();
     totalNumLecture = json['total_num_lecture'];
-    totalTime = json['total_time'];
+    totalTime = json['total_time']?.toString();
     if (json['lectures'] != null) {
       lectures = <Lectures>[];
       json['lectures'].forEach((v) {
@@ -209,9 +209,9 @@ class Lectures {
 
   Lectures.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    title = json['title'];
-    video = json['video'];
-    timeMinutes = json['time_minutes'];
+    title = json['title']?.toString();
+    video = json['video']?.toString();
+    timeMinutes = json['time_minutes']?.toString();
   }
 
   Map<String, dynamic> toJson() {

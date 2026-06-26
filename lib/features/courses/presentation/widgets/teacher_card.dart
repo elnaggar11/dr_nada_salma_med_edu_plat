@@ -2,6 +2,7 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/utils/const.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/utils/target_user.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/network_image_handler.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,8 @@ class TeacherCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final targetUser = isTargetUser(context);
+
     return GestureDetector(
       onTap: () => Navigator.pushNamed(
         context,
@@ -188,29 +191,31 @@ class TeacherCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           // Price
-                          Flexible(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  tr("starts_from"),
-                                  style: TextStyles.textStyleNormal10.copyWith(
-                                    color: grey1,
+                          if (!targetUser)
+                            Flexible(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    tr("starts_from"),
+                                    style: TextStyles.textStyleNormal10
+                                        .copyWith(color: grey1),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  "$price ${tr("sar")}",
-                                  style: TextStyles.textStyleBold14.copyWith(
-                                    color: orangeBold,
+                                  Text(
+                                    "$price ${tr("sar")}",
+                                    style: TextStyles.textStyleBold14.copyWith(
+                                      color: orangeBold,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          ),
+                                ],
+                              ),
+                            )
+                          else
+                            const SizedBox.shrink(),
                           SizedBox(width: 8),
                           // Booking Button
                           if (!Const.isTeacher)

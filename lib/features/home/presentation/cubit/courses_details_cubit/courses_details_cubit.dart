@@ -27,6 +27,9 @@ class CoursesDetailsCubit extends Cubit<CoursesDetailsState> {
     loading = true;
     error = false;
     success = false;
+    lectureNum = 0;
+    totalTime = 0.0;
+    lectureList = [];
     emit(CoursesDetailsLoadingState());
     try {
       final failOrUser = await coursesDetailsUseCase(params!);
@@ -54,21 +57,19 @@ class CoursesDetailsCubit extends Cubit<CoursesDetailsState> {
           coursesDetailsResponse = response;
           print("reviews${coursesDetailsResponse!.data!.reviews}");
           courseId = response.data!.id.toString();
-          coursesDetailsResponse!.data!.contents!
-              .map((e) => lectureNum = lectureNum! + e.lectures!.length)
-              .toList();
 
-          coursesDetailsResponse!.data!.contents!
-              .map((e) => totalTime = totalTime + double.parse(e.totalTime!))
-              .toList();
+          if (coursesDetailsResponse!.data!.contents != null) {
+            for (var e in coursesDetailsResponse!.data!.contents!) {
+              if (e.lectures != null) {
+                lectureNum = lectureNum! + e.lectures!.length;
+                lectureList!.addAll(e.lectures!);
+              }
+              if (e.totalTime != null) {
+                totalTime = totalTime + (double.tryParse(e.totalTime!) ?? 0.0);
+              }
+            }
+          }
 
-          coursesDetailsResponse!.data!.contents!
-              .map((e) => lectureNum = lectureNum! + e.lectures!.length)
-              .toList();
-
-          coursesDetailsResponse!.data!.contents!
-              .map((e) => lectureList = lectureList! + e.lectures!)
-              .toList();
           emit(CoursesDetailsSuccessState(coursesDetailsResponse: response));
         },
       );
@@ -76,6 +77,7 @@ class CoursesDetailsCubit extends Cubit<CoursesDetailsState> {
       loading = false;
       error = true;
       success = false;
+      emit(CoursesDetailsErrorState(message: e.toString()));
     }
   }
 }
