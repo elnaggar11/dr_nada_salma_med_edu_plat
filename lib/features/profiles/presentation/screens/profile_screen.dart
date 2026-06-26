@@ -29,7 +29,9 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
-    context.read<ProfileCubit>().getProfile();
+    if (sharedPreferences.getString(cacheTokenConst) != null) {
+      context.read<ProfileCubit>().getProfile();
+    }
     context.read<ProfileCubit>().getSettings();
     super.initState();
   }
