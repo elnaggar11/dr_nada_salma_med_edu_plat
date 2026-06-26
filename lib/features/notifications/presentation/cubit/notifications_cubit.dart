@@ -31,7 +31,7 @@ class NotificationsCubit extends Cubit<NotificationsState> {
             loading = false;
             error = true;
             success = false;
-            emit(NotificationsErrorState(message: fail.message));
+            if (!isClosed) emit(NotificationsErrorState(message: fail.message));
           }
         },
         (response) {
@@ -39,14 +39,14 @@ class NotificationsCubit extends Cubit<NotificationsState> {
           error = false;
           success = true;
           notificationsResponse = response;
-          emit(NotificationsSuccessState(notificationsResponse: response));
+          if (!isClosed) emit(NotificationsSuccessState(notificationsResponse: response));
         },
       );
     } catch (e) {
       loading = false;
       error = true;
       success = false;
-      emit(NotificationsErrorState(message: e.toString()));
+      if (!isClosed) emit(NotificationsErrorState(message: e.toString()));
     }
   }
 
@@ -63,19 +63,19 @@ class NotificationsCubit extends Cubit<NotificationsState> {
       return result.fold(
         (fail) {
           if (fail is ServerFailure) {
-            emit(NotificationsErrorState(message: fail.message));
+            if (!isClosed) emit(NotificationsErrorState(message: fail.message));
           }
 
           return [];
         },
         (response) {
           notificationsResponse = response;
-          emit(NotificationsSuccessState(notificationsResponse: response));
+          if (!isClosed) emit(NotificationsSuccessState(notificationsResponse: response));
           return response.data!.data! ?? [];
         },
       );
     } catch (e) {
-      emit(NotificationsErrorState(message: e.toString()));
+      if (!isClosed) emit(NotificationsErrorState(message: e.toString()));
       return [];
     }
   }
