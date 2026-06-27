@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
@@ -462,8 +464,12 @@ class _AppointmentsViewState extends State<AppointmentsView> {
     final isBooked = slot.isBooked == true;
     final booking = slot.booking;
 
-    Color bgColor = isBooked ? orangeBold.withOpacity(0.1) : greenLight.withOpacity(0.05);
-    Color borderColor = isBooked ? orangeBold.withOpacity(0.2) : greenLight.withOpacity(0.2);
+    Color bgColor = isBooked
+        ? orangeBold.withOpacity(0.1)
+        : greenLight.withOpacity(0.05);
+    Color borderColor = isBooked
+        ? orangeBold.withOpacity(0.2)
+        : greenLight.withOpacity(0.2);
     Color textColor = isBooked ? orangeBold : Colors.green[800]!;
 
     if (isBooked && booking != null) {
@@ -479,8 +485,17 @@ class _AppointmentsViewState extends State<AppointmentsView> {
     }
 
     final targetUser = Const.isTeacher ? booking?.student : booking?.teacher;
-    final targetName = targetUser?.fullName ?? (Const.isTeacher ? slot.studentName : slot.teacherName);
+    final targetName =
+        targetUser?.fullName ??
+        (Const.isTeacher ? slot.studentName : slot.teacherName);
     final targetPhone = targetUser?.phoneNumber;
+    final formattedPhone = targetPhone != null && targetPhone.isNotEmpty
+        ? (targetPhone.startsWith('+')
+              ? targetPhone
+              : targetPhone.startsWith('966')
+              ? "+$targetPhone"
+              : "+966 $targetPhone")
+        : "";
     final targetImage = targetUser?.image;
 
     String statusText = '';
@@ -511,10 +526,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(
-              color: borderColor,
-              width: 1,
-            ),
+            border: Border.all(color: borderColor, width: 1),
           ),
           child: Stack(
             children: [
@@ -542,8 +554,10 @@ class _AppointmentsViewState extends State<AppointmentsView> {
                             width: 24,
                             height: 24,
                             fit: BoxFit.cover,
-                            placeholder: (context, url) => const CircularProgressIndicator(strokeWidth: 2),
-                            errorWidget: (context, url, error) => const Icon(Icons.person, size: 24),
+                            placeholder: (context, url) =>
+                                const CircularProgressIndicator(strokeWidth: 2),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.person, size: 24),
                           ),
                         ),
                         const SizedBox(height: 2),
@@ -572,13 +586,16 @@ class _AppointmentsViewState extends State<AppointmentsView> {
                         const SizedBox(height: 2),
                         GestureDetector(
                           onTap: () async {
-                            final uri = Uri.parse("tel:$targetPhone");
+                            final uri = Uri.parse(
+                              "tel:${formattedPhone.replaceAll(' ', '')}",
+                            );
                             if (await canLaunchUrl(uri)) {
                               await launchUrl(uri);
                             }
                           },
                           child: Text(
-                            targetPhone,
+                            formattedPhone,
+                            textDirection: ui.TextDirection.ltr,
                             style: TextStyle(
                               color: textColor,
                               fontSize: 9,
@@ -588,7 +605,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
                             ),
                           ),
                         ),
-                      ]
+                      ],
                     ] else ...[
                       Text(
                         tr("available_time"),
@@ -599,7 +616,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                    ]
+                    ],
                   ],
                 ),
               ),
