@@ -76,9 +76,37 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Stack(
-        alignment: Alignment.center,
-        children: [
+      body: BlocConsumer<WatchCourseCubit, WatchCourseState>(
+        listener: (context, state) {
+          if (state is WatchCourseError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                behavior: SnackBarBehavior.floating,
+                content: Text(
+                  state.message == 'course_hasnt_started_yet' ? "لم يبدأ الكورس بعد" : state.message,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is WatchCourseError) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  state.message == 'course_hasnt_started_yet' ? "لم يبدأ الكورس بعد" : state.message,
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          }
+
+          return Stack(
+            alignment: Alignment.center,
+            children: [
           // Make WebView expand to fill available space
           Positioned.fill(
             child: SizedBox(
@@ -123,6 +151,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
           // Loading indicator
           if (loading) const CircularProgressIndicator(color: Colors.red),
         ],
+        );
+        },
       ),
     );
   }

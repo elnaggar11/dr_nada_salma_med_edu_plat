@@ -35,6 +35,7 @@ class BottomBarCubit extends Cubit<BottomBarState> {
 
   bool? renderNavBar = true;
   int pageIndex = 0;
+  final GlobalKey<NavigatorState> homeNavigatorKey = GlobalKey<NavigatorState>();
 
   bool? visibility = true;
 
@@ -53,6 +54,7 @@ class BottomBarCubit extends Cubit<BottomBarState> {
   List<Widget> pageList({BuildContext? context}) {
     return [
       Navigator(
+        key: homeNavigatorKey,
         onGenerateRoute: (settings) {
           Widget page = MultiBlocProvider(
             providers: [

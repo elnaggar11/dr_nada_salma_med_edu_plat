@@ -300,6 +300,8 @@
   "course_delivery_method": "Course Delivery Method",
   "in_person_delivery_only": "This course is offered in-person inside the hall and not just online.",
   "booking_info": "Booking Info",
-  "free_booking_via_app": "This training is free, and booking is done through the app."
+  "free_booking_via_app": "This training is free, and booking is done through the app.",
+  "ended": "Ended",
+  "view_reviews": "Reviews",
+  "enroll_now": "Enroll Now"
 }
-

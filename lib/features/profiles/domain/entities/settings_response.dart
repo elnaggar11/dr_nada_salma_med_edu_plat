@@ -37,6 +37,7 @@ class Data {
   dynamic phoneContact;
   dynamic tax;
   dynamic serviceFees;
+  dynamic tutoringPageBanner;
 
   Data({
     this.id,
@@ -48,6 +49,7 @@ class Data {
     this.phoneContact,
     this.tax,
     this.serviceFees,
+    this.tutoringPageBanner,
   });
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -60,6 +62,7 @@ class Data {
     phoneContact = json['phone_contact'];
     tax = json['tax'];
     serviceFees = json['service_fees'];
+    tutoringPageBanner = json['tutoring_page_banner'];
   }
 
   Map<String, dynamic> toJson() {
@@ -73,6 +76,7 @@ class Data {
     data['phone_contact'] = phoneContact;
     data['tax'] = tax;
     data['service_fees'] = serviceFees;
+    data['tutoring_page_banner'] = tutoringPageBanner;
     return data;
   }
 }

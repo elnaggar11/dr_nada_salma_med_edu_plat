@@ -212,12 +212,14 @@ class ButtonActions {
   bool? addToCart;
   bool? viewCourse;
   bool? reviewCourse;
+  bool? viewReviews;
 
   ButtonActions({
     this.enrollNow,
     this.addToCart,
     this.viewCourse,
     this.reviewCourse,
+    this.viewReviews,
   });
 
   ButtonActions.fromJson(Map<String, dynamic> json) {
@@ -225,6 +227,7 @@ class ButtonActions {
     addToCart = json['add_to_cart'];
     viewCourse = json['view_course'];
     reviewCourse = json['review_course'];
+    viewReviews = json['view_reviews'];
   }
 
   Map<String, dynamic> toJson() {
@@ -233,6 +236,7 @@ class ButtonActions {
     data['add_to_cart'] = addToCart;
     data['view_course'] = viewCourse;
     data['review_course'] = reviewCourse;
+    data['view_reviews'] = viewReviews;
     return data;
   }
 }

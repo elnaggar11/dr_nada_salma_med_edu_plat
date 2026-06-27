@@ -83,12 +83,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(width: context.width / 30),
                             ClipOval(
                               child: NetWorkImageHandler(
-                                image: context
-                                    .read<ProfileCubit>()
-                                    .profileResponse!
-                                    .data!
-                                    .image ??
-                                "",
+                                image:
+                                    context
+                                        .read<ProfileCubit>()
+                                        .profileResponse!
+                                        .data!
+                                        .image ??
+                                    "",
                                 width: context.width / 8,
                                 height: context.width / 8,
                               ),
@@ -108,7 +109,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 SizedBox(height: context.height / 280),
                                 Text(
-                                  (context.read<ProfileCubit>().profileResponse?.data?.specialties?.isNotEmpty ?? false)
+                                  (context
+                                              .read<ProfileCubit>()
+                                              .profileResponse
+                                              ?.data
+                                              ?.specialties
+                                              ?.isNotEmpty ??
+                                          false)
                                       ? "${context.read<ProfileCubit>().profileResponse!.data!.specialties![0].name}"
                                       : "",
                                   style: TextStyles.textStyleNormal12.copyWith(
@@ -252,7 +259,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 SizedBox(width: context.width / 90),
                                 VerticalDivider(
                                   thickness: 1,
-                                  color: black.withOpacity(.1),
+                                  color: black.withValues(alpha: 0.1),
                                   indent: 15,
                                   endIndent: 15,
                                 ),
@@ -352,11 +359,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ? SizedBox()
                                       : Text(
                                           context
-                                                  .read<HeroesCubit>()
-                                                  .heroResponse!
-                                                  .data!
-                                                  .title! ??
-                                              "",
+                                              .read<HeroesCubit>()
+                                              .heroResponse!
+                                              .data!
+                                              .title!,
                                           style: TextStyles.textStyleBold15
                                               .copyWith(
                                                 fontWeight: FontWeight.w800,
@@ -370,11 +376,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ? SizedBox()
                                       : Text(
                                           context
-                                                  .read<HeroesCubit>()
-                                                  .heroResponse!
-                                                  .data!
-                                                  .description! ??
-                                              "",
+                                              .read<HeroesCubit>()
+                                              .heroResponse!
+                                              .data!
+                                              .description!,
                                           style: TextStyles.textStyleBold14
                                               .copyWith(
                                                 fontWeight: FontWeight.w500,

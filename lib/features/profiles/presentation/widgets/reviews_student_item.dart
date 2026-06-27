@@ -4,12 +4,13 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/images.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/image_handler.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/svg_handler.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/courses_details_response.dart';
 import 'package:flutter/material.dart';
 
 class ReviewsStudentItem extends StatelessWidget {
-  final String img;
+  final Reviews review;
 
-  const ReviewsStudentItem({super.key, required this.img});
+  const ReviewsStudentItem({super.key, required this.review});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,7 @@ class ReviewsStudentItem extends StatelessWidget {
             children: [
               ClipOval(
                 child: ImageHandler(
-                  image: img,
+                  image: review.user?.image ?? profile1,
                   width: context.width / 8,
                   height: context.width / 8,
                 ),
@@ -58,7 +59,7 @@ class ReviewsStudentItem extends StatelessWidget {
               right: context.width / 30,
             ),
             child: Text(
-              "“ The course was amazing and greatly boosted my confidence in my medical skills .”",
+              review.content ?? "",
               style: TextStyles.textStyleNormal20.copyWith(
                 color: orangeBold,
                 fontWeight: FontWeight.w400,
@@ -85,7 +86,7 @@ class ReviewsStudentItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Abdullah Al-Walidi",
+                      review.user?.fullName ?? "Unknown User",
                       style: TextStyles.textStyleBold14.copyWith(
                         color: primary,
                         fontWeight: FontWeight.w700,
@@ -94,7 +95,7 @@ class ReviewsStudentItem extends StatelessWidget {
                     ),
                     SizedBox(height: context.height / 60),
                     Text(
-                      "medical student",
+                      "Medical Student",
                       style: TextStyles.textStyleNormal14.copyWith(
                         color: orange,
                         fontWeight: FontWeight.w500,

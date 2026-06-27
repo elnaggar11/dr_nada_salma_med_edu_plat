@@ -29,6 +29,7 @@ import 'package:dr_nada_salma_med_edu_plat/features/bottom_bar/presentation/cubi
 import 'package:dr_nada_salma_med_edu_plat/features/bottom_bar/presentation/screens/bottom_bar_screen.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/certificates/presentation/screen/certificate_screen.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/categories/categories_cubit.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/course_reviews/course_reviews_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/courses_status_cubit/courses_status_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/teacher_detail/teacher_detail_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/screens/teacher_detail_view.dart';
@@ -304,8 +305,13 @@ class AppRoutes {
           settings: settings,
         );
       case reviewsSc:
+        final arg = settings.arguments as Map<String, dynamic>?;
+        final courseId = arg?['course_id'] as int? ?? 0;
         return MaterialPageRoute(
-          builder: (_) => ReviewsScreen(),
+          builder: (_) => BlocProvider(
+            create: (context) => sl<CourseReviewsCubit>(),
+            child: ReviewsScreen(courseId: courseId),
+          ),
           settings: settings,
         );
 

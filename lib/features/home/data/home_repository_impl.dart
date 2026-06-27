@@ -110,6 +110,8 @@ class HomeRepositoryImpl implements HomeRepositories {
       return left(ServerFailure(message: e.message));
     } on UnprocessableContentException catch (e) {
       return left(ServerFailure(message: e.message));
+    } on ForbiddenException catch (e) {
+      return left(ServerFailure(message: e.message));
     }
   }
 }

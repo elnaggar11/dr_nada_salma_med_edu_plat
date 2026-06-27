@@ -35,6 +35,8 @@ class Data {
   dynamic longDescription;
   dynamic categoryName;
   dynamic issuedAt;
+  dynamic imageCertificate;
+  dynamic studentName;
 
   Data({
     this.id,
@@ -44,16 +46,20 @@ class Data {
     this.longDescription,
     this.categoryName,
     this.issuedAt,
+    this.imageCertificate,
+    this.studentName,
   });
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    title = json['title'];
+    title = json['title'] ?? json['course_title'];
     slug = json['slug'];
     semiDescription = json['semi_description'];
     longDescription = json['long_description'];
     categoryName = json['category_name'];
     issuedAt = json['issued_at'];
+    imageCertificate = json['image_certificate'];
+    studentName = json['student_name'];
   }
 
   Map<String, dynamic> toJson() {
@@ -65,6 +71,8 @@ class Data {
     data['long_description'] = longDescription;
     data['category_name'] = categoryName;
     data['issued_at'] = issuedAt;
+    data['image_certificate'] = imageCertificate;
+    data['student_name'] = studentName;
     return data;
   }
 }

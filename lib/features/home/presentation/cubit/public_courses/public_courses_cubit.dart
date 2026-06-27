@@ -29,6 +29,8 @@ class PublicCoursesCubit extends Cubit<PublicCoursesState> {
     required String? name,
     required String? categoryId,
     required String topRated,
+    String? courseStatus,
+    String? isEnded,
   }) async {
     if (isFetching) return; // prevent multiple simultaneous requests
     isFetching = true;
@@ -48,6 +50,8 @@ class PublicCoursesCubit extends Cubit<PublicCoursesState> {
         courseName: name,
         categoryId: categoryId,
         topRated: topRated,
+        courseStatus: courseStatus,
+        isEnded: isEnded,
         limit: 8,
       );
 

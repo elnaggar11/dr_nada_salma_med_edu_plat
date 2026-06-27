@@ -6,6 +6,7 @@ import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/cour
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/teachers_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/subject_details_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/teacher/teacher_detail_response.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/domain/entities/course_reviews_response.dart';
 
 abstract class CoursesRepositories {
   Future<Either<Failure, CategoriesResponse>> getCategories();
@@ -30,5 +31,8 @@ abstract class CoursesRepositories {
   });
   Future<Either<Failure, Map<String, dynamic>>> bookTeacher({
     required Map<String, dynamic> body,
+  });
+  Future<Either<Failure, CourseReviewsResponse>> getCourseReviews({
+    required int courseId,
   });
 }

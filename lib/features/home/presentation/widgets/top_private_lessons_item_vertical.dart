@@ -162,7 +162,7 @@ class TopPrivateLessonsItemVertical extends StatelessWidget {
                               children: [
                                 Flexible(
                                   child: Text(
-                                    "\$${data.price}",
+                                    "\$${data.hourlyRateAfterDiscount ?? data.priceBreakdown ?? data.price}",
                                     style: TextStyles.textStyleBold16.copyWith(
                                       color: orangeBold,
                                     ),

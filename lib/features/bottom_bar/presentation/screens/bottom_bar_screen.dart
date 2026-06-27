@@ -30,6 +30,13 @@ class _BottomBarScreensState extends State<BottomBarScreen>
         if (didPop) {
           return; // Allow the pop if already handled
         }
+        final cubit = context.read<BottomBarCubit>();
+        if (cubit.pageIndex == 0 &&
+            cubit.homeNavigatorKey.currentState?.canPop() == true) {
+          cubit.homeNavigatorKey.currentState?.pop();
+          return;
+        }
+
         final bool? shouldPop = await showDialog<bool>(
           context: context,
           builder: (BuildContext context) {

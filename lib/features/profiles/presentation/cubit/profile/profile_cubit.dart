@@ -239,6 +239,16 @@ class ProfileCubit extends Cubit<ProfileState> {
       failOrUser.fold(
         (fail) {
           if (fail is ServerFailure) {
+            if (fail.message.toLowerCase().contains("unauthenticated") || fail.message.toLowerCase().contains("unauthorized")) {
+              sharedPreferences.remove("saveUser");
+              sharedPreferences.remove("cache_token");
+              sharedPreferences.remove("isTeacher");
+              Const.isTeacher = false;
+              navKey.currentContext!.pushNamedAndRemoveUntil(name: splash);
+              emit(LogOutSuccess(logOutResponse: LogOutResponse(message: fail.message)));
+              return;
+            }
+
             logLoading = false;
             logError = true;
             logSuccess = false;

@@ -1,8 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/fonts.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/custom_app_bar.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/widgets/image_handler.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/appointments/presentation/cubit/appointments_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/utils/const.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/appointments/presentation/cubit/appointments_state.dart';
@@ -11,6 +13,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AppointmentsView extends StatefulWidget {
   const AppointmentsView({super.key});
@@ -370,7 +373,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
   }
 
   Widget _buildTimeLabels(BuildContext context, List<int> times, double width) {
-    final double cellHeight = context.height / 9.5;
+    final double cellHeight = 140.0;
     return Column(
       children: times.map((hour) {
         return Container(
@@ -403,7 +406,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
     int hour,
     List<TimeSlot> slots,
   ) {
-    final double cellHeight = context.height / 9.5;
+    final double cellHeight = 140.0;
     final dayDate = context.read<AppointmentsCubit>().state.weekDays[dayIndex];
     final slot = _getSlotForCell(slots, dayDate, hour);
     final isPastCell = _isPastCell(dayDate, hour);
@@ -457,6 +460,39 @@ class _AppointmentsViewState extends State<AppointmentsView> {
     }
 
     final isBooked = slot.isBooked == true;
+    final booking = slot.booking;
+
+    Color bgColor = isBooked ? orangeBold.withOpacity(0.1) : greenLight.withOpacity(0.05);
+    Color borderColor = isBooked ? orangeBold.withOpacity(0.2) : greenLight.withOpacity(0.2);
+    Color textColor = isBooked ? orangeBold : Colors.green[800]!;
+
+    if (isBooked && booking != null) {
+      if (booking.status == 'confirmed') {
+        bgColor = Colors.green.withOpacity(0.1);
+        borderColor = Colors.green.withOpacity(0.3);
+        textColor = Colors.green[800]!;
+      } else if (booking.status == 'completed') {
+        bgColor = Colors.blue.withOpacity(0.1);
+        borderColor = Colors.blue.withOpacity(0.3);
+        textColor = Colors.blue[800]!;
+      }
+    }
+
+    final targetUser = Const.isTeacher ? booking?.student : booking?.teacher;
+    final targetName = targetUser?.fullName ?? (Const.isTeacher ? slot.studentName : slot.teacherName);
+    final targetPhone = targetUser?.phoneNumber;
+    final targetImage = targetUser?.image;
+
+    String statusText = '';
+    if (isBooked && booking != null) {
+      if (booking.status == 'pending') {
+        statusText = 'قيد الانتظار';
+      } else if (booking.status == 'confirmed') {
+        statusText = 'مؤكد';
+      } else if (booking.status == 'completed') {
+        statusText = 'مكتمل';
+      }
+    }
 
     return Container(
       height: cellHeight,
@@ -471,16 +507,12 @@ class _AppointmentsViewState extends State<AppointmentsView> {
         },
         child: Container(
           margin: const EdgeInsets.all(4),
-          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
           decoration: BoxDecoration(
-            color: isBooked
-                ? orangeBold.withOpacity(0.1)
-                : greenLight.withOpacity(0.05),
+            color: bgColor,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: isBooked
-                  ? orangeBold.withOpacity(0.2)
-                  : greenLight.withOpacity(0.2),
+              color: borderColor,
               width: 1,
             ),
           ),
@@ -494,31 +526,80 @@ class _AppointmentsViewState extends State<AppointmentsView> {
                     Text(
                       "${slot.startTime?.substring(0, 5) ?? ''} - ${slot.endTime?.substring(0, 5) ?? ''}",
                       style: TextStyle(
-                        color: isBooked ? orangeBold : Colors.green[800],
-                        fontSize: 12,
+                        color: textColor,
+                        fontSize: 10,
                         fontWeight: FontWeight.bold,
                         fontFamily: poppins,
                       ),
                     ),
                     const SizedBox(height: 2),
-                    Text(
-                      isBooked
-                          ? (Const.isTeacher
-                              ? (slot.studentName != null && slot.studentName!.isNotEmpty
-                                  ? "حجز: ${slot.studentName}"
-                                  : tr("reserved_appointment"))
-                              : (slot.teacherName != null && slot.teacherName!.isNotEmpty
-                                  ? "حجز مع: ${slot.teacherName}"
-                                  : tr("reserved_appointment")))
-                          : tr("available_time"),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: isBooked ? orangeBold : Colors.green[800],
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
+                    if (isBooked) ...[
+                      if (targetImage != null && targetImage.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        ClipOval(
+                          child: CachedNetworkImage(
+                            imageUrl: targetImage,
+                            width: 24,
+                            height: 24,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => const CircularProgressIndicator(strokeWidth: 2),
+                            errorWidget: (context, url, error) => const Icon(Icons.person, size: 24),
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                      ],
+                      if (targetName != null && targetName.isNotEmpty)
+                        Text(
+                          Const.isTeacher ? "$targetName" : "مع: $targetName",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: textColor,
+                            fontSize: 9,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      if (statusText.isNotEmpty)
+                        Text(
+                          statusText,
+                          style: TextStyle(
+                            color: textColor,
+                            fontSize: 8,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      if (targetPhone != null && targetPhone.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        GestureDetector(
+                          onTap: () async {
+                            final uri = Uri.parse("tel:$targetPhone");
+                            if (await canLaunchUrl(uri)) {
+                              await launchUrl(uri);
+                            }
+                          },
+                          child: Text(
+                            targetPhone,
+                            style: TextStyle(
+                              color: textColor,
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline,
+                              decorationColor: textColor,
+                            ),
+                          ),
+                        ),
+                      ]
+                    ] else ...[
+                      Text(
+                        tr("available_time"),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: textColor,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    ]
                   ],
                 ),
               ),

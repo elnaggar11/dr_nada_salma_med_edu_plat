@@ -7,11 +7,13 @@ import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/c
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/courses_status_cubit/courses_status_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/teacher_detail/teacher_detail_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/teachers/teachers_cubit.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/course_reviews/course_reviews_cubit.dart';
 import 'package:get_it/get_it.dart';
 
 Future<void> coursesInj(GetIt s) async {
   s.registerFactory(() => CategoriesCubit(s()));
   s.registerFactory(() => CoursesStatusCubit(s()));
+  s.registerFactory(() => CourseReviewsCubit(s()));
   s.registerFactory(() => TeacherDetailCubit(s()));
   s.registerFactory(() => TeachersCubit(s()));
   s.registerLazySingleton(() => CategoriesUseCase(s()));

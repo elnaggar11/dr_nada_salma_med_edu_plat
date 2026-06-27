@@ -5,9 +5,12 @@ import 'package:dr_nada_salma_med_edu_plat/core/widgets/custom_app_bar.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/profiles/presentation/widgets/reviews_student_list.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/profiles/presentation/widgets/success_stories_list.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/course_reviews/course_reviews_cubit.dart';
 
 class ReviewsScreen extends StatefulWidget {
-  const ReviewsScreen({super.key});
+  final int courseId;
+  const ReviewsScreen({super.key, required this.courseId});
 
   @override
   State<ReviewsScreen> createState() => _ReviewsScreenState();
@@ -19,6 +22,9 @@ class _ReviewsScreenState extends State<ReviewsScreen>
   @override
   void initState() {
     tabController = TabController(length: 2, vsync: this);
+    if (widget.courseId != 0) {
+      context.read<CourseReviewsCubit>().getCourseReviews(widget.courseId);
+    }
     super.initState();
   }
 

@@ -39,6 +39,7 @@ class TimeSlot {
   String? studentName;
   String? teacherName;
   String? subjectName;
+  Booking? booking;
 
   TimeSlot({
     this.id,
@@ -52,6 +53,7 @@ class TimeSlot {
     this.studentName,
     this.teacherName,
     this.subjectName,
+    this.booking,
   });
 
   TimeSlot.fromJson(Map<String, dynamic> json) {
@@ -66,6 +68,7 @@ class TimeSlot {
     studentName = json['student_name'];
     teacherName = json['teacher_name'];
     subjectName = json['subject_name'];
+    booking = json['booking'] != null ? Booking.fromJson(json['booking']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -83,6 +86,90 @@ class TimeSlot {
     data['student_name'] = this.studentName;
     data['teacher_name'] = this.teacherName;
     data['subject_name'] = this.subjectName;
+    if (this.booking != null) {
+      data['booking'] = this.booking!.toJson();
+    }
+    return data;
+  }
+}
+
+class Booking {
+  int? id;
+  String? status;
+  BookingUser? student;
+  BookingUser? teacher;
+  BookingSubject? subject;
+
+  Booking({this.id, this.status, this.student, this.teacher, this.subject});
+
+  Booking.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    status = json['status'];
+    student = json['student'] != null ? BookingUser.fromJson(json['student']) : null;
+    teacher = json['teacher'] != null ? BookingUser.fromJson(json['teacher']) : null;
+    subject = json['subject'] != null ? BookingSubject.fromJson(json['subject']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = this.id;
+    data['status'] = this.status;
+    if (this.student != null) {
+      data['student'] = this.student!.toJson();
+    }
+    if (this.teacher != null) {
+      data['teacher'] = this.teacher!.toJson();
+    }
+    if (this.subject != null) {
+      data['subject'] = this.subject!.toJson();
+    }
+    return data;
+  }
+}
+
+class BookingUser {
+  int? id;
+  String? fullName;
+  String? email;
+  String? phoneNumber;
+  String? image;
+
+  BookingUser({this.id, this.fullName, this.email, this.phoneNumber, this.image});
+
+  BookingUser.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    fullName = json['full_name'];
+    email = json['email'];
+    phoneNumber = json['phone_number'];
+    image = json['image'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = this.id;
+    data['full_name'] = this.fullName;
+    data['email'] = this.email;
+    data['phone_number'] = this.phoneNumber;
+    data['image'] = this.image;
+    return data;
+  }
+}
+
+class BookingSubject {
+  int? id;
+  String? name;
+
+  BookingSubject({this.id, this.name});
+
+  BookingSubject.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = this.id;
+    data['name'] = this.name;
     return data;
   }
 }

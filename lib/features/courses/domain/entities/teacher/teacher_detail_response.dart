@@ -60,6 +60,8 @@ class TeacherDetail {
   final String? introVideoUrl;
   final String? introVideo;
   final String? bookingPolicyHint;
+  final double? hourlyRateAfterDiscount;
+  final dynamic priceBreakdown;
 
   TeacherDetail({
     this.id,
@@ -97,6 +99,8 @@ class TeacherDetail {
     this.introVideoUrl,
     this.introVideo,
     this.bookingPolicyHint,
+    this.hourlyRateAfterDiscount,
+    this.priceBreakdown,
   });
 
   factory TeacherDetail.fromJson(Map<String, dynamic> json) {
@@ -129,6 +133,8 @@ class TeacherDetail {
       hourlyPrice:
           (json['hourly_rate'] as num?)?.toDouble() ??
           (json['hourly_price'] as num?)?.toDouble(),
+      hourlyRateAfterDiscount: (json['hourly_rate_after_discount'] as num?)?.toDouble(),
+      priceBreakdown: json['price_breakdown'],
       languages: json['languages'] != null
           ? List<String>.from(json['languages'])
           : null,

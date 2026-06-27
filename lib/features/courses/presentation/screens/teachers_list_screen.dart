@@ -210,8 +210,7 @@ class _TeachersListScreenState extends State<TeachersListScreen> {
                               specialty:
                                   teacher.specialty ?? widget.categoryName,
                               image:
-                                  teacher.image ??
-                                  "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=300&auto=format&fit=crop",
+                                  teacher.image ?? "",
                               rating: teacher.rating ?? 0.0,
                               experience:
                                   "${teacher.experienceYears}+ ${tr("years_experience")}",

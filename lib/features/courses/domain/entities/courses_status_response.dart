@@ -53,8 +53,11 @@ class Data {
   dynamic hasDiscount;
   dynamic teachersCount;
   dynamic minHourlyRate;
+  dynamic hourlyRateAfterDiscount;
+  dynamic priceBreakdown;
   ButtonActions? buttonActions;
   dynamic progress;
+  bool? lecturesAreOpen;
 
   Data({
     this.id,
@@ -80,6 +83,7 @@ class Data {
     this.minHourlyRate,
     this.buttonActions,
     this.progress,
+    this.lecturesAreOpen,
   });
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -115,10 +119,13 @@ class Data {
     hasDiscount = json['has_discount'];
     teachersCount = json['teachers_count'];
     minHourlyRate = json['min_hourly_rate'];
+    hourlyRateAfterDiscount = json['hourly_rate_after_discount'];
+    priceBreakdown = json['price_breakdown'];
     buttonActions = json['button_actions'] != null
         ? ButtonActions.fromJson(json['button_actions'])
         : null;
     progress = json['progress'];
+    lecturesAreOpen = json['lectures_are_open'];
   }
 
   Map<String, dynamic> toJson() {
@@ -140,10 +147,13 @@ class Data {
     data['average_rating'] = averageRating;
     data['favorited'] = favorited;
     data['can_watch_course'] = canWatchCourse;
+    data['lectures_are_open'] = lecturesAreOpen;
     data['discount_percentage'] = discountPercentage;
     data['has_discount'] = hasDiscount;
     data['teachers_count'] = teachersCount;
     data['min_hourly_rate'] = minHourlyRate;
+    data['hourly_rate_after_discount'] = hourlyRateAfterDiscount;
+    data['price_breakdown'] = priceBreakdown;
     if (buttonActions != null) {
       data['button_actions'] = buttonActions!.toJson();
     }
@@ -157,12 +167,14 @@ class ButtonActions {
   bool? addToCart;
   bool? viewCourse;
   bool? reviewCourse;
+  bool? viewReviews;
 
   ButtonActions({
     this.enrollNow,
     this.addToCart,
     this.viewCourse,
     this.reviewCourse,
+    this.viewReviews,
   });
 
   ButtonActions.fromJson(Map<String, dynamic> json) {
@@ -170,6 +182,7 @@ class ButtonActions {
     addToCart = json['add_to_cart'];
     viewCourse = json['view_course'];
     reviewCourse = json['review_course'];
+    viewReviews = json['view_reviews'];
   }
 
   Map<String, dynamic> toJson() {
@@ -178,6 +191,7 @@ class ButtonActions {
     data['add_to_cart'] = addToCart;
     data['view_course'] = viewCourse;
     data['review_course'] = reviewCourse;
+    data['view_reviews'] = viewReviews;
     return data;
   }
 }

@@ -35,30 +35,7 @@ class AppointmentsRemoteDataSourceImpl implements AppointmentsRemoteDataSource {
         return TimeSlotResponse.fromJson(response);
       } else {
         final response = await helper.get(url: "/tutoring/bookings");
-        final List<TimeSlot> slots = [];
-        if (response['data'] != null && response['data'] is List) {
-          for (var booking in response['data']) {
-            final session = booking['session'];
-            if (session != null) {
-              slots.add(TimeSlot(
-                id: booking['id'] ?? (session['time_slot_id'] ?? 0),
-                teacherId: session['time_slot_id'],
-                date: session['date'] != null ? DateTime.tryParse(session['date'].toString()) : null,
-                startTime: session['start_time'],
-                endTime: session['end_time'],
-                isBooked: true,
-                studentName: booking['student'],
-                teacherName: booking['teacher'],
-                subjectName: booking['subject'],
-              ));
-            }
-          }
-        }
-        return TimeSlotResponse(
-          status: response['status'] is bool ? response['status'] : true,
-          message: response['message'],
-          data: slots,
-        );
+        return TimeSlotResponse.fromJson(response);
       }
     } on ServerException catch (e) {
       throw ServerException(message: e.message);

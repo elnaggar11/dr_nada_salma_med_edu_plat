@@ -10,6 +10,8 @@ import 'package:dr_nada_salma_med_edu_plat/injection_container/injection_contain
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../main.dart';
+
 class CourseContentItem extends StatelessWidget {
   const CourseContentItem({
     super.key,
@@ -18,6 +20,7 @@ class CourseContentItem extends StatelessWidget {
     required this.time,
     required this.courseId,
     required this.canWatch,
+    required this.lecturesAreOpen,
   });
 
   final String title;
@@ -25,6 +28,7 @@ class CourseContentItem extends StatelessWidget {
   final String time;
   final String courseId;
   final bool canWatch;
+  final bool lecturesAreOpen;
 
   @override
   Widget build(BuildContext context) {
@@ -86,26 +90,35 @@ class CourseContentItem extends StatelessWidget {
             .map(
               (e) => InkWell(
                 onTap: () {
-                  //   if(canWatch == true){
-                  showDialog(
-                    context: context,
-                    builder: (context) => BlocProvider(
-                      create: (context) => sl<WatchCourseCubit>(),
-                      child: VideoPlayerWidget(
-                        lectureVideo: e.video!,
-                        courseId: courseId,
-                        lectureId: e.id.toString(),
+                  if (lecturesAreOpen) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => BlocProvider(
+                        create: (context) => sl<WatchCourseCubit>(),
+                        child: VideoPlayerWidget(
+                          lectureVideo: e.video ?? "",
+                          courseId: courseId,
+                          lectureId: e.id.toString(),
+                        ),
                       ),
-                    ),
-                  );
-                  /*  }else {
-                      msgKey.currentState!.showSnackBar(SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
-                          content: Text(tr("not_subscribed")
-                            ,textScaler: TextScaler.linear(1),style: TextStyles
-                                .textStyleNormal13.copyWith(color: white),)));
-                    }*/
+                    );
+                  } else {
+                    msgKey.currentState?.showSnackBar(
+                      SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(40)),
+                        ),
+                        content: Text(
+                          "لم يبدأ الكورس بعد",
+                          textScaler: TextScaler.linear(1),
+                          style: TextStyles.textStyleNormal13.copyWith(
+                            color: white,
+                          ),
+                        ),
+                      ),
+                    );
+                  }
                 },
                 child: Container(
                   width: double.infinity,

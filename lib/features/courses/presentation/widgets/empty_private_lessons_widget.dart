@@ -1,8 +1,6 @@
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/constants/images.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/widgets/svg_handler.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -19,10 +17,7 @@ class EmptyPrivateLessonsWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(height: context.height / 10),
-          Container(
-            alignment: Alignment.center,
-            child: customSvg(name: privateMenu),
-          ),
+          SizedBox(height: context.height / 10),
           SizedBox(height: context.height / 70),
           Text(
             tr("lessons_available"),

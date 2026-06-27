@@ -94,6 +94,18 @@ class _CertificateScreenState extends State<CertificateScreen> {
                           .data![index]
                           .issuedAt
                           .toString(),
+                      imageCertificate: context
+                          .read<CertificatesCubit>()
+                          .certificateResponse!
+                          .data![index]
+                          .imageCertificate
+                          ?.toString(),
+                      studentName: context
+                          .read<CertificatesCubit>()
+                          .certificateResponse!
+                          .data![index]
+                          .studentName
+                          ?.toString(),
                     ),
                   );
           },

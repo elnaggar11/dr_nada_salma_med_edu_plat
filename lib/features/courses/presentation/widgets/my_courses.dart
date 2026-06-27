@@ -26,7 +26,7 @@ class _MyCoursesState extends State<MyCourses>
   TabController? tabController;
   @override
   void initState() {
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 4, vsync: this);
     if (tabController!.index == 0) {
       context.read<CoursesStatusCubit>().getCoursesStatus(
         params: CoursesStatusParams(
@@ -45,6 +45,13 @@ class _MyCoursesState extends State<MyCourses>
       context.read<CoursesStatusCubit>().getCoursesStatus(
         params: CoursesStatusParams(
           courseStatus: "completed",
+          coursesType: "my-public-courses/",
+        ),
+      );
+    } else if (tabController!.index == 3) {
+      context.read<CoursesStatusCubit>().getCoursesStatus(
+        params: CoursesStatusParams(
+          courseStatus: "ended",
           coursesType: "my-public-courses/",
         ),
       );
@@ -75,8 +82,12 @@ class _MyCoursesState extends State<MyCourses>
             ),
             child: TabBar(
               controller: tabController,
+              isScrollable: true,
+              tabAlignment: TabAlignment.start,
               dividerColor: Colors.transparent,
-              labelPadding: EdgeInsets.zero,
+              labelPadding: EdgeInsets.symmetric(
+                horizontal: context.width / 30,
+              ),
               unselectedLabelStyle: TextStyles.textStyleNormal13.copyWith(
                 color: grey1,
                 fontWeight: FontWeight.w600,
@@ -107,6 +118,13 @@ class _MyCoursesState extends State<MyCourses>
                       coursesType: "my-public-courses/",
                     ),
                   );
+                } else if (ind == 3) {
+                  context.read<CoursesStatusCubit>().getCoursesStatus(
+                    params: CoursesStatusParams(
+                      courseStatus: "ended",
+                      coursesType: "my-public-courses/",
+                    ),
+                  );
                 }
               },
               textScaler: TextScaler.linear(1),
@@ -115,6 +133,7 @@ class _MyCoursesState extends State<MyCourses>
                 Tab(text: tr("in_progress")),
                 Tab(text: tr("coming_soon")),
                 Tab(text: tr("completed")),
+                Tab(text: tr("ended")),
               ],
             ),
           ),
@@ -210,6 +229,11 @@ class _MyCoursesState extends State<MyCourses>
                                   .data![index]
                                   .contentsCount
                                   .toString(),
+                              lecturesAreOpen: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .lecturesAreOpen,
                             ),
                           ),
 
@@ -302,6 +326,11 @@ class _MyCoursesState extends State<MyCourses>
                                   .data![index]
                                   .contentsCount
                                   .toString(),
+                              lecturesAreOpen: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .lecturesAreOpen,
                             ),
                           ),
                     targetUser
@@ -327,6 +356,7 @@ class _MyCoursesState extends State<MyCourses>
                                 categoryName: "الطب الباطني",
                                 lectureNum: "18",
                                 sectionNum: "4",
+                                lecturesAreOpen: true,
                                 showTrainingInfo: true,
                               ),
                               InProgressItem(
@@ -343,6 +373,7 @@ class _MyCoursesState extends State<MyCourses>
                                 categoryName: "الجراحة العامة",
                                 lectureNum: "25",
                                 sectionNum: "5",
+                                lecturesAreOpen: true,
                                 showTrainingInfo: true,
                               ),
                             ],
@@ -436,8 +467,108 @@ class _MyCoursesState extends State<MyCourses>
                                             .data![index]
                                             .contentsCount
                                             .toString(),
+                                        lecturesAreOpen: context
+                                            .read<CoursesStatusCubit>()
+                                            .coursesStatusResponse!
+                                            .data![index]
+                                            .lecturesAreOpen,
                                       ),
                                 )),
+                    (context.read<CoursesStatusCubit>().loading == true
+                        ? InProgressShimmerList()
+                        : context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse ==
+                              null
+                        ? EmptyCourseWidget()
+                        : context
+                              .read<CoursesStatusCubit>()
+                              .coursesStatusResponse!
+                              .data!
+                              .isEmpty
+                        ? EmptyCourseWidget()
+                        : ListView.builder(
+                            shrinkWrap: true,
+                            padding: EdgeInsets.only(
+                              top: context.height / 90,
+                              bottom: 0,
+                            ),
+                            itemCount: context
+                                .read<CoursesStatusCubit>()
+                                .coursesStatusResponse!
+                                .data!
+                                .length,
+                            itemBuilder: (context, index) => InProgressItem(
+                              title: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .title!,
+                              image: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .image!,
+                              points: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .points
+                                  .toString(),
+                              progress: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .progress
+                                  .toString(),
+                              slug: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .slug
+                                  .toString(),
+                              favorited: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .favorited,
+                              id: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .id,
+                              status: 'ended',
+                              totalHours: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .totalHours
+                                  .toString(),
+                              categoryName: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .categoryName
+                                  .toString(),
+                              lectureNum: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .lecturesCount
+                                  .toString(),
+                              sectionNum: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .contentsCount
+                                  .toString(),
+                              lecturesAreOpen: context
+                                  .read<CoursesStatusCubit>()
+                                  .coursesStatusResponse!
+                                  .data![index]
+                                  .lecturesAreOpen,
+                            ),
+                          )),
                   ],
                 );
               },

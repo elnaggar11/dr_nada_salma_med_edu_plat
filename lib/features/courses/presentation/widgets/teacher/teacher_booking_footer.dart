@@ -10,12 +10,14 @@ import '../../../../profiles/presentation/cubit/profile/profile_cubit.dart';
 
 class TeacherBookingFooter extends StatelessWidget {
   final double price;
+  final double? priceAfterDiscount;
   final VoidCallback onBookNow;
   final String? bookingPolicyHint;
 
   const TeacherBookingFooter({
     super.key,
     required this.price,
+    this.priceAfterDiscount,
     required this.onBookNow,
     this.bookingPolicyHint,
   });
@@ -115,12 +117,29 @@ class TeacherBookingFooter extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      "\$$price",
-                      style: context.boldText.copyWith(
-                        fontSize: 20,
-                        color: const Color(0xFF355C7D),
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (priceAfterDiscount != null && priceAfterDiscount! < price) ...[
+                          Text(
+                            "\$$price",
+                            style: context.boldText.copyWith(
+                              fontSize: 16,
+                              color: Colors.grey,
+                              decoration: TextDecoration.lineThrough,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                        ],
+                        Text(
+                          "\$${priceAfterDiscount ?? price}",
+                          style: context.boldText.copyWith(
+                            fontSize: 20,
+                            color: const Color(0xFF355C7D),
+                          ),
+                        ),
+                      ],
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,

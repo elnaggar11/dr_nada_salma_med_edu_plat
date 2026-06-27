@@ -6,12 +6,21 @@ import 'package:dr_nada_salma_med_edu_plat/core/widgets/svg_handler.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:dr_nada_salma_med_edu_plat/core/widgets/network_image_handler.dart';
 
 class CertificateItem extends StatelessWidget {
   final String title;
   final String date;
+  final String? imageCertificate;
+  final String? studentName;
 
-  const CertificateItem({super.key, required this.title, required this.date});
+  const CertificateItem({
+    super.key,
+    required this.title,
+    required this.date,
+    this.imageCertificate,
+    this.studentName,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -126,6 +135,35 @@ class CertificateItem extends StatelessWidget {
                         ),
                       ],
                     ),
+                    if (imageCertificate != null &&
+                        imageCertificate!.isNotEmpty) ...[
+                      SizedBox(height: context.height / 50),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Stack(
+                          alignment: Alignment.topCenter,
+                          children: [
+                            NetWorkImageHandler(
+                              image: imageCertificate!,
+                              width: double.infinity,
+                              height: context.height / 4,
+                            ),
+                            if (studentName != null && studentName!.isNotEmpty)
+                              Positioned(
+                                top: context.height / 20,
+                                child: Text(
+                                  studentName!,
+                                  style: TextStyles.textStyleBold20.copyWith(
+                                    color: primary,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
                     SizedBox(height: context.height / 30),
                     Container(
                       padding: EdgeInsets.all(context.width / 27),

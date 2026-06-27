@@ -20,20 +20,58 @@ class BestMedicalScreen extends StatefulWidget {
   State<BestMedicalScreen> createState() => _BestMedicalScreenState();
 }
 
-class _BestMedicalScreenState extends State<BestMedicalScreen> {
+class _BestMedicalScreenState extends State<BestMedicalScreen>
+    with SingleTickerProviderStateMixin {
   static const int _pageSize = 8;
 
   final scrollController = ScrollController();
+  late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+    
+    // Initial fetch for the first tab
     context.read<PublicCoursesCubit>().getPublicCourses(
       type: '',
       name: '',
       categoryId: '1',
       topRated: '1',
     );
+
+    _tabController.addListener(() {
+      if (_tabController.indexIsChanging) return;
+      
+      String? courseStatus;
+      String? isEnded;
+      
+      switch (_tabController.index) {
+        case 0:
+          // All courses
+          break;
+        case 1:
+          courseStatus = 'active';
+          break;
+        case 2:
+          courseStatus = 'coming_soon';
+          break;
+        case 3:
+          courseStatus = 'ended';
+          isEnded = '1';
+          break;
+      }
+
+      context.read<PublicCoursesCubit>().currentPage = 1;
+      context.read<PublicCoursesCubit>().getPublicCourses(
+        type: '',
+        name: '',
+        categoryId: '1',
+        topRated: '1',
+        courseStatus: courseStatus,
+        isEnded: isEnded,
+      );
+    });
 
     scrollController.addListener(() {
       final cubit = context.read<PublicCoursesCubit>();
@@ -43,14 +81,42 @@ class _BestMedicalScreenState extends State<BestMedicalScreen> {
               scrollController.position.maxScrollExtent - 200 &&
           state is PublicCoursesLoaded &&
           !state.hasReachedMax) {
+        
+        String? courseStatus;
+        String? isEnded;
+        
+        switch (_tabController.index) {
+          case 0:
+            break;
+          case 1:
+            courseStatus = 'active';
+            break;
+          case 2:
+            courseStatus = 'coming_soon';
+            break;
+          case 3:
+            courseStatus = 'ended';
+            isEnded = '1';
+            break;
+        }
+
         cubit.getPublicCourses(
           type: '',
           name: '',
           categoryId: '',
           topRated: '',
+          courseStatus: courseStatus,
+          isEnded: isEnded,
         );
       }
     });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -142,7 +208,27 @@ class _BestMedicalScreenState extends State<BestMedicalScreen> {
             ],
           ),
 
-          SizedBox(height: context.height / 200),
+          SizedBox(height: context.height / 60),
+
+          // Tab Bar
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: context.width / 30),
+            child: TabBar(
+              controller: _tabController,
+              isScrollable: true,
+              labelColor: primary,
+              unselectedLabelColor: Colors.grey,
+              indicatorColor: primary,
+              tabs: [
+                Tab(text: tr("view_all")), // Reusing "view_all"
+                Tab(text: tr("enroll_now")),
+                Tab(text: tr("coming_soon")),
+                Tab(text: tr("ended")),
+              ],
+            ),
+          ),
+
+          SizedBox(height: context.height / 60),
 
           // Paged ListView
           Expanded(child: _coursesList()),

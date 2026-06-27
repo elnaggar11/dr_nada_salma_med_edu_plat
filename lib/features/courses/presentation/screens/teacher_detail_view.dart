@@ -131,6 +131,7 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
                       if (!Const.isTeacher)
                         TeacherBookingFooter(
                           price: teacher.hourlyPrice ?? 0.0,
+                          priceAfterDiscount: teacher.hourlyRateAfterDiscount,
                           bookingPolicyHint: teacher.bookingPolicyHint,
                           onBookNow: () => _showBookingSheet(
                             context,

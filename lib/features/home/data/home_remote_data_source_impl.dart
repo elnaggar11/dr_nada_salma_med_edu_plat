@@ -11,7 +11,7 @@ import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/watch_c
 
 const successStoriesApi = "/success-stories";
 const heroesApi = "/pages/hero";
-const coursesApi = "/courses";
+const coursesApi = "/courses/all-courses";
 const privateLessonsApi = "/courses/courses-private";
 const coursesDetailsApi = "/courses/";
 const watchCourseApi = "/lectures/watch";
@@ -63,12 +63,17 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   @override
   Future<PublicCoursesResponse> getCourses({CoursesParams? params}) async {
     try {
-      final response = params!.type == "filter"
-          ? await helper.get(
-              url:
-                  '$coursesApi?page=${params.page}?category_id=${params.categoryId}&course_name=${params.courseName}&top_rated=${params.topRated}',
-            )
-          : await helper.get(url: '$coursesApi?page=${params.page}');
+      String url = '$coursesApi?page=${params!.page}';
+      if (params.type == "filter") {
+        url += '&category_id=${params.categoryId}&course_name=${params.courseName}&top_rated=${params.topRated}';
+      }
+      if (params.courseStatus != null && params.courseStatus!.isNotEmpty) {
+        url += '&course_status=${params.courseStatus}';
+      }
+      if (params.isEnded != null && params.isEnded!.isNotEmpty) {
+        url += '&is_ended=${params.isEnded}';
+      }
+      final response = await helper.get(url: url);
       print(response.toString());
       return PublicCoursesResponse.fromJson(response);
     } on ServerException catch (e) {
@@ -133,6 +138,8 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       throw UnAuthorizedException(message: e.message);
     } on UnprocessableContentException catch (e) {
       throw UnprocessableContentException(message: e.message);
+    } on ForbiddenException catch (e) {
+      throw ForbiddenException(message: e.message);
     }
   }
 }

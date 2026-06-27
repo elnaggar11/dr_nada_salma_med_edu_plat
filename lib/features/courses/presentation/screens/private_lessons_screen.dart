@@ -11,6 +11,9 @@ import 'package:dr_nada_salma_med_edu_plat/features/shimmer/courses/in_progress_
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/profiles/presentation/cubit/profile/profile_cubit.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/profiles/domain/entities/settings_response.dart' as settings;
+import 'package:dr_nada_salma_med_edu_plat/core/widgets/network_image_handler.dart';
 
 class PrivateLessonsScreen extends StatefulWidget {
   final String type;
@@ -50,7 +53,7 @@ class _PrivateLessonsScreenState extends State<PrivateLessonsScreen>
       color: white,
       child: Column(
         children: [
-          (widget.type == "lessons")
+          widget.type == "lessons"
               ? customAppBar(
                       appBarInd: 0,
                       widget: widget,
@@ -60,6 +63,31 @@ class _PrivateLessonsScreenState extends State<PrivateLessonsScreen>
                     ) ??
                     const SizedBox()
               : const SizedBox(),
+          Builder(
+            builder: (context) {
+              final profileCubit = context.read<ProfileCubit>();
+              final banner = profileCubit.settingsResponse?.data?.firstWhere(
+                  (element) => element.tutoringPageBanner != null,
+                  orElse: () => settings.Data()).tutoringPageBanner;
+              if (banner != null && banner.toString().isNotEmpty) {
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.width / 30,
+                    vertical: 8.0,
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: NetWorkImageHandler(
+                      image: banner.toString(),
+                      width: double.infinity,
+                      height: context.height / 6,
+                    ),
+                  ),
+                );
+              }
+              return const SizedBox();
+            },
+          ),
           Container(
             margin: EdgeInsets.only(
               left: context.width / 30,
@@ -121,7 +149,7 @@ class _PrivateLessonsScreenState extends State<PrivateLessonsScreen>
                                   (data.image != null &&
                                       data.image!.toString().isNotEmpty)
                                   ? data.image!.toString()
-                                  : "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=300&auto=format&fit=crop";
+                                  : "";
                               return PrivateLessonItem(
                                 title: data.title ?? "",
                                 description: description,

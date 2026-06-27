@@ -14,6 +14,7 @@ import 'package:dr_nada_salma_med_edu_plat/injection_container/injection_contain
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class BestMedicalVerticalItem extends StatelessWidget {
   const BestMedicalVerticalItem({
@@ -139,6 +140,39 @@ class BestMedicalVerticalItem extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: context.height / 80),
+                      if (data.buttonActions?.viewReviews == true)
+                        InkWell(
+                          onTap: () {
+                            context.pushNamed(name: reviewsSc, args: {
+                              "course_id": data.id,
+                            });
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                            decoration: BoxDecoration(
+                              color: primary,
+                              borderRadius: BorderRadius.all(Radius.circular(38)),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                customSvg(name: review, color: white, height: 16),
+                                SizedBox(width: 8),
+                                Text(
+                                  tr("view_reviews"),
+                                  style: TextStyles.textStyleNormal10.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    color: white,
+                                  ),
+                                  textScaler: TextScaler.linear(1),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      if (data.buttonActions?.viewReviews == true)
+                        SizedBox(height: context.height / 80),
                       /* Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,

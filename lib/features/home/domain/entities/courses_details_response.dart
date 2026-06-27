@@ -42,6 +42,10 @@ class Data {
   List<Contents>? contents;
   List<Reviews>? reviews;
   ButtonActions? buttonActions;
+  String? courseLectureStartsAt;
+  bool? lecturesAreOpen;
+  String? courseStatus;
+  bool? isEnded;
 
   Data({
     this.id,
@@ -63,6 +67,10 @@ class Data {
     this.contents,
     this.reviews,
     this.buttonActions,
+    this.courseLectureStartsAt,
+    this.lecturesAreOpen,
+    this.courseStatus,
+    this.isEnded,
   });
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -81,6 +89,10 @@ class Data {
     averageRating = json['average_rating'];
     favorited = json['favorited'];
     canWatchCourse = json['can_watch_course'];
+    courseLectureStartsAt = json['course_lecture_starts_at'];
+    lecturesAreOpen = json['lectures_are_open'];
+    courseStatus = json['course_status'];
+    isEnded = json['is_ended'];
     if (json['features'] != null) {
       features = <Features>[];
       json['features'].forEach((v) {
@@ -128,6 +140,10 @@ class Data {
     if (buttonActions != null) {
       data['button_actions'] = buttonActions!.toJson();
     }
+    data['course_lecture_starts_at'] = courseLectureStartsAt;
+    data['lectures_are_open'] = lecturesAreOpen;
+    data['course_status'] = courseStatus;
+    data['is_ended'] = isEnded;
     return data;
   }
 }
@@ -291,12 +307,14 @@ class ButtonActions {
   bool? addToCart;
   bool? viewCourse;
   bool? reviewCourse;
+  bool? viewReviews;
 
   ButtonActions({
     this.enrollNow,
     this.addToCart,
     this.viewCourse,
     this.reviewCourse,
+    this.viewReviews,
   });
 
   ButtonActions.fromJson(Map<String, dynamic> json) {
@@ -304,6 +322,7 @@ class ButtonActions {
     addToCart = json['add_to_cart'];
     viewCourse = json['view_course'];
     reviewCourse = json['review_course'];
+    viewReviews = json['view_reviews'];
   }
 
   Map<String, dynamic> toJson() {
@@ -312,6 +331,7 @@ class ButtonActions {
     data['add_to_cart'] = addToCart;
     data['view_course'] = viewCourse;
     data['review_course'] = reviewCourse;
+    data['view_reviews'] = viewReviews;
     return data;
   }
 }

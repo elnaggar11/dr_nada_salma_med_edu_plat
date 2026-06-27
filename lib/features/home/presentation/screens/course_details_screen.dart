@@ -269,6 +269,37 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                         textScaler: TextScaler.linear(1.0),
                       ),
                     ),
+                    if (context.read<CoursesDetailsCubit>().coursesDetailsResponse?.data?.courseLectureStartsAt != null &&
+                        context.read<CoursesDetailsCubit>().coursesDetailsResponse?.data?.lecturesAreOpen == false) ...[
+                      SizedBox(height: context.height / 50),
+                      Container(
+                        margin: EdgeInsets.only(
+                          left: context.width / 20,
+                          right: context.width / 20,
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: orangeBold.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: orangeBold),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.calendar_month, color: orangeBold, size: 20),
+                            SizedBox(width: 8),
+                            Text(
+                              "يبدأ في: ${context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.courseLectureStartsAt}",
+                              style: TextStyles.textStyleBold14.copyWith(
+                                color: orangeBold,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textScaler: TextScaler.linear(1.0),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                     SizedBox(height: context.height / 50),
 
                     Container(
@@ -500,7 +531,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                               .read<CoursesDetailsCubit>()
                               .coursesDetailsResponse!
                               .data!
-                              .canWatchCourse!,
+                              .canWatchCourse ?? false,
+                          lecturesAreOpen: context
+                              .read<CoursesDetailsCubit>()
+                              .coursesDetailsResponse!
+                              .data!
+                              .lecturesAreOpen ?? false,
                         ),
                       ),
                     ),
