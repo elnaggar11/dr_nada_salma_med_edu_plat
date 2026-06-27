@@ -6,7 +6,6 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/fonts.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/custom_app_bar.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/widgets/image_handler.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/appointments/presentation/cubit/appointments_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/utils/const.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/appointments/presentation/cubit/appointments_state.dart';
@@ -14,7 +13,6 @@ import 'package:dr_nada_salma_med_edu_plat/features/appointments/domain/entities
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AppointmentsView extends StatefulWidget {
@@ -250,7 +248,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 5,
             offset: const Offset(0, 2),
           ),
@@ -384,9 +382,18 @@ class _AppointmentsViewState extends State<AppointmentsView> {
           alignment: Alignment.center,
           decoration: BoxDecoration(
             border: Border(
-              bottom: BorderSide(color: greyLight.withOpacity(0.5), width: 0.5),
-              right: BorderSide(color: greyLight.withOpacity(0.5), width: 0.5),
-              left: BorderSide(color: greyLight.withOpacity(0.5), width: 0.5),
+              bottom: BorderSide(
+                color: greyLight.withValues(alpha: 0.5),
+                width: 0.5,
+              ),
+              right: BorderSide(
+                color: greyLight.withValues(alpha: 0.5),
+                width: 0.5,
+              ),
+              left: BorderSide(
+                color: greyLight.withValues(alpha: 0.5),
+                width: 0.5,
+              ),
             ),
           ),
           child: Text(
@@ -417,8 +424,11 @@ class _AppointmentsViewState extends State<AppointmentsView> {
       return Container(
         height: cellHeight,
         decoration: BoxDecoration(
-          color: greyLight.withOpacity(0.5),
-          border: Border.all(color: greyLight.withOpacity(0.5), width: 0.5),
+          color: greyLight.withValues(alpha: 0.5),
+          border: Border.all(
+            color: greyLight.withValues(alpha: 0.5),
+            width: 0.5,
+          ),
         ),
       );
     }
@@ -428,8 +438,11 @@ class _AppointmentsViewState extends State<AppointmentsView> {
         return Container(
           height: cellHeight,
           decoration: BoxDecoration(
-            color: greyLight.withOpacity(0.35),
-            border: Border.all(color: greyLight.withOpacity(0.5), width: 0.5),
+            color: greyLight.withValues(alpha: 0.35),
+            border: Border.all(
+              color: greyLight.withValues(alpha: 0.5),
+              width: 0.5,
+            ),
           ),
         );
       }
@@ -439,7 +452,10 @@ class _AppointmentsViewState extends State<AppointmentsView> {
           height: cellHeight,
           decoration: BoxDecoration(
             color: Colors.transparent,
-            border: Border.all(color: greyLight.withOpacity(0.5), width: 0.5),
+            border: Border.all(
+              color: greyLight.withValues(alpha: 0.5),
+              width: 0.5,
+            ),
           ),
         );
       }
@@ -452,7 +468,10 @@ class _AppointmentsViewState extends State<AppointmentsView> {
           height: cellHeight,
           decoration: BoxDecoration(
             color: Colors.transparent,
-            border: Border.all(color: greyLight.withOpacity(0.5), width: 0.5),
+            border: Border.all(
+              color: greyLight.withValues(alpha: 0.5),
+              width: 0.5,
+            ),
           ),
           child: const Center(
             child: Icon(Icons.add, color: Colors.grey, size: 16),
@@ -465,21 +484,21 @@ class _AppointmentsViewState extends State<AppointmentsView> {
     final booking = slot.booking;
 
     Color bgColor = isBooked
-        ? orangeBold.withOpacity(0.1)
-        : greenLight.withOpacity(0.05);
+        ? orangeBold.withValues(alpha: 0.1)
+        : greenLight.withValues(alpha: 0.05);
     Color borderColor = isBooked
-        ? orangeBold.withOpacity(0.2)
-        : greenLight.withOpacity(0.2);
+        ? orangeBold.withValues(alpha: 0.2)
+        : greenLight.withValues(alpha: 0.2);
     Color textColor = isBooked ? orangeBold : Colors.green[800]!;
 
     if (isBooked && booking != null) {
       if (booking.status == 'confirmed') {
-        bgColor = Colors.green.withOpacity(0.1);
-        borderColor = Colors.green.withOpacity(0.3);
+        bgColor = Colors.green.withValues(alpha: 0.1);
+        borderColor = Colors.green.withValues(alpha: 0.3);
         textColor = Colors.green[800]!;
       } else if (booking.status == 'completed') {
-        bgColor = Colors.blue.withOpacity(0.1);
-        borderColor = Colors.blue.withOpacity(0.3);
+        bgColor = Colors.blue.withValues(alpha: 0.1);
+        borderColor = Colors.blue.withValues(alpha: 0.3);
         textColor = Colors.blue[800]!;
       }
     }
@@ -512,7 +531,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
     return Container(
       height: cellHeight,
       decoration: BoxDecoration(
-        border: Border.all(color: greyLight.withOpacity(0.5), width: 0.5),
+        border: Border.all(color: greyLight.withValues(alpha: 0.5), width: 0.5),
       ),
       child: GestureDetector(
         onTap: () {
@@ -564,7 +583,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
                       ],
                       if (targetName != null && targetName.isNotEmpty)
                         Text(
-                          Const.isTeacher ? "$targetName" : "مع: $targetName",
+                          Const.isTeacher ? targetName : "مع: $targetName",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: textColor,
@@ -949,6 +968,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
                             startTime: selectedStartStr,
                             endTime: selectedEndStr,
                           );
+                          // ignore: use_build_context_synchronously
                           Navigator.of(dialogContext).pop();
                         },
                   style: ElevatedButton.styleFrom(
