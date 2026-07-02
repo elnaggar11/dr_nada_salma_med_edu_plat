@@ -8,11 +8,23 @@ class TimeSlotResponse {
   TimeSlotResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
+    data = <TimeSlot>[];
     if (json['data'] != null) {
-      data = <TimeSlot>[];
-      json['data'].forEach((v) {
-        data!.add(TimeSlot.fromJson(v));
-      });
+      if (json['data'] is List) {
+        for (var v in json['data']) {
+          data!.add(TimeSlot.fromJson(v));
+        }
+      } else if (json['data'] is Map) {
+        if (json['data']['data'] is List) {
+          for (var v in json['data']['data']) {
+            data!.add(TimeSlot.fromJson(v));
+          }
+        } else if (json['data']['slots'] is List) {
+          for (var v in json['data']['slots']) {
+            data!.add(TimeSlot.fromJson(v));
+          }
+        }
+      }
     }
   }
 
@@ -57,18 +69,64 @@ class TimeSlot {
   });
 
   TimeSlot.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    teacherId = json['teacher_id'];
-    date = json['date'] != null ? DateTime.parse(json['date']) : null;
-    startTime = json['start_time'];
-    endTime = json['end_time'];
-    isBooked = json['is_booked'] == 1 || json['is_booked'] == true;
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    studentName = json['student_name'];
-    teacherName = json['teacher_name'];
-    subjectName = json['subject_name'];
-    booking = json['booking'] != null ? Booking.fromJson(json['booking']) : null;
+    if ((json.containsKey('time_slot') && json['time_slot'] != null && json['time_slot'] is Map) ||
+        (json.containsKey('session') && json['session'] != null && json['session'] is Map)) {
+      final ts = (json['time_slot'] is Map ? json['time_slot'] : null) ?? (json['session'] is Map ? json['session'] : null) ?? {};
+      id = ts['id'] ?? json['id'];
+      teacherId = ts['teacher_id'] ?? json['teacher_id'] ?? (json['teacher'] is Map ? json['teacher']['id'] : null);
+      date = _parseDate(ts['date']) ?? _parseDate(json['date']);
+      startTime = ts['start_time'] ?? json['start_time'];
+      endTime = ts['end_time'] ?? json['end_time'];
+      isBooked = true;
+      createdAt = ts['created_at'] ?? json['created_at'];
+      updatedAt = ts['updated_at'] ?? json['updated_at'];
+      booking = json['booking'] != null 
+          ? Booking.fromJson(json['booking']) 
+          : ((json['teacher'] != null || json['student'] != null) ? Booking.fromJson(json) : null);
+      studentName = booking?.student?.fullName ?? _extractName(json['student']) ?? json['student_name'];
+      teacherName = booking?.teacher?.fullName ?? _extractName(json['teacher']) ?? json['teacher_name'];
+      subjectName = booking?.subject?.name ?? _extractName(json['subject']) ?? json['subject_name'];
+    } else {
+      id = json['id'];
+      teacherId = json['teacher_id'] ?? (json['teacher'] is Map ? json['teacher']['id'] : null);
+      date = _parseDate(json['date']);
+      startTime = json['start_time'] ?? json['time'];
+      endTime = json['end_time'];
+      isBooked = json['is_booked'] == 1 || json['is_booked'] == true || json['is_booked'] == '1';
+      createdAt = json['created_at'];
+      updatedAt = json['updated_at'];
+      booking = json['booking'] != null 
+          ? Booking.fromJson(json['booking']) 
+          : ((json['teacher'] != null || json['student'] != null) ? Booking.fromJson(json) : null);
+      studentName = json['student_name'] ?? booking?.student?.fullName ?? _extractName(json['student']);
+      teacherName = json['teacher_name'] ?? booking?.teacher?.fullName ?? _extractName(json['teacher']);
+      subjectName = json['subject_name'] ?? booking?.subject?.name ?? _extractName(json['subject']);
+    }
+  }
+
+  static DateTime? _parseDate(dynamic dateValue) {
+    if (dateValue == null) return null;
+    final str = dateValue.toString();
+    var parsed = DateTime.tryParse(str);
+    if (parsed != null) return parsed;
+    if (str.contains('/')) {
+      final parts = str.split('/');
+      if (parts.length == 3) {
+        if (parts[2].length == 4) {
+           return DateTime.tryParse('${parts[2]}-${parts[1].padLeft(2, '0')}-${parts[0].padLeft(2, '0')}');
+        } else if (parts[0].length == 4) {
+           return DateTime.tryParse('${parts[0]}-${parts[1].padLeft(2, '0')}-${parts[2].padLeft(2, '0')}');
+        }
+      }
+    }
+    return null;
+  }
+
+  static String? _extractName(dynamic obj) {
+    if (obj is Map) {
+      return obj['full_name'] ?? obj['name'];
+    }
+    return null;
   }
 
   Map<String, dynamic> toJson() {
@@ -105,9 +163,23 @@ class Booking {
   Booking.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     status = json['status'];
-    student = json['student'] != null ? BookingUser.fromJson(json['student']) : null;
-    teacher = json['teacher'] != null ? BookingUser.fromJson(json['teacher']) : null;
-    subject = json['subject'] != null ? BookingSubject.fromJson(json['subject']) : null;
+    student = (json['student'] != null && json['student'] is Map) 
+        ? BookingUser.fromJson(json['student']) 
+        : (json['student'] is String ? BookingUser(
+            fullName: json['student'],
+            image: json['student_image'] ?? json['image'],
+            phoneNumber: json['student_phone'] ?? json['phone'] ?? json['phone_number']
+          ) : null);
+    teacher = (json['teacher'] != null && json['teacher'] is Map) 
+        ? BookingUser.fromJson(json['teacher']) 
+        : (json['teacher'] is String ? BookingUser(
+            fullName: json['teacher'],
+            image: json['teacher_image'] ?? json['image'],
+            phoneNumber: json['teacher_phone'] ?? json['phone'] ?? json['phone_number']
+          ) : null);
+    subject = (json['subject'] != null && json['subject'] is Map) 
+        ? BookingSubject.fromJson(json['subject']) 
+        : (json['subject'] is String ? BookingSubject(name: json['subject']) : null);
   }
 
   Map<String, dynamic> toJson() {

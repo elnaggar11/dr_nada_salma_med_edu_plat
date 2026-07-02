@@ -62,10 +62,22 @@ class _AppointmentsViewState extends State<AppointmentsView> {
   }
 
   int _getHourFromTime(String? timeStr) {
-    if (timeStr == null) return 0;
+    if (timeStr == null || timeStr.isEmpty) return 0;
+    
+    // Check if it's an ISO date string
+    if (timeStr.contains('T')) {
+      final dateTime = DateTime.tryParse(timeStr);
+      if (dateTime != null) {
+        return dateTime.hour;
+      }
+    }
+    
+    // Normal HH:mm or HH:mm:ss
     final parts = timeStr.split(':');
     if (parts.isNotEmpty) {
-      return int.tryParse(parts[0]) ?? 0;
+      // Sometimes timeStr might have spaces like "10:00 AM", so we take just the hour digits
+      final hourStr = parts[0].replaceAll(RegExp(r'[^0-9]'), '');
+      return int.tryParse(hourStr) ?? 0;
     }
     return 0;
   }
@@ -480,7 +492,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
       );
     }
 
-    final isBooked = slot.isBooked == true;
+    final isBooked = (!Const.isTeacher) ? true : (slot.isBooked == true);
     final booking = slot.booking;
 
     Color bgColor = isBooked
@@ -583,21 +595,22 @@ class _AppointmentsViewState extends State<AppointmentsView> {
                       ],
                       if (targetName != null && targetName.isNotEmpty)
                         Text(
-                          Const.isTeacher ? targetName : "مع: $targetName",
+                          Const.isTeacher ? "الطالب: $targetName" : "مع: $targetName",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: textColor,
-                            fontSize: 9,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
                           ),
                           overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
                         ),
                       if (statusText.isNotEmpty)
                         Text(
                           statusText,
                           style: TextStyle(
                             color: textColor,
-                            fontSize: 8,
+                            fontSize: 9,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -617,7 +630,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
                             textDirection: ui.TextDirection.ltr,
                             style: TextStyle(
                               color: textColor,
-                              fontSize: 9,
+                              fontSize: 10,
                               fontWeight: FontWeight.bold,
                               decoration: TextDecoration.underline,
                               decorationColor: textColor,
@@ -1283,6 +1296,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
                                 startTime: selectedStartStr,
                                 endTime: selectedEndStr,
                               );
+                          if (!dialogContext.mounted) return;
                           Navigator.of(dialogContext).pop();
                         },
                   style: ElevatedButton.styleFrom(
@@ -1323,13 +1337,13 @@ class _AppointmentsViewState extends State<AppointmentsView> {
         color: Colors.white,
         border: Border(top: BorderSide(color: greyLight)),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+      child: Wrap(
+        alignment: WrapAlignment.end,
+        spacing: context.width / 25,
+        runSpacing: 8,
         children: [
           _legendItem(tr("available_time"), greenLight),
-          SizedBox(width: context.width / 25),
           _legendItem(tr("reserved_appointment"), orangeBold),
-          SizedBox(width: context.width / 25),
           _legendItem(tr("not_available"), grey1),
         ],
       ),
@@ -1338,6 +1352,7 @@ class _AppointmentsViewState extends State<AppointmentsView> {
 
   Widget _legendItem(String label, Color color) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(label, style: const TextStyle(fontSize: 12, color: primary)),
         const SizedBox(width: 5),

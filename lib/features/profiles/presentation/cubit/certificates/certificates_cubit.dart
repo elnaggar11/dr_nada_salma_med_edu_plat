@@ -48,6 +48,26 @@ class CertificatesCubit extends Cubit<CertificatesState> {
           error = false;
           success = true;
           certificateResponse = response;
+
+          // // TODO: Remove this dummy data after testing
+          // certificateResponse?.data ??= [];
+          // certificateResponse?.data?.addAll([
+          //   Data(
+          //     id: 999,
+          //     studentName: "د. أحمد محمد مصطفى",
+          //     courseTitle: "كورس الطب الباطني المتقدم",
+          //     issuedAt: "2024-05-12 10:30",
+          //     imageCertificate: "https://plus.unsplash.com/premium_photo-1675865396004-cb01dc0243e8?w=500&auto=format&fit=crop&q=60",
+          //   ),
+          //   Data(
+          //     id: 1000,
+          //     studentName: "د. سارة عبد الله العتيبي",
+          //     courseTitle: "أساسيات الجراحة العامة وتطبيقاتها",
+          //     issuedAt: "2025-01-20 14:00",
+          //     imageCertificate: "https://plus.unsplash.com/premium_photo-1675865396004-cb01dc0243e8?w=500&auto=format&fit=crop&q=60",
+          //   ),
+          // ]);
+
           emit(CertificatesSuccessState(certificateResponse: response));
         },
       );

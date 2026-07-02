@@ -67,116 +67,118 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8F9FA),
-      body: BlocBuilder<TeacherDetailCubit, TeacherDetailState>(
-        builder: (context, state) {
-          if (state.status == TeacherDetailRequestState.loading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: SafeArea(
+        child: BlocBuilder<TeacherDetailCubit, TeacherDetailState>(
+          builder: (context, state) {
+            if (state.status == TeacherDetailRequestState.loading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (state.status == TeacherDetailRequestState.error) {
-            return Center(child: Text(state.message ?? "Error"));
-          }
+            if (state.status == TeacherDetailRequestState.error) {
+              return Center(child: Text(state.message ?? "Error"));
+            }
 
-          if (state.status == TeacherDetailRequestState.success &&
-              state.teacherDetail != null) {
-            final teacher = state.teacherDetail!;
-            return Stack(
-              children: [
-                SingleChildScrollView(
-                  padding: const EdgeInsets.only(bottom: 380),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TeacherVideoPlayer(
-                        videoUrl: teacher.videoUrl ?? "",
-                        thumbnail: teacher.image,
-                      ),
-                      TeacherProfileHeader(teacher: teacher),
-                      if (isTargetUser(context)) ...[
-                        const SizedBox(height: 16),
-                        const InPersonTrainingInfoCard(),
-                      ],
-                      if (teacher.bio != null)
-                        TeacherAboutSection(bio: teacher.bio!),
-                      if (teacher.targetAudience != null)
-                        TargetAudienceSection(
-                          audience: teacher.targetAudience!,
+            if (state.status == TeacherDetailRequestState.success &&
+                state.teacherDetail != null) {
+              final teacher = state.teacherDetail!;
+              return Stack(
+                children: [
+                  SingleChildScrollView(
+                    padding: const EdgeInsets.only(bottom: 380),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TeacherVideoPlayer(
+                          videoUrl: teacher.videoUrl ?? "",
+                          thumbnail: teacher.image,
                         ),
-                      if (teacher.teachingExperiences != null &&
-                          teacher.teachingExperiences!.isNotEmpty)
-                        TeachingExperienceSection(
-                          experiences: teacher.teachingExperiences!,
-                        ),
-                      if (state.timeSlots.isNotEmpty)
-                        TeacherTimeSlotsSection(
-                          timeSlots: state.timeSlots,
-                          selectedSlot: selectedTimeSlot,
-                          onSlotSelected: (slot) {
-                            setState(() {
-                              selectedTimeSlot = slot;
-                              selectedDate = slot.date;
-                            });
-                          },
-                        )
-                      else if (teacher.availability != null &&
-                          teacher.availability!.isNotEmpty)
-                        AvailabilitySection(
-                          availability: teacher.availability!,
-                        ),
-                      if (state.reviews.isNotEmpty)
-                        TeacherRatingsList(
-                          overallRating: teacher.rating ?? 0.0,
-                          reviews: state.reviews,
-                        ),
-                      if (!Const.isTeacher)
-                        TeacherBookingFooter(
-                          price: teacher.hourlyPrice ?? 0.0,
-                          priceAfterDiscount: teacher.hourlyRateAfterDiscount,
-                          bookingPolicyHint: teacher.bookingPolicyHint,
-                          onBookNow: () => _showBookingSheet(
-                            context,
-                            teacher,
-                            state.timeSlots,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  top: 50,
-                  right: 20,
-                  child: GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.9),
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 5,
-                            offset: const Offset(0, 2),
-                          ),
+                        TeacherProfileHeader(teacher: teacher),
+                        if (isTargetUser(context)) ...[
+                          const SizedBox(height: 16),
+                          const InPersonTrainingInfoCard(),
                         ],
-                      ),
-                      child: Directionality(
-                        textDirection: ui.TextDirection.ltr,
-                        child: const Icon(
-                          Icons.arrow_forward_ios,
-                          size: 20,
-                          color: Colors.black,
+                        if (teacher.bio != null)
+                          TeacherAboutSection(bio: teacher.bio!),
+                        if (teacher.targetAudience != null)
+                          TargetAudienceSection(
+                            audience: teacher.targetAudience!,
+                          ),
+                        if (teacher.teachingExperiences != null &&
+                            teacher.teachingExperiences!.isNotEmpty)
+                          TeachingExperienceSection(
+                            experiences: teacher.teachingExperiences!,
+                          ),
+                        if (state.timeSlots.isNotEmpty)
+                          TeacherTimeSlotsSection(
+                            timeSlots: state.timeSlots,
+                            selectedSlot: selectedTimeSlot,
+                            onSlotSelected: (slot) {
+                              setState(() {
+                                selectedTimeSlot = slot;
+                                selectedDate = slot.date;
+                              });
+                            },
+                          )
+                        else if (teacher.availability != null &&
+                            teacher.availability!.isNotEmpty)
+                          AvailabilitySection(
+                            availability: teacher.availability!,
+                          ),
+                        if (state.reviews.isNotEmpty)
+                          TeacherRatingsList(
+                            overallRating: teacher.rating ?? 0.0,
+                            reviews: state.reviews,
+                          ),
+                        if (!Const.isTeacher)
+                          TeacherBookingFooter(
+                            price: teacher.hourlyPrice ?? 0.0,
+                            priceAfterDiscount: teacher.hourlyRateAfterDiscount,
+                            bookingPolicyHint: teacher.bookingPolicyHint,
+                            onBookNow: () => _showBookingSheet(
+                              context,
+                              teacher,
+                              state.timeSlots,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    top: 20,
+                    right: 25,
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.9),
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 5,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Directionality(
+                          textDirection: ui.TextDirection.ltr,
+                          child: const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 20,
+                            color: Colors.black,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            );
-          }
+                ],
+              );
+            }
 
-          return const SizedBox.shrink();
-        },
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }
@@ -201,7 +203,9 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setModalState) {
-            final totalPrice = (teacher.hourlyPrice ?? 0) * hoursCount;
+            final basePrice =
+                teacher.hourlyRateAfterDiscount ?? teacher.hourlyPrice ?? 0;
+            final totalPrice = basePrice * hoursCount;
 
             return Directionality(
               textDirection: ui.TextDirection.rtl,
@@ -372,8 +376,19 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
                                 SizedBox(height: context.height / 36),
                                 _totalPriceCard(
                                   context,
-                                  hourlyPrice: teacher.hourlyPrice ?? 0,
+                                  hourlyPrice:
+                                      teacher.hourlyRateAfterDiscount ??
+                                      teacher.hourlyPrice ??
+                                      0,
                                   totalPrice: totalPrice,
+                                  originalHourlyPrice:
+                                      teacher.hourlyRateAfterDiscount != null
+                                      ? teacher.hourlyPrice
+                                      : null,
+                                  originalTotalPrice:
+                                      teacher.hourlyRateAfterDiscount != null
+                                      ? (teacher.hourlyPrice ?? 0) * hoursCount
+                                      : null,
                                 ),
                                 SizedBox(height: context.height / 32),
                               ] else ...[
@@ -685,6 +700,8 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
     BuildContext context, {
     required double hourlyPrice,
     required double totalPrice,
+    double? originalHourlyPrice,
+    double? originalTotalPrice,
   }) {
     return Container(
       padding: EdgeInsets.symmetric(
@@ -706,11 +723,33 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
                   style: TextStyles.textStyleBold14.copyWith(color: grey1),
                 ),
                 const SizedBox(height: 6),
-                Text(
-                  "${hourlyPrice.toStringAsFixed(1)}\$ × $hoursCount ${tr("hours_count")}",
-                  style: TextStyles.textStyleBold12.copyWith(color: grey1),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        "${hourlyPrice.toStringAsFixed(1)}\$ × $hoursCount ${tr("hours_count")}",
+                        style: TextStyles.textStyleBold12.copyWith(
+                          color: grey1,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      if (originalHourlyPrice != null &&
+                          originalHourlyPrice > hourlyPrice) ...[
+                        const SizedBox(width: 6),
+                        Text(
+                          "${originalHourlyPrice.toStringAsFixed(1)}\$",
+                          style: TextStyles.textStyleBold12.copyWith(
+                            color: grey1.withOpacity(0.5),
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -733,6 +772,24 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                  if (originalTotalPrice != null &&
+                      originalTotalPrice > totalPrice) ...[
+                    const SizedBox(width: 6),
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 2),
+                        child: Text(
+                          "${originalTotalPrice.toStringAsFixed(1)}",
+                          style: TextStyles.textStyleBold14.copyWith(
+                            color: Colors.grey,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ),
+                  ],
                   const SizedBox(width: 4),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 6),

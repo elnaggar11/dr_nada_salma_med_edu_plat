@@ -29,7 +29,9 @@ class CertificateResponse {
 
 class Data {
   int? id;
+  int? courseId;
   dynamic title;
+  dynamic courseTitle;
   dynamic slug;
   dynamic semiDescription;
   dynamic longDescription;
@@ -40,7 +42,9 @@ class Data {
 
   Data({
     this.id,
+    this.courseId,
     this.title,
+    this.courseTitle,
     this.slug,
     this.semiDescription,
     this.longDescription,
@@ -52,7 +56,9 @@ class Data {
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    courseId = json['course_id'];
     title = json['title'] ?? json['course_title'];
+    courseTitle = json['course_title'] ?? json['title'];
     slug = json['slug'];
     semiDescription = json['semi_description'];
     longDescription = json['long_description'];
@@ -65,7 +71,9 @@ class Data {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
+    data['course_id'] = courseId;
     data['title'] = title;
+    data['course_title'] = courseTitle;
     data['slug'] = slug;
     data['semi_description'] = semiDescription;
     data['long_description'] = longDescription;

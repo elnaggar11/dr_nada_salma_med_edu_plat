@@ -63,11 +63,23 @@ class _CertificateScreenState extends State<CertificateScreen> {
                         ),
                         SizedBox(height: context.height / 60),
                         Text(
-                          tr("no_certificates"),
-                          style: TextStyles.textStyleBold15.copyWith(
+                          "You Haven’t Earned Any Certificates Yet!",
+                          style: TextStyles.textStyleBold18.copyWith(
                             color: primary,
                           ),
-                          textScaler: TextScaler.linear(1),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 12),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                          child: Text(
+                            "Earn your first certificate by completing a course!",
+                            style: TextStyles.textStyleNormal14.copyWith(
+                              color: grey1,
+                              height: 1.5,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ],
                     ),

@@ -4,9 +4,11 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/images.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/svg_handler.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:dr_nada_salma_med_edu_plat/core/widgets/network_image_handler.dart';
+
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 class CertificateItem extends StatelessWidget {
   final String title;
@@ -112,7 +114,7 @@ class CertificateItem extends StatelessWidget {
                           date.toString() == "null"
                               ? ""
                               : DateFormat(
-                                  'd MMMM',
+                                  'd MMMM yyyy',
                                 ).format(DateTime.parse(date.toString())),
                           style: TextStyles.textStyleNormal14.copyWith(
                             fontWeight: FontWeight.w500,
@@ -126,7 +128,9 @@ class CertificateItem extends StatelessWidget {
                         Text(
                           date.toString() == "null"
                               ? ""
-                              : DateTime.parse(date).hour.toString(),
+                              : DateFormat(
+                                  'hh:mm a',
+                                ).format(DateTime.parse(date.toString())),
                           style: TextStyles.textStyleNormal14.copyWith(
                             fontWeight: FontWeight.w500,
                             color: grey1,
@@ -135,60 +139,94 @@ class CertificateItem extends StatelessWidget {
                         ),
                       ],
                     ),
-                    if (imageCertificate != null &&
-                        imageCertificate!.isNotEmpty) ...[
-                      SizedBox(height: context.height / 50),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Stack(
-                          alignment: Alignment.topCenter,
-                          children: [
-                            NetWorkImageHandler(
-                              image: imageCertificate!,
-                              width: double.infinity,
-                              height: context.height / 4,
-                            ),
-                            if (studentName != null && studentName!.isNotEmpty)
-                              Positioned(
-                                top: context.height / 20,
-                                child: Text(
-                                  studentName!,
-                                  style: TextStyles.textStyleBold20.copyWith(
-                                    color: primary,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
+                    // if (imageCertificate != null &&
+                    //     imageCertificate!.isNotEmpty) ...[
+                    //   SizedBox(height: context.height / 50),
+                    //   ClipRRect(
+                    //     borderRadius: BorderRadius.circular(12),
+                    //     child: Stack(
+                    //       alignment: Alignment.center,
+                    //       children: [
+                    //         NetWorkImageHandler(
+                    //           image: imageCertificate!,
+                    //           width: double.infinity,
+                    //           height: context.height / 4,
+                    //         ),
+                    //         if (studentName != null && studentName!.isNotEmpty)
+                    //           Positioned(
+                    //             left: 0,
+                    //             right: 0,
+                    //             child: Text(
+                    //               studentName!,
+                    //               style: TextStyles.textStyleBold20.copyWith(
+                    //                 color: primary,
+                    //                 fontWeight: FontWeight.bold,
+                    //               ),
+                    //               textAlign: TextAlign.center,
+                    //             ),
+                    //           ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ],
+                    SizedBox(height: context.height / 30),
+                    InkWell(
+                      onTap: () async {
+                        if (imageCertificate != null &&
+                            imageCertificate!.isNotEmpty) {
+                          try {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(tr("loading"))),
+                            );
+
+                            final tempDir = await getTemporaryDirectory();
+                            String ext = imageCertificate!.split('.').last;
+                            if (ext.length > 4 ||
+                                !ext.contains(RegExp(r'^[a-zA-Z]+$'))) {
+                              ext = 'pdf';
+                            }
+                            final filePath =
+                                '${tempDir.path}/certificate_${DateTime.now().millisecondsSinceEpoch}.$ext';
+
+                            await Dio().download(imageCertificate!, filePath);
+
+                            await Share.shareXFiles([
+                              XFile(filePath),
+                            ], text: tr("certificates"));
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("Error downloading certificate"),
                               ),
+                            );
+                          }
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(context.width / 27),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(40)),
+                          color: white,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Download Certificate PDF",
+                              style: TextStyles.textStyleNormal12.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: orangeBold,
+                              ),
+                              textScaler: TextScaler.linear(1),
+                            ),
+                            SizedBox(width: context.width / 40),
+                            Container(
+                              alignment: Alignment.center,
+                              child: customSvg(name: upload3, color: primary),
+                            ),
                           ],
                         ),
-                      ),
-                    ],
-                    SizedBox(height: context.height / 30),
-                    Container(
-                      padding: EdgeInsets.all(context.width / 27),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(40)),
-                        color: white,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Download Certificate PDF",
-                            style: TextStyles.textStyleNormal12.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: orangeBold,
-                            ),
-                            textScaler: TextScaler.linear(1),
-                          ),
-                          SizedBox(width: context.width / 40),
-                          Container(
-                            alignment: Alignment.center,
-                            child: customSvg(name: upload3, color: primary),
-                          ),
-                        ],
                       ),
                     ),
                   ],

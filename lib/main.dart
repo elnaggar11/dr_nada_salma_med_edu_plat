@@ -1,4 +1,6 @@
 import 'dart:ui';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'features/profiles/presentation/cubit/profile/profile_cubit.dart';
 
 import 'package:device_preview/device_preview.dart';
 import 'app_routes.dart';
@@ -90,17 +92,24 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      onGenerateRoute: appRoutes.onGenerateRoutes,
-      debugShowCheckedModeBanner: false,
-      scrollBehavior: ScrollConfiguration.of(context).copyWith(
-        dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse},
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ProfileCubit>(
+          create: (context) => di.sl<ProfileCubit>(),
+        ),
+      ],
+      child: MaterialApp(
+        onGenerateRoute: appRoutes.onGenerateRoutes,
+        debugShowCheckedModeBanner: false,
+        scrollBehavior: ScrollConfiguration.of(context).copyWith(
+          dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse},
+        ),
+        navigatorKey: navKey,
+        locale: context.locale,
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        scaffoldMessengerKey: msgKey,
       ),
-      navigatorKey: navKey,
-      locale: context.locale,
-      localizationsDelegates: context.localizationDelegates,
-      supportedLocales: context.supportedLocales,
-      scaffoldMessengerKey: msgKey,
     );
   }
 }

@@ -31,8 +31,35 @@ class AppointmentsRemoteDataSourceImpl implements AppointmentsRemoteDataSource {
   Future<TimeSlotResponse> getTimeSlots() async {
     try {
       if (Const.isTeacher) {
-        final response = await helper.get(url: getTimeSlotsApi);
-        return TimeSlotResponse.fromJson(response);
+        final timeSlotsResponse = await helper.get(url: getTimeSlotsApi);
+        final timeSlotsList = TimeSlotResponse.fromJson(timeSlotsResponse).data ?? [];
+
+        try {
+          final bookingsResponse = await helper.get(url: "/teacher/tutoring/bookings");
+          final bookingsList = TimeSlotResponse.fromJson(bookingsResponse).data ?? [];
+          
+          for (var slot in timeSlotsList) {
+            if (slot.isBooked == true) {
+               final matchingBookingList = bookingsList.where(
+                 (b) => b.id == slot.id || (b.date == slot.date && b.startTime == slot.startTime)
+               ).toList();
+               
+               if (matchingBookingList.isNotEmpty) {
+                 final matchingBooking = matchingBookingList.first;
+                 if (matchingBooking.studentName != null) {
+                    slot.studentName = matchingBooking.studentName;
+                 }
+                 if (matchingBooking.booking != null) {
+                    slot.booking = matchingBooking.booking;
+                 }
+               }
+            }
+          }
+        } catch (e) {
+          // Fallback to just time slots if bookings endpoint fails
+        }
+
+        return TimeSlotResponse(status: true, message: "Success", data: timeSlotsList);
       } else {
         final response = await helper.get(url: "/tutoring/bookings");
         return TimeSlotResponse.fromJson(response);

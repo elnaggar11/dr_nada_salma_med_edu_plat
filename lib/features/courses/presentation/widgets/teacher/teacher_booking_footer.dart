@@ -117,29 +117,41 @@ class TeacherBookingFooter extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        if (priceAfterDiscount != null && priceAfterDiscount! < price) ...[
-                          Text(
-                            "\$$price",
-                            style: context.boldText.copyWith(
-                              fontSize: 16,
-                              color: Colors.grey,
-                              decoration: TextDecoration.lineThrough,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "${priceAfterDiscount ?? price}\$",
+                                  style: context.boldText.copyWith(
+                                    fontSize: 20,
+                                    color: const Color(0xFF355C7D),
+                                  ),
+                                ),
+                                if (priceAfterDiscount != null && priceAfterDiscount! < price) ...[
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    "$price\$",
+                                    style: context.boldText.copyWith(
+                                      fontSize: 16,
+                                      color: Colors.grey,
+                                      decoration: TextDecoration.lineThrough,
+                                    ),
+                                  ),
+                                ],
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 4),
                         ],
-                        Text(
-                          "\$${priceAfterDiscount ?? price}",
-                          style: context.boldText.copyWith(
-                            fontSize: 20,
-                            color: const Color(0xFF355C7D),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,

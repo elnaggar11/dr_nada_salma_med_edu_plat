@@ -65,26 +65,28 @@ class _PrivateLessonsScreenState extends State<PrivateLessonsScreen>
               : const SizedBox(),
           Builder(
             builder: (context) {
-              final profileCubit = context.read<ProfileCubit>();
-              final banner = profileCubit.settingsResponse?.data?.firstWhere(
-                  (element) => element.tutoringPageBanner != null,
-                  orElse: () => settings.Data()).tutoringPageBanner;
-              if (banner != null && banner.toString().isNotEmpty) {
-                return Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: context.width / 30,
-                    vertical: 8.0,
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: NetWorkImageHandler(
-                      image: banner.toString(),
-                      width: double.infinity,
-                      height: context.height / 6,
+              try {
+                final profileCubit = context.read<ProfileCubit>();
+                final banner = profileCubit.settingsResponse?.data?.firstWhere(
+                    (element) => element.tutoringPageBanner != null,
+                    orElse: () => settings.Data()).tutoringPageBanner;
+                if (banner != null && banner.toString().isNotEmpty) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: context.width / 30,
+                      vertical: 8.0,
                     ),
-                  ),
-                );
-              }
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: NetWorkImageHandler(
+                        image: banner.toString(),
+                        width: double.infinity,
+                        height: context.height / 6,
+                      ),
+                    ),
+                  );
+                }
+              } catch (_) {}
               return const SizedBox();
             },
           ),

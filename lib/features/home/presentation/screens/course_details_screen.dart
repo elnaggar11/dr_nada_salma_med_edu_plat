@@ -20,6 +20,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/courses_details_response.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/widgets/course_booking_footer.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/widgets/course_booking_sheet.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
   const CourseDetailsScreen({super.key, required this.params});
@@ -38,6 +42,45 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
       params: CoursesDetailsParams(slug: widget.params.slug),
     );
     super.initState();
+  }
+
+  void _openWhatsAppCourseBooking(Data course) async {
+    const phoneNumber = '2001022370181';
+    
+    final message = StringBuffer();
+    message.writeln('السلام عليكم');
+    message.writeln('أرغب في تأكيد حجز الكورس التالي بعد إتمام الدفع:');
+    message.writeln('');
+    message.writeln('اسم الكورس: ${course.title ?? ''}');
+    message.writeln('السعر: \$${course.price ?? ''}');
+    
+    final whatsappUrl =
+        "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message.toString())}";
+
+    if (await canLaunchUrl(Uri.parse(whatsappUrl))) {
+      await launchUrl(Uri.parse(whatsappUrl), mode: LaunchMode.externalApplication);
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("عذراً، لا يمكن فتح واتساب.")),
+        );
+      }
+    }
+  }
+
+  void _showCourseBookingSheet(Data course) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => CourseBookingSheet(
+        course: course,
+        onConfirmBooking: () {
+          Navigator.pop(context); // Close sheet
+          _openWhatsAppCourseBooking(course);
+        },
+      ),
+    );
   }
 
   @override
@@ -269,15 +312,28 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                         textScaler: TextScaler.linear(1.0),
                       ),
                     ),
-                    if (context.read<CoursesDetailsCubit>().coursesDetailsResponse?.data?.courseLectureStartsAt != null &&
-                        context.read<CoursesDetailsCubit>().coursesDetailsResponse?.data?.lecturesAreOpen == false) ...[
+                    if (context
+                                .read<CoursesDetailsCubit>()
+                                .coursesDetailsResponse
+                                ?.data
+                                ?.courseLectureStartsAt !=
+                            null &&
+                        context
+                                .read<CoursesDetailsCubit>()
+                                .coursesDetailsResponse
+                                ?.data
+                                ?.lecturesAreOpen ==
+                            false) ...[
                       SizedBox(height: context.height / 50),
                       Container(
                         margin: EdgeInsets.only(
                           left: context.width / 20,
                           right: context.width / 20,
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: orangeBold.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
@@ -286,7 +342,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.calendar_month, color: orangeBold, size: 20),
+                            Icon(
+                              Icons.calendar_month,
+                              color: orangeBold,
+                              size: 20,
+                            ),
                             SizedBox(width: 8),
                             Text(
                               "يبدأ في: ${context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.courseLectureStartsAt}",
@@ -392,39 +452,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                         ],
                       ),
                     ),
-                    SizedBox(height: context.height / 40),
-                    Container(
-                      margin: EdgeInsets.only(
-                        left: context.width / 30,
-                        right: context.width / 30,
-                      ),
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            Text(
-                              "30-Day Money-Back Guarantee",
-                              style: TextStyles.textStyleBold12.copyWith(
-                                color: primary,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              textScaler: TextScaler.linear(1),
-                            ),
-                            SizedBox(width: context.width / 20),
-                            customSvg(name: elipse),
-                            SizedBox(width: context.width / 20),
-                            Text(
-                              "Full Lifetime Access",
-                              style: TextStyles.textStyleBold12.copyWith(
-                                color: primary,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              textScaler: TextScaler.linear(1),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+
                     SizedBox(height: context.height / 20),
                     Container(
                       margin: EdgeInsets.only(
@@ -527,16 +555,20 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                               .data!
                               .id
                               .toString(),
-                          canWatch: context
-                              .read<CoursesDetailsCubit>()
-                              .coursesDetailsResponse!
-                              .data!
-                              .canWatchCourse ?? false,
-                          lecturesAreOpen: context
-                              .read<CoursesDetailsCubit>()
-                              .coursesDetailsResponse!
-                              .data!
-                              .lecturesAreOpen ?? false,
+                          canWatch:
+                              context
+                                  .read<CoursesDetailsCubit>()
+                                  .coursesDetailsResponse!
+                                  .data!
+                                  .canWatchCourse ??
+                              false,
+                          lecturesAreOpen:
+                              context
+                                  .read<CoursesDetailsCubit>()
+                                  .coursesDetailsResponse!
+                                  .data!
+                                  .lecturesAreOpen ??
+                              false,
                         ),
                       ),
                     ),
@@ -873,6 +905,31 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
           ],),);
   },
 )*/
+      bottomSheet: BlocBuilder<CoursesDetailsCubit, CoursesDetailsState>(
+        builder: (context, state) {
+          final cubit = context.read<CoursesDetailsCubit>();
+          final response = cubit.coursesDetailsResponse;
+          
+          if (response == null || cubit.loading == true || state is CoursesDetailsLoadingState || state is CoursesDetailsInitial) {
+            return const SizedBox.shrink();
+          }
+          
+          final courseData = response.data;
+          if (courseData == null) return const SizedBox.shrink();
+          
+          final canEnroll = courseData.buttonActions?.enrollNow == true;
+          
+          if (!canEnroll) {
+             return const SizedBox.shrink();
+          }
+
+          return CourseBookingFooter(
+            price: courseData.price?.toString() ?? "0",
+            priceAfterDiscount: courseData.priceAfterDiscount?.toString(),
+            onBookPressed: () => _showCourseBookingSheet(courseData),
+          );
+        },
+      ),
     );
   }
 }

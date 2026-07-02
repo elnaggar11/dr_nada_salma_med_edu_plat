@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 extension MediaQueryValues on BuildContext {
   double get width => MediaQuery.of(this).size.width;
@@ -47,7 +47,7 @@ class TeacherVideoPlayer extends StatelessWidget {
           // Play Button Overlay
           Center(
             child: GestureDetector(
-              onTap: () => _launchURL(videoUrl),
+              onTap: () => _playInApp(context, videoUrl),
               child: Container(
                 width: 60,
                 height: 60,
@@ -83,10 +83,38 @@ class TeacherVideoPlayer extends StatelessWidget {
     return (match != null && match.groupCount >= 7) ? match.group(7)! : "";
   }
 
-  Future<void> _launchURL(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+  void _playInApp(BuildContext context, String url) {
+    var validUrl = url;
+    if (!validUrl.startsWith('http://') && !validUrl.startsWith('https://')) {
+      validUrl = 'https://$validUrl';
     }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          backgroundColor: Colors.black,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            iconTheme: const IconThemeData(color: Colors.white),
+            elevation: 0,
+          ),
+          body: Center(
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: InAppWebView(
+                initialUrlRequest: URLRequest(url: WebUri(validUrl)),
+                initialOptions: InAppWebViewGroupOptions(
+                  crossPlatform: InAppWebViewOptions(
+                    javaScriptEnabled: true,
+                    mediaPlaybackRequiresUserGesture: false,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

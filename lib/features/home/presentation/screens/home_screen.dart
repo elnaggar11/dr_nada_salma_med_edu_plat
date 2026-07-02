@@ -324,20 +324,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             right: context.width / 30,
                           ),
                           decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                context.read<HeroesCubit>().heroResponse == null
-                                    ? ""
-                                    : context
-                                          .read<HeroesCubit>()
-                                          .heroResponse!
-                                          .data!
-                                          .image!,
-                              ),
-                              fit: BoxFit.cover,
-                              scale: 1.0,
-                              alignment: Alignment.center,
-                            ),
+                            image: (context.read<HeroesCubit>().heroResponse?.data?.image?.isNotEmpty == true)
+                                ? DecorationImage(
+                                    image: NetworkImage(
+                                      context.read<HeroesCubit>().heroResponse!.data!.image!,
+                                    ),
+                                    fit: BoxFit.cover,
+                                    scale: 1.0,
+                                    alignment: Alignment.center,
+                                  )
+                                : null,
                             color: accent,
                             shape: BoxShape.rectangle,
                             borderRadius: BorderRadius.all(Radius.circular(22)),
@@ -714,13 +710,16 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: context.height / 150),
               BlocBuilder<SuccessStoriesCubit, SuccessStoriesState>(
                 builder: (context, state) {
-                  return context.read<SuccessStoriesCubit>().loading == true
-                      ? SuccessStoriesShimmerList()
-                      : SuccessStoriesList(
-                          successStoriesResponse: context
-                              .read<SuccessStoriesCubit>()
-                              .successStoriesResponse!,
-                        );
+                  final cubit = context.read<SuccessStoriesCubit>();
+                  if (cubit.loading == true) {
+                    return SuccessStoriesShimmerList();
+                  }
+                  if (cubit.successStoriesResponse == null) {
+                    return const SizedBox.shrink();
+                  }
+                  return SuccessStoriesList(
+                    successStoriesResponse: cubit.successStoriesResponse!,
+                  );
                 },
               ),
             ],

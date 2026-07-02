@@ -1052,36 +1052,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       height: context.width / 3,
                                     ),
                                   ),
-                                  SizedBox(height: context.height / 50),
-                                  Text(
-                                    context
-                                        .read<ProfileCubit>()
-                                        .settingsResponse!
-                                        .data![0]
-                                        .siteName,
-                                    style: TextStyles.textStyleBold15.copyWith(
-                                      color: primary,
-                                    ),
-                                    textScaler: TextScaler.linear(1),
-                                  ),
-                                  SizedBox(height: context.height / 40),
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                      left: context.height / 30,
-                                      right: context.height / 30,
-                                    ),
-                                    child: Text(
+                                  if (context.read<ProfileCubit>().settingsResponse?.data?.isNotEmpty == true) ...[
+                                    SizedBox(height: context.height / 50),
+                                    Text(
                                       context
                                           .read<ProfileCubit>()
                                           .settingsResponse!
                                           .data![0]
-                                          .siteDescription,
-                                      style: TextStyles.textStyleNormal12
-                                          .copyWith(color: primary),
+                                          .siteName,
+                                      style: TextStyles.textStyleBold15.copyWith(
+                                        color: primary,
+                                      ),
                                       textScaler: TextScaler.linear(1),
-                                      textAlign: TextAlign.center,
                                     ),
-                                  ),
+                                    SizedBox(height: context.height / 40),
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                        left: context.height / 30,
+                                        right: context.height / 30,
+                                      ),
+                                      child: Text(
+                                        context
+                                            .read<ProfileCubit>()
+                                            .settingsResponse!
+                                            .data![0]
+                                            .siteDescription,
+                                        style: TextStyles.textStyleNormal12
+                                            .copyWith(color: primary),
+                                        textScaler: TextScaler.linear(1),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
                                   SizedBox(height: context.height / 40),
                                   Text(
                                     context

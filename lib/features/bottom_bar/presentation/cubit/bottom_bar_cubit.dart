@@ -55,6 +55,7 @@ class BottomBarCubit extends Cubit<BottomBarState> {
     return [
       Navigator(
         key: homeNavigatorKey,
+        observers: [HomeNavigatorObserver(this)],
         onGenerateRoute: (settings) {
           Widget page = MultiBlocProvider(
             providers: [
@@ -62,7 +63,6 @@ class BottomBarCubit extends Cubit<BottomBarState> {
               BlocProvider(create: (context) => sl<HeroesCubit>()),
               BlocProvider(create: (context) => sl<PublicCoursesCubit>()),
               BlocProvider(create: (context) => sl<PrivateLessonsCubit>()),
-              BlocProvider(create: (context) => sl<ProfileCubit>()),
               BlocProvider(create: (context) => sl<NotificationsCubit>()),
             ],
             child: HomeScreen(),
@@ -196,15 +196,34 @@ class BottomBarCubit extends Cubit<BottomBarState> {
         BlocProvider(create: (context) => sl<CartCubit>()),
         BlocProvider(create: (context) => sl<CreateOrderFromCartCubit>()),
       ], child: CartScreen()),*/
-      BlocProvider(
-        create: (context) => sl<ProfileCubit>(),
-        child: ProfileScreen(appBarInd: 4),
-      ),
+      ProfileScreen(appBarInd: 4),
     ];
   }
 
   Future<void> updateBottomBarVisibility({bool? visible}) async {
     visibility = visible;
     emit(UpdateBottomBarVisibility());
+  }
+}
+
+class HomeNavigatorObserver extends NavigatorObserver {
+  final BottomBarCubit cubit;
+
+  HomeNavigatorObserver(this.cubit);
+
+  @override
+  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
+    super.didPop(route, previousRoute);
+    
+    final name = previousRoute?.settings.name;
+    if (name == filterSc || 
+        name == courseDetailsSc || 
+        name == privateLessonsDetailsSc || 
+        name == notificationsSc || 
+        name == emptyPrivateLessons) {
+      cubit.updateBottomBarVisibility(visible: false);
+    } else {
+      cubit.updateBottomBarVisibility(visible: true);
+    }
   }
 }

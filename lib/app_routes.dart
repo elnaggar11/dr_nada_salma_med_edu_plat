@@ -190,7 +190,6 @@ class AppRoutes {
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider(create: (_) => BottomBarCubit()),
-              BlocProvider(create: (_) => sl<ProfileCubit>()),
               BlocProvider(create: (_) => sl<HeroesCubit>()),
               BlocProvider(create: (_) => sl<PublicCoursesCubit>()),
               BlocProvider(create: (_) => sl<CategoriesCubit>()),
