@@ -45,20 +45,23 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   }
 
   void _openWhatsAppCourseBooking(Data course) async {
-    const phoneNumber = '2001022370181';
-    
+    const phoneNumber = '+966556000986';
+
     final message = StringBuffer();
     message.writeln('السلام عليكم');
     message.writeln('أرغب في تأكيد حجز الكورس التالي بعد إتمام الدفع:');
     message.writeln('');
     message.writeln('اسم الكورس: ${course.title ?? ''}');
     message.writeln('السعر: \$${course.price ?? ''}');
-    
+
     final whatsappUrl =
         "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message.toString())}";
 
     if (await canLaunchUrl(Uri.parse(whatsappUrl))) {
-      await launchUrl(Uri.parse(whatsappUrl), mode: LaunchMode.externalApplication);
+      await launchUrl(
+        Uri.parse(whatsappUrl),
+        mode: LaunchMode.externalApplication,
+      );
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -909,18 +912,21 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
         builder: (context, state) {
           final cubit = context.read<CoursesDetailsCubit>();
           final response = cubit.coursesDetailsResponse;
-          
-          if (response == null || cubit.loading == true || state is CoursesDetailsLoadingState || state is CoursesDetailsInitial) {
+
+          if (response == null ||
+              cubit.loading == true ||
+              state is CoursesDetailsLoadingState ||
+              state is CoursesDetailsInitial) {
             return const SizedBox.shrink();
           }
-          
+
           final courseData = response.data;
           if (courseData == null) return const SizedBox.shrink();
-          
+
           final canEnroll = courseData.buttonActions?.enrollNow == true;
-          
+
           if (!canEnroll) {
-             return const SizedBox.shrink();
+            return const SizedBox.shrink();
           }
 
           return CourseBookingFooter(
