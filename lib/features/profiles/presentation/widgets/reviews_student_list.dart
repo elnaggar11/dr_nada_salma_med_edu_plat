@@ -1,6 +1,9 @@
 import 'package:dr_nada_salma_med_edu_plat/core/constants/colors.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/profiles/presentation/widgets/reviews_student_item.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/course_reviews/course_reviews_cubit.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/empty_course_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:dr_nada_salma_med_edu_plat/gen/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -23,8 +26,8 @@ class ReviewsStudentList extends StatelessWidget {
         } else if (state.status == CourseReviewsRequestState.loaded) {
           final reviews = state.response?.data ?? [];
           if (reviews.isEmpty) {
-            return const Center(
-              child: Text("No reviews found"),
+            return Center(
+              child: EmptyCourseWidget(title: LocaleKeys.no_reviews.tr()),
             );
           }
           return ListView.builder(

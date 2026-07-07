@@ -104,10 +104,35 @@ class TeacherVideoPlayer extends StatelessWidget {
               aspectRatio: 16 / 9,
               child: InAppWebView(
                 initialUrlRequest: URLRequest(url: WebUri(validUrl)),
+                onLoadStop: (controller, url) async {
+                  // Inject CSS to hide Google Drive and OneDrive headers, buttons, and popouts
+                  await controller.evaluateJavascript(source: '''
+                    var style = document.createElement('style');
+                    style.innerHTML = `
+                      .ndfHFb-c4YZDc-Wrql6b, /* Drive Popout button */
+                      .ndfHFb-c4YZDc-GSQQnc-LgbsSe, /* Drive Top bar buttons */
+                      .ndfHFb-c4YZDc-j7LFlb, /* Drive Header */
+                      .od-ItemContent-header, /* OneDrive header */
+                      .od-Dialog-header, /* OneDrive dialog header */
+                      .ms-CommandBar /* OneDrive command bar */
+                      { display: none !important; }
+                    `;
+                    document.head.appendChild(style);
+                  ''');
+                },
                 initialOptions: InAppWebViewGroupOptions(
                   crossPlatform: InAppWebViewOptions(
                     javaScriptEnabled: true,
                     mediaPlaybackRequiresUserGesture: false,
+                    disableContextMenu: true,
+                    supportZoom: false,
+                  ),
+                  android: AndroidInAppWebViewOptions(
+                    builtInZoomControls: false,
+                    displayZoomControls: false,
+                  ),
+                  ios: IOSInAppWebViewOptions(
+                    allowsInlineMediaPlayback: true,
                   ),
                 ),
               ),

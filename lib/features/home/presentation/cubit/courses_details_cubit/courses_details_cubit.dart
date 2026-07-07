@@ -5,15 +5,18 @@ import 'package:dr_nada_salma_med_edu_plat/core/errors/failure.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/courses_details_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/courses_details_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/usecases/courses_details_use_case.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/home/domain/usecases/request_course_booking_use_case.dart';
 import 'package:dr_nada_salma_med_edu_plat/main.dart';
 import 'package:flutter/material.dart';
 
 part 'courses_details_state.dart';
 
 class CoursesDetailsCubit extends Cubit<CoursesDetailsState> {
-  CoursesDetailsCubit(this.coursesDetailsUseCase)
-    : super(CoursesDetailsInitial());
+  CoursesDetailsCubit(
+      this.coursesDetailsUseCase, this.requestCourseBookingUseCase)
+      : super(CoursesDetailsInitial());
   final CoursesDetailsUseCase coursesDetailsUseCase;
+  final RequestCourseBookingUseCase requestCourseBookingUseCase;
   bool? loading = false;
   bool? error = false;
   bool? success = false;
@@ -78,6 +81,32 @@ class CoursesDetailsCubit extends Cubit<CoursesDetailsState> {
       error = true;
       success = false;
       emit(CoursesDetailsErrorState(message: e.toString()));
+    }
+  }
+  Future<void> requestCourseBooking({
+    required List<int> courseIds,
+    String? couponCode,
+  }) async {
+    emit(CourseBookingLoadingState());
+    try {
+      final result = await requestCourseBookingUseCase(
+        courseIds: courseIds,
+        couponCode: couponCode,
+      );
+      result.fold(
+        (fail) {
+          String msg = "Unknown error occurred";
+          if (fail is ServerFailure) msg = fail.message;
+          emit(CourseBookingErrorState(message: msg));
+        },
+        (response) {
+          emit(CourseBookingSuccessState(
+            message: response['message'] ?? "Course booked successfully",
+          ));
+        },
+      );
+    } catch (e) {
+      emit(CourseBookingErrorState(message: e.toString()));
     }
   }
 }

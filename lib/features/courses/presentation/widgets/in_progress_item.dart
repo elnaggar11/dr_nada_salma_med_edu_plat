@@ -95,7 +95,7 @@ class InProgressItem extends StatelessWidget {
                     BlocProvider(
                       create: (context) => sl<FavouriteCubit>(),
                       child: FavouriteButton(
-                        isFavourite: favorited,
+                        isFavourite: favorited == true,
                         courseId: id.toString(),
                       ),
                     ),

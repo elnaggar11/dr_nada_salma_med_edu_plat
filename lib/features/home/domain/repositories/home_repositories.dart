@@ -24,4 +24,8 @@ abstract class HomeRepositories {
   Future<Either<Failure, WatchCourseResponse>> watchCourse({
     WatchCourseParams? params,
   });
+  Future<Either<Failure, dynamic>> requestCourseBooking({
+    required List<int> courseIds,
+    String? couponCode,
+  });
 }

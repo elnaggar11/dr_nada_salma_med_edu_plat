@@ -5,15 +5,28 @@ import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/courses
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-class CourseBookingSheet extends StatelessWidget {
+class CourseBookingSheet extends StatefulWidget {
   final Data course;
-  final VoidCallback onConfirmBooking;
+  final void Function(String? couponCode) onConfirmBooking;
 
   const CourseBookingSheet({
     super.key,
     required this.course,
     required this.onConfirmBooking,
   });
+
+  @override
+  State<CourseBookingSheet> createState() => _CourseBookingSheetState();
+}
+
+class _CourseBookingSheetState extends State<CourseBookingSheet> {
+  final TextEditingController _couponController = TextEditingController();
+
+  @override
+  void dispose() {
+    _couponController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +41,17 @@ class CourseBookingSheet extends StatelessWidget {
       ),
       child: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: context.width / 20,
-            vertical: 20,
+          padding: EdgeInsets.only(
+            left: context.width / 20,
+            right: context.width / 20,
+            top: 20,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
               // Header
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -56,22 +72,22 @@ class CourseBookingSheet extends StatelessWidget {
 
               // Course Name & Price
               Text(
-                course.title ?? "",
+                widget.course.title ?? "",
                 style: TextStyles.textStyleBold16.copyWith(color: primary),
               ),
               const SizedBox(height: 10),
               Row(
                 children: [
                   Text(
-                    "\$${course.price}",
+                    "\$${widget.course.price}",
                     style: TextStyles.textStyleBold20.copyWith(
                       color: orangeBold,
                     ),
                   ),
-                  if (course.priceAfterDiscount != null) ...[
+                  if (widget.course.priceAfterDiscount != null) ...[
                     const SizedBox(width: 10),
                     Text(
-                      "\$${course.priceAfterDiscount}",
+                      "\$${widget.course.priceAfterDiscount}",
                       style: TextStyles.textStyleNormal12.copyWith(
                         color: grey1,
                         decoration: TextDecoration.lineThrough,
@@ -79,6 +95,36 @@ class CourseBookingSheet extends StatelessWidget {
                     ),
                   ],
                 ],
+              ),
+              const SizedBox(height: 20),
+
+              // Coupon Code Field
+              Container(
+                decoration: BoxDecoration(
+                  color: white,
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(color: grey1.withOpacity(0.3)),
+                ),
+                child: TextField(
+                  controller: _couponController,
+                  decoration: InputDecoration(
+                    hintText: tr("coupon_code"),
+                    hintStyle: TextStyles.textStyleNormal12.copyWith(
+                      color: grey1,
+                    ),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 15,
+                      vertical: 12,
+                    ),
+                    prefixIcon: const Icon(
+                      Icons.local_offer_outlined,
+                      color: primary,
+                      size: 20,
+                    ),
+                  ),
+                  style: TextStyles.textStyleBold14.copyWith(color: black),
+                ),
               ),
               const SizedBox(height: 25),
 
@@ -139,7 +185,10 @@ class CourseBookingSheet extends StatelessWidget {
                     borderRadius: BorderRadius.circular(40),
                   ),
                   color: primary,
-                  onPressed: onConfirmBooking,
+                  onPressed: () {
+                    final coupon = _couponController.text.trim();
+                    widget.onConfirmBooking(coupon.isEmpty ? null : coupon);
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -156,6 +205,7 @@ class CourseBookingSheet extends StatelessWidget {
                 ),
               ),
             ],
+          ),
           ),
         ),
       ),

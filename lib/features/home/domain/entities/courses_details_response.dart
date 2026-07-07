@@ -46,6 +46,8 @@ class Data {
   bool? lecturesAreOpen;
   String? courseStatus;
   bool? isEnded;
+  bool? hasPdf;
+  String? pdf;
 
   Data({
     this.id,
@@ -71,6 +73,8 @@ class Data {
     this.lecturesAreOpen,
     this.courseStatus,
     this.isEnded,
+    this.hasPdf,
+    this.pdf,
   });
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -93,6 +97,8 @@ class Data {
     lecturesAreOpen = json['lectures_are_open'];
     courseStatus = json['course_status'];
     isEnded = json['is_ended'];
+    hasPdf = json['has_pdf'];
+    pdf = json['pdf'];
     if (json['features'] != null) {
       features = <Features>[];
       json['features'].forEach((v) {
@@ -144,6 +150,8 @@ class Data {
     data['lectures_are_open'] = lecturesAreOpen;
     data['course_status'] = courseStatus;
     data['is_ended'] = isEnded;
+    data['has_pdf'] = hasPdf;
+    data['pdf'] = pdf;
     return data;
   }
 }
@@ -219,15 +227,21 @@ class Lectures {
   int? id;
   String? title;
   String? video;
+  String? fullVideoUrl;
   String? timeMinutes;
+  String? file;
+  String? pdf;
 
-  Lectures({this.id, this.title, this.video, this.timeMinutes});
+  Lectures({this.id, this.title, this.video, this.fullVideoUrl, this.timeMinutes, this.file, this.pdf});
 
   Lectures.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title']?.toString();
     video = json['video']?.toString();
+    fullVideoUrl = json['full_video_url']?.toString();
     timeMinutes = json['time_minutes']?.toString();
+    file = json['file']?.toString();
+    pdf = json['pdf']?.toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -235,7 +249,10 @@ class Lectures {
     data['id'] = id;
     data['title'] = title;
     data['video'] = video;
+    data['full_video_url'] = fullVideoUrl;
     data['time_minutes'] = timeMinutes;
+    data['file'] = file;
+    data['pdf'] = pdf;
     return data;
   }
 }
@@ -308,6 +325,7 @@ class ButtonActions {
   bool? viewCourse;
   bool? reviewCourse;
   bool? viewReviews;
+  bool? downloadPdf;
 
   ButtonActions({
     this.enrollNow,
@@ -315,6 +333,7 @@ class ButtonActions {
     this.viewCourse,
     this.reviewCourse,
     this.viewReviews,
+    this.downloadPdf,
   });
 
   ButtonActions.fromJson(Map<String, dynamic> json) {
@@ -323,6 +342,7 @@ class ButtonActions {
     viewCourse = json['view_course'];
     reviewCourse = json['review_course'];
     viewReviews = json['view_reviews'];
+    downloadPdf = json['download_pdf'];
   }
 
   Map<String, dynamic> toJson() {
@@ -332,6 +352,7 @@ class ButtonActions {
     data['view_course'] = viewCourse;
     data['review_course'] = reviewCourse;
     data['view_reviews'] = viewReviews;
+    data['download_pdf'] = downloadPdf;
     return data;
   }
 }

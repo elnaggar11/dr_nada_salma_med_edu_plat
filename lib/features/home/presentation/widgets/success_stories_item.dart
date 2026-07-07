@@ -40,7 +40,7 @@ class SuccessStoriesItem extends StatelessWidget {
             children: [
               ClipOval(
                 child: NetWorkImageHandler(
-                  image: data.user!.image,
+                  image: data.user?.image ?? '',
                   width: context.width / 8,
                   height: context.width / 8,
                 ),
@@ -53,7 +53,7 @@ class SuccessStoriesItem extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      data.user!.fullName,
+                      data.user?.fullName ?? '',
                       style: TextStyles.textStyleBold10.copyWith(
                         color: primary,
                         fontWeight: FontWeight.bold,
@@ -73,7 +73,7 @@ class SuccessStoriesItem extends StatelessWidget {
               ),
 
               Text(
-                data.rating.toString(),
+                (data.rating ?? "0").toString(),
                 style: TextStyles.textStyleBold12.copyWith(
                   fontFamily: poppins,
                   fontWeight: FontWeight.w600,
@@ -83,7 +83,7 @@ class SuccessStoriesItem extends StatelessWidget {
               ),
               SizedBox(width: context.width / 60),
               RatingBarIndicator(
-                rating: double.parse(data.rating),
+                rating: double.tryParse(data.rating?.toString() ?? '0') ?? 0.0,
                 itemSize: 15,
                 itemCount: 5,
                 itemBuilder: (context, index) =>

@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../main.dart';
-
+import '../screens/pdf_viewer_screen.dart';
 class CourseContentItem extends StatelessWidget {
   const CourseContentItem({
     super.key,
@@ -96,7 +96,7 @@ class CourseContentItem extends StatelessWidget {
                       builder: (context) => BlocProvider(
                         create: (context) => sl<WatchCourseCubit>(),
                         child: VideoPlayerWidget(
-                          lectureVideo: e.video ?? "",
+                          lectureVideo: e.fullVideoUrl ?? e.video ?? "",
                           courseId: courseId,
                           lectureId: e.id.toString(),
                         ),
@@ -140,13 +140,72 @@ class CourseContentItem extends StatelessWidget {
                           color: primary,
                         ),
                       ),
-                      SizedBox(width: context.width / 40),
-                      Text(
-                        "$time Min",
-                        textScaler: TextScaler.linear(1),
-                        style: TextStyles.textStyleNormal14.copyWith(
-                          color: primary,
-                        ),
+                      SizedBox(height: context.height / 80),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "$time Min",
+                            textScaler: TextScaler.linear(1),
+                            style: TextStyles.textStyleNormal14.copyWith(
+                              color: primary,
+                            ),
+                          ),
+                          if (e.pdf != null || e.file != null)
+                            InkWell(
+                              onTap: () {
+                                if (lecturesAreOpen) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PdfViewerScreen(
+                                        pdfUrl: e.pdf ?? e.file ?? "",
+                                        title: e.title ?? "محتوى المحاضرة",
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  msgKey.currentState?.showSnackBar(
+                                    SnackBar(
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(Radius.circular(40)),
+                                      ),
+                                      content: Text(
+                                        "لم يبدأ الكورس بعد",
+                                        textScaler: TextScaler.linear(1),
+                                        style: TextStyles.textStyleNormal13.copyWith(
+                                          color: white,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: context.width / 40,
+                                  vertical: context.height / 150,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(color: primary.withOpacity(0.2)),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(Icons.picture_as_pdf, color: Colors.red, size: 20),
+                                    SizedBox(width: context.width / 80),
+                                    Text(
+                                      "محتوى المحاضرة",
+                                      style: TextStyles.textStyleNormal12.copyWith(color: primary, fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ],
                   ),

@@ -114,4 +114,24 @@ class HomeRepositoryImpl implements HomeRepositories {
       return left(ServerFailure(message: e.message));
     }
   }
+
+  @override
+  Future<Either<Failure, dynamic>> requestCourseBooking({
+    required List<int> courseIds,
+    String? couponCode,
+  }) async {
+    try {
+      final response = await homeRemoteDataSource.requestCourseBooking(
+        courseIds: courseIds,
+        couponCode: couponCode,
+      );
+      return Right(response);
+    } on ServerException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on UnAuthorizedException catch (e) {
+      return left(ServerFailure(message: e.message));
+    } on UnprocessableContentException catch (e) {
+      return left(ServerFailure(message: e.message));
+    }
+  }
 }

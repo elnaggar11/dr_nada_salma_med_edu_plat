@@ -21,8 +21,9 @@ import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/screens/to
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/widgets/empty_courses_widget.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/notifications/presentation/cubit/notifications_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/notifications/presentation/screen/notification_screen.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/profiles/presentation/cubit/profile/profile_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/profiles/presentation/screens/profile_screen.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/profiles/presentation/screens/reviews_screen.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/course_reviews/course_reviews_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/reviews/presentation/screens/success_stories_screen.dart';
 import 'package:dr_nada_salma_med_edu_plat/injection_container/injection_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -180,6 +181,17 @@ class BottomBarCubit extends Cubit<BottomBarState> {
               value: context!.read<BottomBarCubit>(),
               child: EmptyPrivateLessonsWidget(),
             );
+          } else if (settings.name == reviewsSc) {
+            updateBottomBarVisibility(visible: false);
+            final arg = settings.arguments as Map<String, dynamic>?;
+            final courseId = arg?['course_id'] as int? ?? 0;
+            page = MultiBlocProvider(
+              providers: [
+                BlocProvider.value(value: context!.read<BottomBarCubit>()),
+                BlocProvider(create: (_) => sl<CourseReviewsCubit>()),
+              ],
+              child: ReviewsScreen(courseId: courseId),
+            );
           }
           return MaterialPageRoute(builder: (_) => page);
         },
@@ -220,7 +232,8 @@ class HomeNavigatorObserver extends NavigatorObserver {
         name == courseDetailsSc || 
         name == privateLessonsDetailsSc || 
         name == notificationsSc || 
-        name == emptyPrivateLessons) {
+        name == emptyPrivateLessons ||
+        name == reviewsSc) {
       cubit.updateBottomBarVisibility(visible: false);
     } else {
       cubit.updateBottomBarVisibility(visible: true);

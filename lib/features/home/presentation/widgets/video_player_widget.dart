@@ -83,7 +83,9 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
               SnackBar(
                 behavior: SnackBarBehavior.floating,
                 content: Text(
-                  state.message == 'course_hasnt_started_yet' ? "لم يبدأ الكورس بعد" : state.message,
+                  state.message == 'course_hasnt_started_yet'
+                      ? "لم يبدأ الكورس بعد"
+                      : state.message,
                   style: const TextStyle(color: Colors.white),
                 ),
               ),
@@ -96,7 +98,9 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Text(
-                  state.message == 'course_hasnt_started_yet' ? "لم يبدأ الكورس بعد" : state.message,
+                  state.message == 'course_hasnt_started_yet'
+                      ? "لم يبدأ الكورس بعد"
+                      : state.message,
                   style: const TextStyle(color: Colors.white, fontSize: 16),
                   textAlign: TextAlign.center,
                 ),
@@ -107,51 +111,156 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
           return Stack(
             alignment: Alignment.center,
             children: [
-          // Make WebView expand to fill available space
-          Positioned.fill(
-            child: SizedBox(
-              width: context.width,
-              height: double.infinity,
-              child: AspectRatio(
-                aspectRatio: 16 / 9,
-                child: InAppWebView(
-                  initialUrlRequest: URLRequest(
-                    url: WebUri(
-                      'https://drive.google.com/file/d/${widget.lectureVideo}/preview',
-                    ),
-                  ),
-                  onWebViewCreated: (controller) => webView = controller,
-                  onLoadStart: (controller, url) {
-                    setState(() => loading = true);
-                  },
-                  onLoadStop: (controller, url) {
-                    setState(() => loading = false);
-                  },
-                  onLoadError: (controller, url, code, message) {
-                    setState(() => loading = false);
-                    debugPrint('WebView load error ($code): $message');
-                  },
-                  onConsoleMessage: (controller, consoleMessage) {
-                    if (!_shouldIgnoreConsoleMessage(consoleMessage.message)) {
-                      debugPrint('WebView console: ${consoleMessage.message}');
-                    }
-                  },
-                  initialOptions: InAppWebViewGroupOptions(
-                    crossPlatform: InAppWebViewOptions(
-                      javaScriptEnabled: true,
-                      useOnLoadResource: true,
-                      mediaPlaybackRequiresUserGesture: false,
+              // Make WebView expand to fill available space
+              Positioned.fill(
+                child: SizedBox(
+                  width: context.width,
+                  height: double.infinity,
+                  child: AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: InAppWebView(
+                      initialUrlRequest: URLRequest(
+                        url: WebUri(
+                          widget.lectureVideo.startsWith('http')
+                              ? widget.lectureVideo
+                              : 'https://drive.google.com/file/d/${widget.lectureVideo}/preview',
+                        ),
+                      ),
+                      onWebViewCreated: (controller) => webView = controller,
+                      onLoadStart: (controller, url) {
+                        setState(() => loading = true);
+                      },
+                      onLoadStop: (controller, url) async {
+                        setState(() => loading = false);
+                        // Inject CSS to hide Google Drive and OneDrive headers, buttons, and popouts
+                        await controller.evaluateJavascript(
+                          source: '''
+                           var style = document.createElement('style');
+                          style.innerHTML = `
+                            /* === Hide ENTIRE top bar area for OneDrive === */
+                            [class*="OneUp-header"],
+                            [class*="OneUp-command"],
+                            [class*="OneUp-close"],
+                            [class*="OneUp-details"],
+                            [class*="CommandBar"],
+                            [class*="commandBar"],
+                            [class*="od-TopBar"],
+                            [class*="od-ItemHeader"],
+                            [class*="od-OverflowMenu"],
+                            [class*="od-Dialog-header"],
+                            [class*="ms-CommandBar"],
+                            [class*="Files-CommandBar"],
+                            /* === Hide ENTIRE top bar for Google Drive === */
+                            [class*="ndfHFb-c4YZDc-Wrql6b"],
+                            [class*="ndfHFb-c4YZDc-GSQQnc"],
+                            [class*="ndfHFb-c4YZDc-j7LFlb"],
+                            [class*="ndfHFb-c4YZDc-to915"],
+                            /* === Hide ALL buttons by aria-label === */
+                            button[aria-label="Download"],
+                            button[aria-label="Close"],
+                            button[aria-label="Info"],
+                            button[aria-label="Details"],
+                            button[aria-label="View details"],
+                            button[aria-label="Share"],
+                            button[aria-label="More actions"],
+                            button[aria-label="Open in new window"],
+                            button[aria-label="إغلاق"],
+                            button[aria-label="معلومات"],
+                            button[aria-label="التفاصيل"],
+                            button[aria-label="عرض التفاصيل"],
+                            button[aria-label="مشاركة"],
+                            button[aria-label="المزيد من الإجراءات"],
+                            button[aria-label="تنزيل"],
+                            button[aria-label="فتح في نافذة جديدة"],
+                            /* === Hide by automationid === */
+                            [data-automationid="closeButton"],
+                            [data-automationid="moreActionsButton"],
+                            [data-automationid="detailsPaneButton"],
+                            [data-automationid="shareButton"],
+                            [data-automationid="downloadButton"],
+                            /* === Hide download links === */
+                            a[download],
+                            button[name="Download"] {
+                              display: none !important;
+                              visibility: hidden !important;
+                              opacity: 0 !important;
+                              pointer-events: none !important;
+                              width: 0 !important;
+                              height: 0 !important;
+                              overflow: hidden !important;
+                            }
+                          `;
+                          document.head.appendChild(style);
+                          
+                          // Prevent download from native HTML5 video controls
+                          var videos = document.getElementsByTagName('video');
+                          for(var i = 0; i < videos.length; i++) {
+                            videos[i].setAttribute('controlsList', 'nodownload');
+                            // Also disable context menu on video elements specifically
+                            videos[i].addEventListener('contextmenu', function(e) { e.preventDefault(); });
+                          }
+                          
+                          // Disable context menu on the entire document
+                          document.addEventListener('contextmenu', event => event.preventDefault());
+                        ''',
+                        );
+                      },
+                      onLoadError: (controller, url, code, message) {
+                        setState(() => loading = false);
+                        debugPrint('WebView load error ($code): $message');
+                      },
+                      onConsoleMessage: (controller, consoleMessage) {
+                        if (!_shouldIgnoreConsoleMessage(
+                          consoleMessage.message,
+                        )) {
+                          debugPrint(
+                            'WebView console: ${consoleMessage.message}',
+                          );
+                        }
+                      },
+                      initialOptions: InAppWebViewGroupOptions(
+                        crossPlatform: InAppWebViewOptions(
+                          javaScriptEnabled: true,
+                          useOnLoadResource: true,
+                          mediaPlaybackRequiresUserGesture: false,
+                          disableContextMenu:
+                              true, // Prevents long press to save video
+                          supportZoom:
+                              false, // Prevents zooming out to see other elements
+                        ),
+                        android: AndroidInAppWebViewOptions(
+                          builtInZoomControls: false,
+                          displayZoomControls: false,
+                        ),
+                        ios: IOSInAppWebViewOptions(
+                          allowsInlineMediaPlayback: true,
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ),
 
-          // Loading indicator
-          if (loading) const CircularProgressIndicator(color: Colors.red),
-        ],
-        );
+              // Loading indicator
+              if (loading)
+                Positioned.fill(
+                  child: Center(
+                    child: const CircularProgressIndicator(color: Colors.red),
+                  ),
+                ),
+
+              // Black overlay to cover OneDrive/Google Drive top bar buttons
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: 48,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          );
         },
       ),
     );

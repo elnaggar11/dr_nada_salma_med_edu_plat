@@ -9,6 +9,7 @@ import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/in_progress_item.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/shimmer/courses/in_progress_shimmer_list.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:dr_nada_salma_med_edu_plat/gen/locale_keys.g.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -152,13 +153,13 @@ class _MyCoursesState extends State<MyCourses>
                                   .read<CoursesStatusCubit>()
                                   .coursesStatusResponse ==
                               null
-                        ? EmptyCourseWidget()
+                        ? EmptyCourseWidget(title: LocaleKeys.empty_in_progress.tr())
                         : context
                               .read<CoursesStatusCubit>()
                               .coursesStatusResponse!
                               .data!
                               .isEmpty
-                        ? EmptyCourseWidget()
+                        ? EmptyCourseWidget(title: LocaleKeys.empty_in_progress.tr())
                         : ListView.builder(
                             shrinkWrap: true,
                             padding: EdgeInsets.only(
@@ -205,7 +206,7 @@ class _MyCoursesState extends State<MyCourses>
                                   .data![index]
                                   .favorited,
                               id: null,
-                              status: 'completed',
+                              status: 'in_progress',
                               totalHours: context
                                   .read<CoursesStatusCubit>()
                                   .coursesStatusResponse!
@@ -243,13 +244,13 @@ class _MyCoursesState extends State<MyCourses>
                                   .read<CoursesStatusCubit>()
                                   .coursesStatusResponse ==
                               null
-                        ? EmptyCourseWidget()
+                        ? EmptyCourseWidget(title: LocaleKeys.empty_coming_soon.tr())
                         : context
                               .read<CoursesStatusCubit>()
                               .coursesStatusResponse!
                               .data!
                               .isEmpty
-                        ? EmptyCourseWidget()
+                        ? EmptyCourseWidget(title: LocaleKeys.empty_coming_soon.tr())
                         : ListView.builder(
                             shrinkWrap: true,
                             padding: EdgeInsets.only(
@@ -300,7 +301,7 @@ class _MyCoursesState extends State<MyCourses>
                                   .coursesStatusResponse!
                                   .data![index]
                                   .id,
-                              status: 'completed',
+                              status: 'coming_soon',
                               totalHours: context
                                   .read<CoursesStatusCubit>()
                                   .coursesStatusResponse!
@@ -384,13 +385,13 @@ class _MyCoursesState extends State<MyCourses>
                                         .read<CoursesStatusCubit>()
                                         .coursesStatusResponse ==
                                     null
-                              ? EmptyCourseWidget()
+                              ? EmptyCourseWidget(title: LocaleKeys.empty_completed.tr())
                               : context
                                     .read<CoursesStatusCubit>()
                                     .coursesStatusResponse!
                                     .data!
                                     .isEmpty
-                              ? EmptyCourseWidget()
+                              ? EmptyCourseWidget(title: LocaleKeys.empty_completed.tr())
                               : ListView.builder(
                                   shrinkWrap: true,
                                   padding: EdgeInsets.only(
@@ -480,13 +481,13 @@ class _MyCoursesState extends State<MyCourses>
                                   .read<CoursesStatusCubit>()
                                   .coursesStatusResponse ==
                               null
-                        ? EmptyCourseWidget()
+                        ? EmptyCourseWidget(title: LocaleKeys.empty_ended.tr())
                         : context
                               .read<CoursesStatusCubit>()
                               .coursesStatusResponse!
                               .data!
                               .isEmpty
-                        ? EmptyCourseWidget()
+                        ? EmptyCourseWidget(title: LocaleKeys.empty_ended.tr())
                         : ListView.builder(
                             shrinkWrap: true,
                             padding: EdgeInsets.only(

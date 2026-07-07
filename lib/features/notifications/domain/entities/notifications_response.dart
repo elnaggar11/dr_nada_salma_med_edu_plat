@@ -149,18 +149,37 @@ class Datum {
 class NotificationData {
   String? title;
   String? description;
+  String? titleAr;
+  String? descriptionAr;
+  String? titleEn;
+  String? descriptionEn;
 
-  NotificationData({this.title, this.description});
+  NotificationData({
+    this.title,
+    this.description,
+    this.titleAr,
+    this.descriptionAr,
+    this.titleEn,
+    this.descriptionEn,
+  });
 
   NotificationData.fromJson(Map<String, dynamic> json) {
     title = json['title'];
     description = json['description'];
+    titleAr = json['title_ar'];
+    descriptionAr = json['description_ar'];
+    titleEn = json['title_en'];
+    descriptionEn = json['description_en'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['title'] = title;
     data['description'] = description;
+    data['title_ar'] = titleAr;
+    data['description_ar'] = descriptionAr;
+    data['title_en'] = titleEn;
+    data['description_en'] = descriptionEn;
     return data;
   }
 }

@@ -18,3 +18,15 @@ class CoursesDetailsSuccessState extends CoursesDetailsState {
 
   CoursesDetailsSuccessState({required this.coursesDetailsResponse});
 }
+
+class CourseBookingLoadingState extends CoursesDetailsState {}
+
+class CourseBookingSuccessState extends CoursesDetailsState {
+  final String message;
+  CourseBookingSuccessState({required this.message});
+}
+
+class CourseBookingErrorState extends CoursesDetailsState {
+  final String message;
+  CourseBookingErrorState({required this.message});
+}

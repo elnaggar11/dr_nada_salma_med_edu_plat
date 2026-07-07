@@ -304,5 +304,10 @@ abstract class  LocaleKeys {
   static const in_person_delivery_only = 'in_person_delivery_only';
   static const booking_info = 'booking_info';
   static const free_booking_via_app = 'free_booking_via_app';
+  static const empty_in_progress = 'empty_in_progress';
+  static const empty_coming_soon = 'empty_coming_soon';
+  static const empty_completed = 'empty_completed';
+  static const empty_ended = 'empty_ended';
+  static const empty_success_stories = 'empty_success_stories';
 
 }

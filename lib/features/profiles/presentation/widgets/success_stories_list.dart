@@ -1,31 +1,46 @@
-import 'package:dr_nada_salma_med_edu_plat/core/constants/images.dart';
-import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/success_stories_response.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets/empty_course_widget.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/cubit/success_stories/success_stories_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/widgets/success_stories_item.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:dr_nada_salma_med_edu_plat/gen/locale_keys.g.dart';
+import 'package:dr_nada_salma_med_edu_plat/injection_container/injection_container.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SuccessStoriesList extends StatelessWidget {
-  List<String> imgList = [
-    profile1,
-    profile2,
-    profile1,
-    profile2,
-    profile1,
-    profile2,
-    profile1,
-  ];
-
   SuccessStoriesList({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      child: ListView.builder(
-        itemCount: imgList.length,
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
-        addAutomaticKeepAlives: true,
-        physics: ClampingScrollPhysics(),
-        itemBuilder: (context, index) => SuccessStoriesItem(data: Data()),
+    return BlocProvider(
+      create: (context) => sl<SuccessStoriesCubit>()..getSuccessStories(),
+      child: BlocBuilder<SuccessStoriesCubit, SuccessStoriesState>(
+        builder: (context, state) {
+          if (state is SuccessStoriesLoadingState) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is SuccessStoriesErrorState) {
+            return Center(child: Text(state.message ?? "حدث خطأ ما"));
+          } else if (state is SuccessStoriesSuccessState) {
+            final list = state.successStoriesResponse?.data ?? [];
+            if (list.isEmpty) {
+              return Center(
+                child: EmptyCourseWidget(title: LocaleKeys.empty_success_stories.tr()),
+              );
+            }
+            return ListView.builder(
+              itemCount: list.length,
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              addAutomaticKeepAlives: true,
+              physics: const ClampingScrollPhysics(),
+              itemBuilder: (context, index) =>
+                  SuccessStoriesItem(data: list[index]),
+            );
+          }
+          return const SizedBox();
+        },
       ),
     );
   }
 }
+

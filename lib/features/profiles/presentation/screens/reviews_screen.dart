@@ -7,6 +7,8 @@ import 'package:dr_nada_salma_med_edu_plat/features/profiles/presentation/widget
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/cubit/course_reviews/course_reviews_cubit.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:dr_nada_salma_med_edu_plat/gen/locale_keys.g.dart';
 
 class ReviewsScreen extends StatefulWidget {
   final int courseId;
@@ -32,8 +34,9 @@ class _ReviewsScreenState extends State<ReviewsScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(
-        widget: SizedBox(),
-        title: "Our reviews",
+        appBarInd: 0,
+        widget: const SizedBox(),
+        title: LocaleKeys.our_reviews.tr(),
         status: false,
         context: context,
       ),
@@ -61,8 +64,8 @@ class _ReviewsScreenState extends State<ReviewsScreen>
             indicatorAnimation: TabIndicatorAnimation.linear,
             physics: ClampingScrollPhysics(),
             tabs: [
-              Tab(text: "Reviews Students"),
-              Tab(text: "Success Stories"),
+              Tab(text: LocaleKeys.reviews_student.tr()),
+              Tab(text: LocaleKeys.success_stories.tr()),
             ],
           ),
           Expanded(

@@ -16,6 +16,7 @@ import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/widgets/re
 import 'package:dr_nada_salma_med_edu_plat/main.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/screens/pdf_viewer_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -72,16 +73,23 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   }
 
   void _showCourseBookingSheet(Data course) {
+    final cubit = context.read<CoursesDetailsCubit>();
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => CourseBookingSheet(
-        course: course,
-        onConfirmBooking: () {
-          Navigator.pop(context); // Close sheet
-          _openWhatsAppCourseBooking(course);
-        },
+      builder: (context) => BlocProvider.value(
+        value: cubit,
+        child: CourseBookingSheet(
+          course: course,
+          onConfirmBooking: (String? couponCode) {
+            Navigator.pop(context); // Close sheet
+            cubit.requestCourseBooking(
+              courseIds: [course.id!],
+              couponCode: couponCode,
+            );
+          },
+        ),
       ),
     );
   }
@@ -117,7 +125,34 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
         height: double.infinity,
         color: white,
         child: SingleChildScrollView(
-          child: BlocBuilder<CoursesDetailsCubit, CoursesDetailsState>(
+          child: BlocConsumer<CoursesDetailsCubit, CoursesDetailsState>(
+            listener: (context, state) {
+              if (state is CourseBookingSuccessState) {
+                msgKey.currentState?.showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      state.message,
+                      style: TextStyles.textStyleNormal13.copyWith(color: white),
+                    ),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+                final course = context.read<CoursesDetailsCubit>().coursesDetailsResponse?.data;
+                if (course != null) {
+                  _openWhatsAppCourseBooking(course);
+                }
+              } else if (state is CourseBookingErrorState) {
+                msgKey.currentState?.showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      state.message,
+                      style: TextStyles.textStyleNormal13.copyWith(color: white),
+                    ),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
             builder: (context, state) {
               final cubit = context.read<CoursesDetailsCubit>();
               if (cubit.coursesDetailsResponse == null ||
@@ -457,6 +492,44 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                     ),
 
                     SizedBox(height: context.height / 20),
+                    if (context.read<CoursesDetailsCubit>().coursesDetailsResponse?.data?.buttonActions?.downloadPdf == true || context.read<CoursesDetailsCubit>().coursesDetailsResponse?.data?.hasPdf == true) ...[
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: context.width / 30),
+                        width: double.infinity,
+                        height: 50,
+                        child: MaterialButton(
+                          onPressed: () {
+                            final slug = context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.slug;
+                            final pdfUrl = context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.pdf;
+                            
+                            final url = (pdfUrl != null && pdfUrl.isNotEmpty) 
+                                ? pdfUrl 
+                                : "https://api1.drnadasalma.com/api/courses/$slug/pdf";
+                            
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PdfViewerScreen(
+                                  pdfUrl: url,
+                                  title: context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.title?.toString() ?? "Course PDF",
+                                ),
+                              ),
+                            );
+                          },
+                          color: orangeBold,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.picture_as_pdf, color: white),
+                              SizedBox(width: 8),
+                              Text(tr("download_pdf") ?? "View Course PDF", style: TextStyles.textStyleBold14.copyWith(color: white), textScaler: TextScaler.linear(1)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: context.height / 20),
+                    ],
                     Container(
                       margin: EdgeInsets.only(
                         left: context.width / 30,
@@ -513,6 +586,47 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                               ),
                               textScaler: TextScaler.linear(1),
                             ),
+                            if (context.read<CoursesDetailsCubit>().coursesDetailsResponse?.data?.hasPdf == true &&
+                                context.read<CoursesDetailsCubit>().coursesDetailsResponse?.data?.pdf != null) ...[
+                              SizedBox(width: context.width / 30),
+                              customSvg(name: elipse),
+                              SizedBox(width: context.width / 30),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => PdfViewerScreen(
+                                        pdfUrl: context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.pdf!,
+                                        title: tr("course_content"),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: context.width / 40,
+                                    vertical: context.height / 150,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: white,
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(color: primary.withOpacity(0.2)),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.picture_as_pdf, color: Colors.red, size: 16),
+                                      SizedBox(width: context.width / 80),
+                                      Text(
+                                        tr("course_content"),
+                                        style: TextStyles.textStyleNormal12.copyWith(color: primary, fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
                           ],
                         ),
                       ),
@@ -787,23 +901,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
             context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.buttonActions!.addToCart == true ?
            BlocBuilder<CartCubit, CartState>(
              builder: (context, state) {
-               return Container(
-             color: white,
-             margin: EdgeInsets.only(left: context.width/22,right: context.width/22),
-              width: double.infinity,
-              child: MaterialButton(
-                height: context.height/13,
-                color: accent,
-                elevation: 0,
-                splashColor: Colors.transparent,
-                hoverColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-                hoverElevation: 0,
-                highlightElevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(40))),
-                onPressed: (){
-                  context.read<CartCubit>().setCartIndex(ind: 1);
-                  context.read<CartCubit>()
                       .addToCart(params:
                   AddToCartParams(courseId: context.read<CoursesDetailsCubit>().courseId));
                 },
@@ -908,7 +1005,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
           ],),);
   },
 )*/
-      bottomSheet: BlocBuilder<CoursesDetailsCubit, CoursesDetailsState>(
+      bottomNavigationBar: BlocBuilder<CoursesDetailsCubit, CoursesDetailsState>(
         builder: (context, state) {
           final cubit = context.read<CoursesDetailsCubit>();
           final response = cubit.coursesDetailsResponse;

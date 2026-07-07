@@ -9,12 +9,25 @@ class CourseReviewsResponse {
 
   CourseReviewsResponse.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    message = json['message'];
-    if (json['data'] != null) {
+    
+    if (json['data'] is String) {
+      message = json['data'];
+    } else {
+      message = json['message'] is String ? json['message'] : json['message']?.toString();
+    }
+
+    dynamic reviewsData;
+    if (json['message'] is Map && json['message']['reviews'] != null) {
+      reviewsData = json['message']['reviews'];
+    } else {
+      reviewsData = json['data'];
+    }
+
+    if (reviewsData is List) {
       data = <Reviews>[];
-      json['data'].forEach((v) {
+      for (var v in reviewsData) {
         data!.add(Reviews.fromJson(v));
-      });
+      }
     }
   }
 

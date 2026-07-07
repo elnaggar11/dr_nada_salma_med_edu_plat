@@ -7,6 +7,7 @@ import 'package:dr_nada_salma_med_edu_plat/features/home/domain/usecases/private
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/usecases/public_courses_use_case.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/usecases/success_stories_use_case.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/usecases/watch_course_use_case.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/home/domain/usecases/request_course_booking_use_case.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/cubit/courses_details_cubit/courses_details_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/cubit/hero/heroes_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/cubit/private_lessons_cubit/private_lessons_cubit.dart';
@@ -20,7 +21,7 @@ Future<void> initHomeInj(GetIt s) async {
   s.registerFactory(() => HeroesCubit(s()));
   s.registerFactory(() => PublicCoursesCubit(s()));
   s.registerFactory(() => PrivateLessonsCubit(s()));
-  s.registerFactory(() => CoursesDetailsCubit(s()));
+  s.registerFactory(() => CoursesDetailsCubit(s(), s()));
   s.registerFactory(() => WatchCourseCubit(s()));
   s.registerLazySingleton(() => WatchCourseUseCase(s()));
   s.registerLazySingleton<HomeRemoteDataSource>(
@@ -32,4 +33,5 @@ Future<void> initHomeInj(GetIt s) async {
   s.registerLazySingleton(() => PublicCoursesUseCase(s()));
   s.registerLazySingleton(() => CoursesDetailsUseCase(s()));
   s.registerLazySingleton(() => PrivateLessonsUseCase(s()));
+  s.registerLazySingleton(() => RequestCourseBookingUseCase(s()));
 }

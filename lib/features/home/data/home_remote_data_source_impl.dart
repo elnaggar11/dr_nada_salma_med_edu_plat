@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:dr_nada_salma_med_edu_plat/core/errors/exceptions.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/utils/api_base_helper.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/courses_details_params.dart';
@@ -8,6 +9,7 @@ import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/public_
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/success_stories_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/watch_course_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/watch_course_response.dart';
+import 'package:flutter/foundation.dart';
 
 const successStoriesApi = "/success-stories";
 const heroesApi = "/pages/hero";
@@ -25,6 +27,10 @@ abstract class HomeRemoteDataSource {
     CoursesDetailsParams? params,
   });
   Future<WatchCourseResponse> watchCourse({WatchCourseParams params});
+  Future<dynamic> requestCourseBooking({
+    required List<int> courseIds,
+    String? couponCode,
+  });
 }
 
 class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
@@ -65,7 +71,8 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
     try {
       String url = '$coursesApi?page=${params!.page}';
       if (params.type == "filter") {
-        url += '&category_id=${params.categoryId}&course_name=${params.courseName}&top_rated=${params.topRated}';
+        url +=
+            '&category_id=${params.categoryId}&course_name=${params.courseName}&top_rated=${params.topRated}';
       }
       if (params.courseStatus != null && params.courseStatus!.isNotEmpty) {
         url += '&course_status=${params.courseStatus}';
@@ -74,7 +81,9 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         url += '&is_ended=${params.isEnded}';
       }
       final response = await helper.get(url: url);
-      print(response.toString());
+      if (kDebugMode) {
+        print(response.toString());
+      }
       return PublicCoursesResponse.fromJson(response);
     } on ServerException catch (e) {
       throw ServerException(message: e.message);
@@ -127,9 +136,12 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   @override
   Future<WatchCourseResponse> watchCourse({WatchCourseParams? params}) async {
     try {
-      final response = await helper.get(
-        url:
-            '$watchCourseApi?lecture_id=${params!.lectureId}&course_id=${params.courseId}',
+      final response = await helper.post(
+        url: watchCourseApi,
+        body: {
+          'lecture_id': params!.lectureId,
+          'course_id': params.courseId,
+        },
       );
       return WatchCourseResponse.fromJson(response);
     } on ServerException catch (e) {
@@ -140,6 +152,28 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       throw UnprocessableContentException(message: e.message);
     } on ForbiddenException catch (e) {
       throw ForbiddenException(message: e.message);
+    }
+  }
+
+  @override
+  Future<dynamic> requestCourseBooking({
+    required List<int> courseIds,
+    String? couponCode,
+  }) async {
+    try {
+      final body = {
+        'course_id': jsonEncode(courseIds),
+        if (couponCode != null && couponCode.isNotEmpty)
+          'coupon_code': couponCode,
+      };
+      final response = await helper.post(url: '/course-requests', body: body);
+      return response;
+    } on ServerException catch (e) {
+      throw ServerException(message: e.message);
+    } on UnAuthorizedException catch (e) {
+      throw UnAuthorizedException(message: e.message);
+    } on UnprocessableContentException catch (e) {
+      throw UnprocessableContentException(message: e.message);
     }
   }
 }

@@ -37,12 +37,15 @@ import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/screens/private_lessons_screen.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/favourite/presentation/cubit/favourite_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/favourite/presentation/screens/favourite_screen.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/courses_details_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/courses_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/cubit/hero/heroes_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/cubit/private_lessons_cubit/private_lessons_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/cubit/public_courses/public_courses_cubit.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/cubit/courses_details_cubit/courses_details_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/cubit/success_stories/success_stories_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/screens/best_mdeical_search_result_screen.dart';
+import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/screens/course_details_screen.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/screens/best_medical_screen.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/screens/filter_screen.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/screens/private_lessons_search_result_screen.dart';
@@ -472,6 +475,19 @@ class AppRoutes {
             child: TeacherDetailView(
               teacherId: args['teacher_id'] as int,
               subjectId: args['subject_id'] as int,
+            ),
+          ),
+          settings: settings,
+        );
+      case courseDetailsSc:
+        return MaterialPageRoute(
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (_) => sl<BottomBarCubit>()),
+              BlocProvider(create: (_) => sl<CoursesDetailsCubit>()),
+            ],
+            child: CourseDetailsScreen(
+              params: settings.arguments as CoursesDetailsParams,
             ),
           ),
           settings: settings,

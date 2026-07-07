@@ -60,7 +60,6 @@
   "enter_code" : "Enter the code sent to your Email.",
   "nt_receive_code" : "Didn't receive the code? ",
   "reversible" : "This action is reversible!",
-  "delete" : "Delete",
   "add_to_cart" : "Add to cart",
   "resend_code" : "Resend code",
   "reset_pass" : "Reset Password!",
@@ -303,5 +302,10 @@
   "free_booking_via_app": "This training is free, and booking is done through the app.",
   "ended": "Ended",
   "view_reviews": "Reviews",
-  "enroll_now": "Enroll Now"
+  "enroll_now": "Enroll Now",
+  "empty_in_progress": "You haven't started any course yet, start your learning journey now!",
+  "empty_coming_soon": "There are no coming soon courses at the moment.",
+  "empty_completed": "You haven't completed any course yet, keep learning to achieve your goals!",
+  "empty_ended": "There are no ended courses in your study record.",
+  "empty_success_stories": "No success stories currently"
 }

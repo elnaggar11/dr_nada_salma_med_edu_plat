@@ -7,7 +7,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 
 class EmptyCourseWidget extends StatelessWidget {
-  const EmptyCourseWidget({super.key});
+  final String? title;
+
+  const EmptyCourseWidget({super.key, this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class EmptyCourseWidget extends StatelessWidget {
               right: context.width / 20,
             ),
             child: Text(
-              tr("havent_registered_any_course"),
+              title ?? tr("havent_registered_any_course"),
               style: TextStyles.textStyleBold19.copyWith(
                 color: primary,
                 fontWeight: FontWeight.w800,
