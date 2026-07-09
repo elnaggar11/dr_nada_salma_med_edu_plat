@@ -120,14 +120,20 @@ class CourseContentItem extends StatelessWidget {
                       builder: (context) => BlocProvider(
                         create: (context) => sl<WatchCourseCubit>(),
                         child: VideoPlayerWidget(
-                          lectureVideo: e.fullVideoUrl ?? e.video ?? "",
+                          lectureVideo:
+                        
+                              e.fullVideoUrl ??
+                              e.video ??
+                              "",
                           courseId: courseId,
                           lectureId: e.id.toString(),
                         ),
                       ),
                     );
                   } else {
-                    final dateStr = courseLectureStartsAt != null && courseLectureStartsAt!.isNotEmpty
+                    final dateStr =
+                        courseLectureStartsAt != null &&
+                            courseLectureStartsAt!.isNotEmpty
                         ? "ستبدأ المحاضرات في $courseLectureStartsAt"
                         : "لم يبدأ الكورس بعد";
 
