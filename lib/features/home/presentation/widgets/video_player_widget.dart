@@ -108,6 +108,43 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
             );
           }
 
+          String videoUrl = widget.lectureVideo.startsWith('http')
+              ? widget.lectureVideo
+              : 'https://drive.google.com/file/d/${widget.lectureVideo}/preview';
+
+          bool isOneDrive =
+              videoUrl.toLowerCase().contains('1drv.ms') ||
+              videoUrl.toLowerCase().contains('onedrive');
+          String? htmlData;
+
+          if (isOneDrive) {
+            String downloadUrl = videoUrl.contains('?')
+                ? '${videoUrl.split('?').first}?download=1'
+                : '$videoUrl?download=1';
+
+            htmlData =
+                '''
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    body { margin: 0; padding: 0; background-color: black; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+    video { width: 100%; max-height: 100vh; outline: none; }
+  </style>
+</head>
+<body>
+  <video controls playsinline webkit-playsinline autoplay controlsList="nodownload">
+    <source src="$downloadUrl" type="video/mp4">
+  </video>
+  <script>
+    document.addEventListener('contextmenu', event => event.preventDefault());
+  </script>
+</body>
+</html>
+            ''';
+          }
+
           return Stack(
             alignment: Alignment.center,
             children: [
@@ -220,7 +257,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                       },
                       initialOptions: InAppWebViewGroupOptions(
                         crossPlatform: InAppWebViewOptions(
-                          userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Mobile/15E148 Safari/604.1",
+                          userAgent:
+                              "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Mobile/15E148 Safari/604.1",
                           javaScriptEnabled: true,
                           useOnLoadResource: true,
                           mediaPlaybackRequiresUserGesture: false,
@@ -256,10 +294,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                 top: 0,
                 left: 0,
                 right: 0,
-                child: Container(
-                  height: 48,
-                  color: Colors.black,
-                ),
+                child: Container(height: 48, color: Colors.black),
               ),
             ],
           );
