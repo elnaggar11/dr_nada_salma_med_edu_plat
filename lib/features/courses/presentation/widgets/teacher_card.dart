@@ -15,6 +15,7 @@ class TeacherCard extends StatelessWidget {
   final String experience;
   final int studentCount;
   final String price;
+  final String? priceAfterDiscount;
   final bool isVerified;
   final String slug;
   final int teacherId;
@@ -30,6 +31,7 @@ class TeacherCard extends StatelessWidget {
     required this.experience,
     required this.studentCount,
     required this.price,
+    this.priceAfterDiscount,
     required this.slug,
     required this.teacherId,
     required this.subjectId,
@@ -203,14 +205,38 @@ class TeacherCard extends StatelessWidget {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  Text(
-                                    "$price ${tr("sar")}",
-                                    style: TextStyles.textStyleBold14.copyWith(
-                                      color: orangeBold,
+                                  if (priceAfterDiscount != null && priceAfterDiscount != '0') ...[
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "$price ",
+                                          style: TextStyles.textStyleBold14.copyWith(
+                                            color: grey1,
+                                            decoration: TextDecoration.lineThrough,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        Text(
+                                          "$priceAfterDiscount ${tr('sar')}",
+                                          style: TextStyles.textStyleBold14.copyWith(
+                                            color: orangeBold,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
                                     ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                                  ] else ...[
+                                    Text(
+                                      "$price ${tr('sar')}",
+                                      style: TextStyles.textStyleBold14.copyWith(
+                                        color: orangeBold,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
                                 ],
                               ),
                             )

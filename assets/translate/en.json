@@ -99,6 +99,8 @@
   "upload": "Upload your profile picture",
   "course_details" : "Course details",
   "course_content": "Course content",
+  "view_pdf": "View PDF",
+  "pdf_not_available": "Sorry, the PDF for this course is not available right now.",
   "description" : "Description",
   "reviews_student" : "Reviews Students",
   "create_new_account" : "Create new account",

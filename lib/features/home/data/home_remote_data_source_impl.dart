@@ -136,7 +136,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   @override
   Future<WatchCourseResponse> watchCourse({WatchCourseParams? params}) async {
     try {
-      final response = await helper.post(
+      final response = await helper.postJson(
         url: watchCourseApi,
         body: {
           'lecture_id': params!.lectureId,

@@ -730,7 +730,7 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
-                        "${hourlyPrice.toStringAsFixed(1)}\$ × $hoursCount ${tr("hours_count")}",
+                        "${hourlyPrice.toStringAsFixed(1)} ${tr('sar')} × $hoursCount ${tr('hours_count')}",
                         style: TextStyles.textStyleBold12.copyWith(
                           color: grey1,
                         ),
@@ -741,7 +741,7 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
                           originalHourlyPrice > hourlyPrice) ...[
                         const SizedBox(width: 6),
                         Text(
-                          "${originalHourlyPrice.toStringAsFixed(1)}\$",
+                          "${originalHourlyPrice.toStringAsFixed(1)} ${tr('sar')}",
                           style: TextStyles.textStyleBold12.copyWith(
                             color: grey1.withOpacity(0.5),
                             decoration: TextDecoration.lineThrough,
@@ -779,7 +779,7 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 2),
                         child: Text(
-                          "${originalTotalPrice.toStringAsFixed(1)}",
+                          originalTotalPrice.toStringAsFixed(1),
                           style: TextStyles.textStyleBold14.copyWith(
                             color: Colors.grey,
                             decoration: TextDecoration.lineThrough,
@@ -794,7 +794,7 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
                   Padding(
                     padding: const EdgeInsets.only(bottom: 6),
                     child: Text(
-                      "ر.س",
+                      tr("sar"),
                       style: TextStyles.textStyleBold16.copyWith(
                         color: orangeBold,
                       ),
@@ -893,7 +893,7 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
               const Icon(Icons.info_outline, color: orangeBold, size: 28),
               const SizedBox(width: 10),
               Text(
-                "تنبيه",
+                tr("alert"),
                 style: TextStyles.textStyleBold18.copyWith(color: primary),
               ),
             ],
@@ -906,7 +906,7 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
             TextButton(
               onPressed: () => Navigator.pop(ctx),
               child: Text(
-                "موافق",
+                tr("ok"),
                 style: TextStyles.textStyleBold16.copyWith(color: orangeBold),
               ),
             ),
@@ -954,8 +954,8 @@ class _TeacherDetailViewState extends State<TeacherDetailView> {
       message.writeln('ملاحظات: $notes');
     }
     if (!isTargetUser(context)) {
-      message.writeln('سعر الساعة: \$${teacher.hourlyPrice ?? 0}');
-      message.writeln('إجمالي السعر: \$${totalPrice.toStringAsFixed(1)}');
+      message.writeln('سعر الساعة: ${teacher.hourlyPrice ?? 0} ${tr('sar')}');
+      message.writeln('إجمالي السعر: ${totalPrice.toStringAsFixed(1)} ${tr('sar')}');
     }
     if (teacher.experienceYears != null) {
       message.writeln('سنوات الخبرة: ${teacher.experienceYears}');

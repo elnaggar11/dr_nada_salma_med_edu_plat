@@ -31,7 +31,7 @@ class _BestMedicalScreenState extends State<BestMedicalScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
-    
+
     // Initial fetch for the first tab
     context.read<PublicCoursesCubit>().getPublicCourses(
       type: '',
@@ -42,10 +42,10 @@ class _BestMedicalScreenState extends State<BestMedicalScreen>
 
     _tabController.addListener(() {
       if (_tabController.indexIsChanging) return;
-      
+
       String? courseStatus;
       String? isEnded;
-      
+
       switch (_tabController.index) {
         case 0:
           // All courses
@@ -81,10 +81,9 @@ class _BestMedicalScreenState extends State<BestMedicalScreen>
               scrollController.position.maxScrollExtent - 200 &&
           state is PublicCoursesLoaded &&
           !state.hasReachedMax) {
-        
         String? courseStatus;
         String? isEnded;
-        
+
         switch (_tabController.index) {
           case 0:
             break;
@@ -167,7 +166,7 @@ class _BestMedicalScreenState extends State<BestMedicalScreen>
                             SizedBox(width: context.width / 90),
                             VerticalDivider(
                               thickness: 1,
-                              color: black.withOpacity(.1),
+                              color: black.withValues(alpha: .1),
                               indent: 15,
                               endIndent: 15,
                             ),
@@ -280,13 +279,6 @@ class _BestMedicalScreenState extends State<BestMedicalScreen>
           },
         );
       },
-    );
-  }
-
-  Widget _loadingIndicator() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Center(child: CircularProgressIndicator(color: primary)),
     );
   }
 }

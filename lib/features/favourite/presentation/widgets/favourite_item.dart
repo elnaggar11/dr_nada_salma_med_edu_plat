@@ -149,13 +149,13 @@ class FavouriteItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Flexible(
-                        child: Text("\$${data.course!.price}",style: TextStyles.textStyleBold16.copyWith
+                        child: Text("${data.course!.price} ${tr('sar')}",style: TextStyles.textStyleBold16.copyWith
                           (color: orangeBold),
                           textScaler: TextScaler.linear(1),),
                       ),
                       SizedBox(width: context.width/20,),
                       Flexible(
-                        child: Text("\$${data.course!.priceAfterDiscount ?? ""}",style: TextStyles.textStyleNormal12.copyWith
+                        child: Text("${data.course!.priceAfterDiscount ?? ""} ${tr('sar')}",style: TextStyles.textStyleNormal12.copyWith
                           (color: grey1,fontWeight: FontWeight.w500)
                           ,textScaler: TextScaler.linear(1),),
                       ),

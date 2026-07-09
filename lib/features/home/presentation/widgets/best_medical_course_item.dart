@@ -130,8 +130,12 @@ class BestMedicalItem extends StatelessWidget {
               ],
             ),
             SizedBox(height: context.height / 80),
-            if (data.buttonActions?.viewReviews == true)
-              InkWell(
+            Visibility(
+              visible: data.buttonActions?.viewReviews == true,
+              maintainSize: true,
+              maintainAnimation: true,
+              maintainState: true,
+              child: InkWell(
                 onTap: () {
                   context.pushNamed(name: reviewsSc, args: {
                     "course_id": data.id,
@@ -161,17 +165,17 @@ class BestMedicalItem extends StatelessWidget {
                   ),
                 ),
               ),
-            if (data.buttonActions?.viewReviews == true)
-              SizedBox(height: context.height / 80),
+            ),
+            SizedBox(height: context.height / 80),
             /*   Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("\$${data.priceAfterDiscount ?? 0}",style: TextStyles.textStyleBold16.copyWith
+                Text("${data.priceAfterDiscount ?? 0} ${tr('sar')}",style: TextStyles.textStyleBold16.copyWith
                   (color: orangeBold,),
                   textScaler: TextScaler.linear(1),),
                 SizedBox(width: context.width/20,),
-                Text("\$ ${data.price ?? 0}",style: TextStyles.textStyleNormal12.copyWith
+                Text("${data.price ?? 0} ${tr('sar')}",style: TextStyles.textStyleNormal12.copyWith
                   (color: grey1,fontWeight: FontWeight.w500)
                   ,textScaler: TextScaler.linear(1),),
             ],)*/

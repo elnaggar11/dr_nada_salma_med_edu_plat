@@ -28,10 +28,8 @@ class TeacherBookingFooter extends StatelessWidget {
     try {
       final userId = sharedPreferences.getInt("user_id");
       final userEmail = sharedPreferences.getString("user_email");
-      final userFullName = sharedPreferences.getString(
-        "user_fullName",
-      );
-      if (userId == 311 || 
+      final userFullName = sharedPreferences.getString("user_fullName");
+      if (userId == 311 ||
           userId == 7 ||
           userEmail == "abdoshams2005@gmail.com" ||
           userEmail == "tamer005@gmail.com" ||
@@ -108,9 +106,15 @@ class TeacherBookingFooter extends StatelessWidget {
               const SizedBox(height: 12),
               // Cost Card
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 16,
+                ),
                 decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFFF9D0BA), width: 1.5),
+                  border: Border.all(
+                    color: const Color(0xFFF9D0BA),
+                    width: 1.5,
+                  ),
                   borderRadius: BorderRadius.circular(16),
                   color: Colors.white,
                 ),
@@ -130,16 +134,17 @@ class TeacherBookingFooter extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  "${priceAfterDiscount ?? price}\$",
+                                  "${priceAfterDiscount ?? price} ${tr('sar')}",
                                   style: context.boldText.copyWith(
                                     fontSize: 20,
                                     color: const Color(0xFF355C7D),
                                   ),
                                 ),
-                                if (priceAfterDiscount != null && priceAfterDiscount! < price) ...[
+                                if (priceAfterDiscount != null &&
+                                    priceAfterDiscount! < price) ...[
                                   const SizedBox(width: 8),
                                   Text(
-                                    "$price\$",
+                                    "$price ${tr('sar')}",
                                     style: context.boldText.copyWith(
                                       fontSize: 16,
                                       color: Colors.grey,

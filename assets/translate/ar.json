@@ -88,6 +88,8 @@
   "no": "لا",
   "course_details": "تفاصيل الدورة",
   "course_content": "محتوى الدورة",
+  "view_pdf": "عرض الـ PDF",
+  "pdf_not_available": "عذراً، محتوى الكورس غير متوفر كملف PDF حالياً",
   "description": "الوصف",
   "reviews_student": "تقييمات الطلاب",
   "create_new_account": "إنشاء حساب جديد",

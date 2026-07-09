@@ -12,6 +12,7 @@ import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets
 import 'package:dr_nada_salma_med_edu_plat/features/favourite/presentation/cubit/favourite_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/courses_details_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/injection_container/injection_container.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/public_courses_response.dart';
@@ -162,7 +163,7 @@ class TopPrivateLessonsItemVertical extends StatelessWidget {
                               children: [
                                 Flexible(
                                   child: Text(
-                                    "\$${data.hourlyRateAfterDiscount ?? data.priceBreakdown ?? data.price}",
+                                    "${data.hourlyRateAfterDiscount ?? data.priceBreakdown ?? data.price}",
                                     style: TextStyles.textStyleBold16.copyWith(
                                       color: orangeBold,
                                     ),
@@ -172,7 +173,7 @@ class TopPrivateLessonsItemVertical extends StatelessWidget {
                                 SizedBox(width: context.width / 20),
                                 Flexible(
                                   child: Text(
-                                    "\$",
+                                    tr('sar'),
                                     style: TextStyles.textStyleNormal12
                                         .copyWith(
                                           color: grey1,

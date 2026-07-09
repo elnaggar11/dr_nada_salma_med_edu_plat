@@ -12,6 +12,7 @@ import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/widgets
 import 'package:dr_nada_salma_med_edu_plat/features/favourite/presentation/cubit/favourite_cubit.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/public_courses_response.dart';
 import 'package:dr_nada_salma_med_edu_plat/injection_container/injection_container.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -143,7 +144,7 @@ class PrivateLessonsItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "\$${data.price}",
+                        "${data.price} ${tr('sar')}",
                         style: TextStyles.textStyleBold16.copyWith(
                           color: orangeBold,
                         ),
@@ -151,7 +152,7 @@ class PrivateLessonsItem extends StatelessWidget {
                       ),
                       SizedBox(width: context.width / 20),
                       Text(
-                        "\$${data.priceAfterDiscount ?? 0}",
+                        "${data.priceAfterDiscount ?? 0} ${tr('sar')}",
                         style: TextStyles.textStyleNormal12.copyWith(
                           color: grey1,
                           fontWeight: FontWeight.w500,

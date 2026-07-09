@@ -220,6 +220,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                       },
                       initialOptions: InAppWebViewGroupOptions(
                         crossPlatform: InAppWebViewOptions(
+                          userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Mobile/15E148 Safari/604.1",
                           javaScriptEnabled: true,
                           useOnLoadResource: true,
                           mediaPlaybackRequiresUserGesture: false,
@@ -234,6 +235,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                         ),
                         ios: IOSInAppWebViewOptions(
                           allowsInlineMediaPlayback: true,
+                          sharedCookiesEnabled: true,
                         ),
                       ),
                     ),

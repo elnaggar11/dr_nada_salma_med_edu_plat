@@ -80,7 +80,6 @@ void main() async {
         useOnlyLangCode: true,
         child: MyApp(appRoutes: AppRoutes()),
       ),
-      // Wrap your app
     ),
   );
 }
@@ -89,14 +88,11 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key, required this.appRoutes});
   final AppRoutes appRoutes;
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<ProfileCubit>(
-          create: (context) => di.sl<ProfileCubit>(),
-        ),
+        BlocProvider<ProfileCubit>(create: (context) => di.sl<ProfileCubit>()),
       ],
       child: MaterialApp(
         onGenerateRoute: appRoutes.onGenerateRoutes,

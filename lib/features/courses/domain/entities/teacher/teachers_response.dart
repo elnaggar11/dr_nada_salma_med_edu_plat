@@ -33,6 +33,7 @@ class TeacherItem {
   final int? experienceYears;
   final int? studentsCount;
   final double? hourlyPrice;
+  final double? hourlyRateAfterDiscount;
   final String? slug;
 
   TeacherItem({
@@ -44,6 +45,7 @@ class TeacherItem {
     this.experienceYears,
     this.studentsCount,
     this.hourlyPrice,
+    this.hourlyRateAfterDiscount,
     this.slug,
   });
 
@@ -58,6 +60,7 @@ class TeacherItem {
           json['experience_years'] ?? json['years_experience'] ?? 0,
       studentsCount: json['students_count'] ?? 0,
       hourlyPrice: _parseDouble(json['hourly_price'] ?? json['hourly_rate']),
+      hourlyRateAfterDiscount: _parseDouble(json['hourly_rate_after_discount'] ?? json['hourly_price_after_discount']),
       slug: json['slug'],
     );
   }

@@ -79,7 +79,7 @@ class _CourseBookingSheetState extends State<CourseBookingSheet> {
               Row(
                 children: [
                   Text(
-                    "\$${widget.course.price}",
+                    "${widget.course.price} ${tr('sar')}",
                     style: TextStyles.textStyleBold20.copyWith(
                       color: orangeBold,
                     ),
@@ -87,7 +87,7 @@ class _CourseBookingSheetState extends State<CourseBookingSheet> {
                   if (widget.course.priceAfterDiscount != null) ...[
                     const SizedBox(width: 10),
                     Text(
-                      "\$${widget.course.priceAfterDiscount}",
+                      "${widget.course.priceAfterDiscount} ${tr('sar')}",
                       style: TextStyles.textStyleNormal12.copyWith(
                         color: grey1,
                         decoration: TextDecoration.lineThrough,

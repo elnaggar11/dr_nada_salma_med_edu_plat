@@ -178,13 +178,13 @@ class BestMedicalVerticalItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Flexible(
-                        child: Text("\$${data.priceAfterDiscount ?? 0}",style: TextStyles.textStyleBold16.copyWith
+                        child: Text("${data.priceAfterDiscount ?? 0} ${tr('sar')}",style: TextStyles.textStyleBold16.copyWith
                           (color: orangeBold,),
                           textScaler: TextScaler.linear(1),),
                       ),
                       SizedBox(width: context.width/20,),
                       Flexible(
-                        child: Text("\$${data.price ?? 0}",style: TextStyles.textStyleNormal12.copyWith
+                        child: Text("${data.price ?? 0} ${tr('sar')}",style: TextStyles.textStyleNormal12.copyWith
                           (color: grey1,fontWeight: FontWeight.w500)
                           ,textScaler: TextScaler.linear(1),),
                       ),

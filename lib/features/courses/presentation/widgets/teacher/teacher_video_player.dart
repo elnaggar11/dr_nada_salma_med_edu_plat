@@ -44,7 +44,6 @@ class TeacherVideoPlayer extends StatelessWidget {
               errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
           ),
-          // Play Button Overlay
           Center(
             child: GestureDetector(
               onTap: () => _playInApp(context, videoUrl),
@@ -52,7 +51,7 @@ class TeacherVideoPlayer extends StatelessWidget {
                 width: 60,
                 height: 60,
                 decoration: const BoxDecoration(
-                  color: Color(0xFFF06523), // Vibrant Orange
+                  color: Color(0xFFF06523),
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
@@ -106,7 +105,8 @@ class TeacherVideoPlayer extends StatelessWidget {
                 initialUrlRequest: URLRequest(url: WebUri(validUrl)),
                 onLoadStop: (controller, url) async {
                   // Inject CSS to hide Google Drive and OneDrive headers, buttons, and popouts
-                  await controller.evaluateJavascript(source: '''
+                  await controller.evaluateJavascript(
+                    source: '''
                     var style = document.createElement('style');
                     style.innerHTML = `
                       .ndfHFb-c4YZDc-Wrql6b, /* Drive Popout button */
@@ -118,10 +118,13 @@ class TeacherVideoPlayer extends StatelessWidget {
                       { display: none !important; }
                     `;
                     document.head.appendChild(style);
-                  ''');
+                  ''',
+                  );
                 },
                 initialOptions: InAppWebViewGroupOptions(
                   crossPlatform: InAppWebViewOptions(
+                    userAgent:
+                        "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.4 Mobile/15E148 Safari/604.1",
                     javaScriptEnabled: true,
                     mediaPlaybackRequiresUserGesture: false,
                     disableContextMenu: true,
@@ -133,6 +136,7 @@ class TeacherVideoPlayer extends StatelessWidget {
                   ),
                   ios: IOSInAppWebViewOptions(
                     allowsInlineMediaPlayback: true,
+                    sharedCookiesEnabled: true,
                   ),
                 ),
               ),

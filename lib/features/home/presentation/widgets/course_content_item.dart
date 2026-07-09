@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../main.dart';
-import '../screens/pdf_viewer_screen.dart';
+
 class CourseContentItem extends StatelessWidget {
   const CourseContentItem({
     super.key,
@@ -21,6 +21,8 @@ class CourseContentItem extends StatelessWidget {
     required this.courseId,
     required this.canWatch,
     required this.lecturesAreOpen,
+    required this.isBooked,
+    this.courseLectureStartsAt,
   });
 
   final String title;
@@ -29,6 +31,8 @@ class CourseContentItem extends StatelessWidget {
   final String courseId;
   final bool canWatch;
   final bool lecturesAreOpen;
+  final bool isBooked;
+  final String? courseLectureStartsAt;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +49,7 @@ class CourseContentItem extends StatelessWidget {
 
         onExpansionChanged: (bool? val) {},
         shape: RoundedRectangleBorder(
-          side: BorderSide(width: 0, color: primary.withOpacity(.1)),
+          side: BorderSide(width: 0, color: primary.withValues(alpha: .1)),
         ),
         expandedCrossAxisAlignment: CrossAxisAlignment.start,
         collapsedBackgroundColor: primary.withOpacity(.1),
@@ -90,6 +94,26 @@ class CourseContentItem extends StatelessWidget {
             .map(
               (e) => InkWell(
                 onTap: () {
+                  if (!isBooked) {
+                    msgKey.currentState?.showSnackBar(
+                      SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(40)),
+                        ),
+                        content: Text(
+                          "يجب الاشتراك في الكورس أولاً",
+                          textScaler: TextScaler.linear(1),
+                          style: TextStyles.textStyleNormal13.copyWith(
+                            color: white,
+                          ),
+                        ),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                    return;
+                  }
+
                   if (lecturesAreOpen) {
                     showDialog(
                       context: context,
@@ -103,6 +127,10 @@ class CourseContentItem extends StatelessWidget {
                       ),
                     );
                   } else {
+                    final dateStr = courseLectureStartsAt != null && courseLectureStartsAt!.isNotEmpty
+                        ? "ستبدأ المحاضرات في $courseLectureStartsAt"
+                        : "لم يبدأ الكورس بعد";
+
                     msgKey.currentState?.showSnackBar(
                       SnackBar(
                         behavior: SnackBarBehavior.floating,
@@ -110,7 +138,7 @@ class CourseContentItem extends StatelessWidget {
                           borderRadius: BorderRadius.all(Radius.circular(40)),
                         ),
                         content: Text(
-                          "لم يبدأ الكورس بعد",
+                          dateStr,
                           textScaler: TextScaler.linear(1),
                           style: TextStyles.textStyleNormal13.copyWith(
                             color: white,
@@ -151,60 +179,6 @@ class CourseContentItem extends StatelessWidget {
                               color: primary,
                             ),
                           ),
-                          if (e.pdf != null || e.file != null)
-                            InkWell(
-                              onTap: () {
-                                if (lecturesAreOpen) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => PdfViewerScreen(
-                                        pdfUrl: e.pdf ?? e.file ?? "",
-                                        title: e.title ?? "محتوى المحاضرة",
-                                      ),
-                                    ),
-                                  );
-                                } else {
-                                  msgKey.currentState?.showSnackBar(
-                                    SnackBar(
-                                      behavior: SnackBarBehavior.floating,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(Radius.circular(40)),
-                                      ),
-                                      content: Text(
-                                        "لم يبدأ الكورس بعد",
-                                        textScaler: TextScaler.linear(1),
-                                        style: TextStyles.textStyleNormal13.copyWith(
-                                          color: white,
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: context.width / 40,
-                                  vertical: context.height / 150,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: white,
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(color: primary.withOpacity(0.2)),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(Icons.picture_as_pdf, color: Colors.red, size: 20),
-                                    SizedBox(width: context.width / 80),
-                                    Text(
-                                      "محتوى المحاضرة",
-                                      style: TextStyles.textStyleNormal12.copyWith(color: primary, fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
                         ],
                       ),
                     ],

@@ -217,6 +217,9 @@ class _TeachersListScreenState extends State<TeachersListScreen> {
                               studentCount: teacher.studentsCount ?? 0,
                               price: (teacher.hourlyPrice ?? 0.0)
                                   .toStringAsFixed(0),
+                              priceAfterDiscount: (teacher.hourlyRateAfterDiscount != null && teacher.hourlyRateAfterDiscount! < (teacher.hourlyPrice ?? 0.0))
+                                  ? teacher.hourlyRateAfterDiscount!.toStringAsFixed(0)
+                                  : null,
                               slug: teacher.slug ?? "",
                               teacherId: teacher.id ?? 0,
                               subjectId: subjectId,

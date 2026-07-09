@@ -53,7 +53,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
     message.writeln('أرغب في تأكيد حجز الكورس التالي بعد إتمام الدفع:');
     message.writeln('');
     message.writeln('اسم الكورس: ${course.title ?? ''}');
-    message.writeln('السعر: \$${course.price ?? ''}');
+    message.writeln('السعر: ${course.price ?? ''} ${tr('sar')}');
 
     final whatsappUrl =
         "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message.toString())}";
@@ -65,9 +65,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
       );
     } else {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("عذراً، لا يمكن فتح واتساب.")),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(tr("cannot_open_whatsapp"))));
       }
     }
   }
@@ -83,7 +83,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
         child: CourseBookingSheet(
           course: course,
           onConfirmBooking: (String? couponCode) {
-            Navigator.pop(context); // Close sheet
+            Navigator.pop(context);
             cubit.requestCourseBooking(
               courseIds: [course.id!],
               couponCode: couponCode,
@@ -132,12 +132,17 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                   SnackBar(
                     content: Text(
                       state.message,
-                      style: TextStyles.textStyleNormal13.copyWith(color: white),
+                      style: TextStyles.textStyleNormal13.copyWith(
+                        color: white,
+                      ),
                     ),
                     backgroundColor: Colors.green,
                   ),
                 );
-                final course = context.read<CoursesDetailsCubit>().coursesDetailsResponse?.data;
+                final course = context
+                    .read<CoursesDetailsCubit>()
+                    .coursesDetailsResponse
+                    ?.data;
                 if (course != null) {
                   _openWhatsAppCourseBooking(course);
                 }
@@ -146,7 +151,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                   SnackBar(
                     content: Text(
                       state.message,
-                      style: TextStyles.textStyleNormal13.copyWith(color: white),
+                      style: TextStyles.textStyleNormal13.copyWith(
+                        color: white,
+                      ),
                     ),
                     backgroundColor: Colors.red,
                   ),
@@ -492,44 +499,6 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                     ),
 
                     SizedBox(height: context.height / 20),
-                    if (context.read<CoursesDetailsCubit>().coursesDetailsResponse?.data?.buttonActions?.downloadPdf == true || context.read<CoursesDetailsCubit>().coursesDetailsResponse?.data?.hasPdf == true) ...[
-                      Container(
-                        margin: EdgeInsets.symmetric(horizontal: context.width / 30),
-                        width: double.infinity,
-                        height: 50,
-                        child: MaterialButton(
-                          onPressed: () {
-                            final slug = context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.slug;
-                            final pdfUrl = context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.pdf;
-                            
-                            final url = (pdfUrl != null && pdfUrl.isNotEmpty) 
-                                ? pdfUrl 
-                                : "https://api1.drnadasalma.com/api/courses/$slug/pdf";
-                            
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => PdfViewerScreen(
-                                  pdfUrl: url,
-                                  title: context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.title?.toString() ?? "Course PDF",
-                                ),
-                              ),
-                            );
-                          },
-                          color: orangeBold,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.picture_as_pdf, color: white),
-                              SizedBox(width: 8),
-                              Text(tr("download_pdf") ?? "View Course PDF", style: TextStyles.textStyleBold14.copyWith(color: white), textScaler: TextScaler.linear(1)),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: context.height / 20),
-                    ],
                     Container(
                       margin: EdgeInsets.only(
                         left: context.width / 30,
@@ -586,47 +555,111 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                               ),
                               textScaler: TextScaler.linear(1),
                             ),
-                            if (context.read<CoursesDetailsCubit>().coursesDetailsResponse?.data?.hasPdf == true &&
-                                context.read<CoursesDetailsCubit>().coursesDetailsResponse?.data?.pdf != null) ...[
-                              SizedBox(width: context.width / 30),
-                              customSvg(name: elipse),
-                              SizedBox(width: context.width / 30),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => PdfViewerScreen(
-                                        pdfUrl: context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.pdf!,
-                                        title: tr("course_content"),
+                            SizedBox(width: context.width / 30),
+                            customSvg(name: elipse),
+                            SizedBox(width: context.width / 30),
+                            InkWell(
+                              onTap: () {
+                                final isBooked = context
+                                        .read<CoursesDetailsCubit>()
+                                        .coursesDetailsResponse
+                                        ?.data
+                                        ?.isBooked ==
+                                    true;
+
+                                if (!isBooked) {
+                                  msgKey.currentState?.showSnackBar(
+                                    SnackBar(
+                                      behavior: SnackBarBehavior.floating,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(40),
+                                        ),
                                       ),
+                                      content: Text(
+                                        "يجب الاشتراك في الكورس أولاً",
+                                        style: TextStyles.textStyleNormal13
+                                            .copyWith(color: white),
+                                        textScaler: TextScaler.linear(1),
+                                      ),
+                                      backgroundColor: Colors.red,
                                     ),
                                   );
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: context.width / 40,
-                                    vertical: context.height / 150,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: white,
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(color: primary.withOpacity(0.2)),
-                                  ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(Icons.picture_as_pdf, color: Colors.red, size: 16),
-                                      SizedBox(width: context.width / 80),
-                                      Text(
-                                        tr("course_content"),
-                                        style: TextStyles.textStyleNormal12.copyWith(color: primary, fontWeight: FontWeight.bold),
+                                  return;
+                                }
+
+                                final hasPdf =
+                                    context
+                                        .read<CoursesDetailsCubit>()
+                                        .coursesDetailsResponse
+                                        ?.data
+                                        ?.hasPdf ==
+                                    true;
+                                final pdfUrl = context
+                                    .read<CoursesDetailsCubit>()
+                                    .coursesDetailsResponse
+                                    ?.data
+                                    ?.pdf;
+
+                                if (!hasPdf ||
+                                    pdfUrl == null ||
+                                    pdfUrl.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        tr("pdf_not_available"),
+                                        style: TextStyles.textStyleNormal13
+                                            .copyWith(color: white),
                                       ),
-                                    ],
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                  return;
+                                }
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => PdfViewerScreen(
+                                      pdfUrl: pdfUrl,
+                                      title: tr("course_content"),
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: context.width / 40,
+                                  vertical: context.height / 150,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: white,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: primary.withValues(alpha: .2),
                                   ),
                                 ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.picture_as_pdf,
+                                      color: Colors.red,
+                                      size: 16,
+                                    ),
+                                    SizedBox(width: context.width / 80),
+                                    Text(
+                                      tr("course_content"),
+                                      style: TextStyles.textStyleNormal12
+                                          .copyWith(
+                                            color: primary,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ],
+                            ),
                           ],
                         ),
                       ),
@@ -686,6 +719,19 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                   .data!
                                   .lecturesAreOpen ??
                               false,
+                          isBooked:
+                              context
+                                  .read<CoursesDetailsCubit>()
+                                  .coursesDetailsResponse!
+                                  .data!
+                                  .isBooked ==
+                              true,
+                          courseLectureStartsAt:
+                              context
+                                  .read<CoursesDetailsCubit>()
+                                  .coursesDetailsResponse!
+                                  .data!
+                                  .courseLectureStartsAt,
                         ),
                       ),
                     ),
@@ -941,14 +987,14 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("\$${context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.price}"
+                        Text("${context.read<CoursesDetailsCubit>().coursesDetailsResponse!.data!.price} ${tr('sar')}"
                           ,style: TextStyles.textStyleBold22
                             .copyWith(color: orangeBold,
                             fontWeight: FontWeight.w800),textScaler: TextScaler.linear(1),),
                         context.read<CoursesDetailsCubit>().coursesDetailsResponse!
                             .data!.priceAfterDiscount == null? SizedBox() :
-                        Text("\$${context.read<CoursesDetailsCubit>().coursesDetailsResponse!
-                            .data!.priceAfterDiscount ?? ""}",style: TextStyles.textStyleNormal12.copyWith(color: grey1
+                        Text("${context.read<CoursesDetailsCubit>().coursesDetailsResponse!
+                            .data!.priceAfterDiscount ?? ""} ${tr('sar')}",style: TextStyles.textStyleNormal12.copyWith(color: grey1
                             ,fontWeight: FontWeight.w500),textScaler: TextScaler.linear(1),)],),
                   ),
                   SizedBox(width: context.width/20,),
@@ -1005,34 +1051,39 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
           ],),);
   },
 )*/
-      bottomNavigationBar: BlocBuilder<CoursesDetailsCubit, CoursesDetailsState>(
-        builder: (context, state) {
-          final cubit = context.read<CoursesDetailsCubit>();
-          final response = cubit.coursesDetailsResponse;
+      bottomNavigationBar:
+          BlocBuilder<CoursesDetailsCubit, CoursesDetailsState>(
+            builder: (context, state) {
+              final cubit = context.read<CoursesDetailsCubit>();
+              final response = cubit.coursesDetailsResponse;
 
-          if (response == null ||
-              cubit.loading == true ||
-              state is CoursesDetailsLoadingState ||
-              state is CoursesDetailsInitial) {
-            return const SizedBox.shrink();
-          }
+              if (response == null ||
+                  cubit.loading == true ||
+                  state is CoursesDetailsLoadingState ||
+                  state is CoursesDetailsInitial) {
+                return const SizedBox.shrink();
+              }
 
-          final courseData = response.data;
-          if (courseData == null) return const SizedBox.shrink();
+              final courseData = response.data;
+              if (courseData == null) return const SizedBox.shrink();
 
-          final canEnroll = courseData.buttonActions?.enrollNow == true;
+              final isEnded =
+                  courseData.isEnded == true ||
+                  courseData.courseStatus == 'ended';
+              final canEnroll =
+                  courseData.buttonActions?.enrollNow == true && !isEnded;
 
-          if (!canEnroll) {
-            return const SizedBox.shrink();
-          }
+              if (!canEnroll) {
+                return const SizedBox.shrink();
+              }
 
-          return CourseBookingFooter(
-            price: courseData.price?.toString() ?? "0",
-            priceAfterDiscount: courseData.priceAfterDiscount?.toString(),
-            onBookPressed: () => _showCourseBookingSheet(courseData),
-          );
-        },
-      ),
+              return CourseBookingFooter(
+                price: courseData.price?.toString() ?? "0",
+                priceAfterDiscount: courseData.priceAfterDiscount?.toString(),
+                onBookPressed: () => _showCourseBookingSheet(courseData),
+              );
+            },
+          ),
     );
   }
 }

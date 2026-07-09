@@ -42,7 +42,7 @@ class CourseBookingFooter extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "\$$price",
+                "$price ${tr('sar')}",
                 style: TextStyles.textStyleBold22.copyWith(
                   color: orangeBold,
                   fontWeight: FontWeight.w800,
@@ -51,7 +51,7 @@ class CourseBookingFooter extends StatelessWidget {
               ),
               if (priceAfterDiscount != null)
                 Text(
-                  "\$$priceAfterDiscount",
+                  "$priceAfterDiscount ${tr('sar')}",
                   style: TextStyles.textStyleNormal12.copyWith(
                     color: grey1,
                     fontWeight: FontWeight.w500,

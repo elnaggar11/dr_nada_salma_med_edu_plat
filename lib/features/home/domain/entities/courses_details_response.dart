@@ -46,8 +46,10 @@ class Data {
   bool? lecturesAreOpen;
   String? courseStatus;
   bool? isEnded;
+  bool? commingSoon;
   bool? hasPdf;
   String? pdf;
+  bool? isBooked;
 
   Data({
     this.id,
@@ -73,8 +75,10 @@ class Data {
     this.lecturesAreOpen,
     this.courseStatus,
     this.isEnded,
+    this.commingSoon,
     this.hasPdf,
     this.pdf,
+    this.isBooked,
   });
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -97,8 +101,10 @@ class Data {
     lecturesAreOpen = json['lectures_are_open'];
     courseStatus = json['course_status'];
     isEnded = json['is_ended'];
+    commingSoon = json['comming_soon'];
     hasPdf = json['has_pdf'];
     pdf = json['pdf'];
+    isBooked = json['is_booked'];
     if (json['features'] != null) {
       features = <Features>[];
       json['features'].forEach((v) {
@@ -150,8 +156,13 @@ class Data {
     data['lectures_are_open'] = lecturesAreOpen;
     data['course_status'] = courseStatus;
     data['is_ended'] = isEnded;
+    data['comming_soon'] = commingSoon;
     data['has_pdf'] = hasPdf;
     data['pdf'] = pdf;
+    data['is_booked'] = isBooked;
+    if (buttonActions != null) {
+      data['button_actions'] = buttonActions!.toJson();
+    }
     return data;
   }
 }

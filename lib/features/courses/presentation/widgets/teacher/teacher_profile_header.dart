@@ -19,10 +19,8 @@ class TeacherProfileHeader extends StatelessWidget {
     try {
       final userId = sharedPreferences.getInt("user_id");
       final userEmail = sharedPreferences.getString("user_email");
-      final userFullName = sharedPreferences.getString(
-        "user_fullName",
-      );
-      if (userId == 311 || 
+      final userFullName = sharedPreferences.getString("user_fullName");
+      if (userId == 311 ||
           userId == 7 ||
           userEmail == "abdoshams2005@gmail.com" ||
           userEmail == "tamer005@gmail.com" ||
@@ -207,7 +205,10 @@ class TeacherProfileHeader extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF7F8FA),
                   borderRadius: BorderRadius.circular(16),
@@ -226,13 +227,31 @@ class TeacherProfileHeader extends StatelessWidget {
                     RichText(
                       text: TextSpan(
                         children: [
-                          TextSpan(
-                            text: " ${tr("sar")} ${teacher.hourlyPrice ?? 0.0}",
-                            style: context.boldText.copyWith(
-                              fontSize: 18,
-                              color: const Color(0xFF355C7D),
+                          if (teacher.hourlyRateAfterDiscount != null && teacher.hourlyRateAfterDiscount! < (teacher.hourlyPrice ?? 0.0)) ...[
+                            TextSpan(
+                              text: "${teacher.hourlyPrice ?? 0.0} ",
+                              style: context.boldText.copyWith(
+                                fontSize: 14,
+                                color: Colors.grey,
+                                decoration: TextDecoration.lineThrough,
+                              ),
                             ),
-                          ),
+                            TextSpan(
+                              text: "${teacher.hourlyRateAfterDiscount} ${tr('sar')} ",
+                              style: context.boldText.copyWith(
+                                fontSize: 18,
+                                color: const Color(0xFF355C7D),
+                              ),
+                            ),
+                          ] else ...[
+                            TextSpan(
+                              text: "${teacher.hourlyPrice ?? 0.0} ${tr('sar')} ",
+                              style: context.boldText.copyWith(
+                                fontSize: 18,
+                                color: const Color(0xFF355C7D),
+                              ),
+                            ),
+                          ],
                           TextSpan(
                             text: LocaleKeys.per_hour.tr(),
                             style: context.mediumText.copyWith(
