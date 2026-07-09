@@ -84,10 +84,14 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
           course: course,
           onConfirmBooking: (String? couponCode) {
             Navigator.pop(context);
-            cubit.requestCourseBooking(
-              courseIds: [course.id!],
-              couponCode: couponCode,
-            );
+            if (course.courseStatus == 'pending') {
+              _openWhatsAppCourseBooking(course);
+            } else {
+              cubit.requestCourseBooking(
+                courseIds: [course.id!],
+                couponCode: couponCode,
+              );
+            }
           },
         ),
       ),
@@ -1071,7 +1075,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                   courseData.isEnded == true ||
                   courseData.courseStatus == 'ended';
               final canEnroll =
-                  courseData.buttonActions?.enrollNow == true && !isEnded;
+                  (courseData.buttonActions?.enrollNow == true || courseData.courseStatus == 'pending') && !isEnded;
 
               if (!canEnroll) {
                 return const SizedBox.shrink();
