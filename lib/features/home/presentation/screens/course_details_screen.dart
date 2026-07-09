@@ -151,17 +151,24 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                   _openWhatsAppCourseBooking(course);
                 }
               } else if (state is CourseBookingErrorState) {
-                msgKey.currentState?.showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      state.message,
-                      style: TextStyles.textStyleNormal13.copyWith(
-                        color: white,
+                if (state.message.toLowerCase().contains("pending") || state.message.toLowerCase().contains("already requested")) {
+                  final course = context.read<CoursesDetailsCubit>().coursesDetailsResponse?.data;
+                  if (course != null) {
+                    _openWhatsAppCourseBooking(course);
+                  }
+                } else {
+                  msgKey.currentState?.showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        state.message,
+                        style: TextStyles.textStyleNormal13.copyWith(
+                          color: white,
+                        ),
                       ),
+                      backgroundColor: Colors.red,
                     ),
-                    backgroundColor: Colors.red,
-                  ),
-                );
+                  );
+                }
               }
             },
             builder: (context, state) {
