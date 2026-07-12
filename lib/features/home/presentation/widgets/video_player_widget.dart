@@ -233,6 +233,9 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                           var videos = document.getElementsByTagName('video');
                           for(var i = 0; i < videos.length; i++) {
                             videos[i].setAttribute('controlsList', 'nodownload');
+                            videos[i].setAttribute('disablePictureInPicture', 'true');
+                            videos[i].setAttribute('disableRemotePlayback', 'true');
+                            videos[i].setAttribute('x-webkit-airplay', 'deny');
                             // Also disable context menu on video elements specifically
                             videos[i].addEventListener('contextmenu', function(e) { e.preventDefault(); });
                           }
@@ -274,6 +277,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                         ios: IOSInAppWebViewOptions(
                           allowsInlineMediaPlayback: true,
                           sharedCookiesEnabled: true,
+                          allowsAirPlayForMediaPlayback: false,
                         ),
                       ),
                     ),

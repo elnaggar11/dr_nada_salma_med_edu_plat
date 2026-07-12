@@ -29,14 +29,31 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
     _fetchPdf();
   }
 
+  String _getDirectPdfUrl(String url) {
+    if (url.contains('drive.google.com/file/d/')) {
+      final regExp = RegExp(r'file\/d\/([a-zA-Z0-9_-]+)');
+      final match = regExp.firstMatch(url);
+      if (match != null && match.groupCount >= 1) {
+        final fileId = match.group(1);
+        return 'https://drive.google.com/uc?export=download&id=$fileId';
+      }
+    } else if (url.toLowerCase().contains('1drv.ms') || url.toLowerCase().contains('onedrive')) {
+      return url.contains('?') ? '${url.split('?').first}?download=1' : '$url?download=1';
+    }
+    return url;
+  }
+
   Future<void> _fetchPdf() async {
     try {
       final token = sharedPreferences.get(cacheTokenConst);
-      debugPrint("Fetching PDF from: \${widget.pdfUrl}");
+      
+      final downloadUrl = _getDirectPdfUrl(widget.pdfUrl);
+      
+      debugPrint("Fetching PDF from: $downloadUrl");
       
       final dio = Dio();
       final response = await dio.get(
-        widget.pdfUrl,
+        downloadUrl,
         options: Options(
           responseType: ResponseType.bytes,
           headers: {
@@ -81,7 +98,7 @@ class _PdfViewerScreenState extends State<PdfViewerScreen> {
           widget.title,
           style: TextStyles.textStyleBold18.copyWith(color: white),
         ),
-        backgroundColor: primary,
+        backgroundColor: orangeBold,
         iconTheme: const IconThemeData(color: white),
       ),
       body: _isLoading 

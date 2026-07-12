@@ -118,6 +118,14 @@ class TeacherVideoPlayer extends StatelessWidget {
                       { display: none !important; }
                     `;
                     document.head.appendChild(style);
+                    
+                    var videos = document.getElementsByTagName('video');
+                    for(var i = 0; i < videos.length; i++) {
+                      videos[i].setAttribute('controlsList', 'nodownload');
+                      videos[i].setAttribute('disablePictureInPicture', 'true');
+                      videos[i].setAttribute('disableRemotePlayback', 'true');
+                      videos[i].setAttribute('x-webkit-airplay', 'deny');
+                    }
                   ''',
                   );
                 },
@@ -137,6 +145,7 @@ class TeacherVideoPlayer extends StatelessWidget {
                   ios: IOSInAppWebViewOptions(
                     allowsInlineMediaPlayback: true,
                     sharedCookiesEnabled: true,
+                    allowsAirPlayForMediaPlayback: false,
                   ),
                 ),
               ),
