@@ -13,6 +13,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'features/notifications/notifications_handler.dart';
 import 'firebase_options.dart';
 import 'injection_container/injection_container.dart' as di;
+import 'package:screen_protector/screen_protector.dart';
 
 // 50 34 36
 
@@ -84,9 +85,26 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key, required this.appRoutes});
   final AppRoutes appRoutes;
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    ScreenProtector.preventScreenshotOn();
+  }
+
+  @override
+  void dispose() {
+    ScreenProtector.preventScreenshotOff();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +113,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<ProfileCubit>(create: (context) => di.sl<ProfileCubit>()),
       ],
       child: MaterialApp(
-        onGenerateRoute: appRoutes.onGenerateRoutes,
+        onGenerateRoute: widget.appRoutes.onGenerateRoutes,
         debugShowCheckedModeBanner: false,
         scrollBehavior: ScrollConfiguration.of(context).copyWith(
           dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse},

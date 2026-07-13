@@ -1,11 +1,16 @@
+import 'dart:async';
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:dr_nada_salma_med_edu_plat/core/constants/dieminsions.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/domain/entities/watch_course_params.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/home/presentation/cubit/watch_course_cubit/watch_course_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:screen_protector/screen_protector.dart';
+import 'package:no_screen_mirror/no_screen_mirror.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
   final String lectureVideo;
@@ -23,9 +28,18 @@ class VideoPlayerWidget extends StatefulWidget {
   State<VideoPlayerWidget> createState() => _VideoPlayerWidgetState();
 }
 
-class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
+class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
+    with WidgetsBindingObserver {
   InAppWebViewController? webView;
   bool loading = true;
+  static const MethodChannel _channel = MethodChannel(
+    'com.drnadasalma/screen_record',
+  );
+  Timer? _androidRecordTimer;
+  bool _isCurrentlyMuted = false;
+  final _noScreenMirrorPlugin = NoScreenMirror.instance;
+  StreamSubscription? _mirrorSubscription;
+  bool isMirroring = false;
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // Shared protection JS — injected into ALL frames (including iframes)
@@ -138,63 +152,64 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   /// This approach is resilient to CSS class name changes because it blocks
   /// the JavaScript files that create the buttons, not the buttons themselves.
   List<ContentBlocker> get _contentBlockers => [
-        // Block Google Cast SDK (creates the Cast button in YouTube)
-        ContentBlocker(
-          trigger: ContentBlockerTrigger(
-            urlFilter: '.*cast\\.js.*',
-          ),
-          action: ContentBlockerAction(type: ContentBlockerActionType.BLOCK),
-        ),
-        ContentBlocker(
-          trigger: ContentBlockerTrigger(
-            urlFilter: '.*cast_sender.*',
-          ),
-          action: ContentBlockerAction(type: ContentBlockerActionType.BLOCK),
-        ),
-        ContentBlocker(
-          trigger: ContentBlockerTrigger(
-            urlFilter: '.*cast_framework.*',
-          ),
-          action: ContentBlockerAction(type: ContentBlockerActionType.BLOCK),
-        ),
-        ContentBlocker(
-          trigger: ContentBlockerTrigger(
-            urlFilter: '.*www\\.gstatic\\.com/cv/js/sender.*',
-          ),
-          action: ContentBlockerAction(type: ContentBlockerActionType.BLOCK),
-        ),
-        ContentBlocker(
-          trigger: ContentBlockerTrigger(
-            urlFilter: '.*www\\.gstatic\\.com/eureka.*',
-          ),
-          action: ContentBlockerAction(type: ContentBlockerActionType.BLOCK),
-        ),
-        // Block AirPlay discovery scripts
-        ContentBlocker(
-          trigger: ContentBlockerTrigger(
-            urlFilter: '.*airplay.*',
-          ),
-          action: ContentBlockerAction(type: ContentBlockerActionType.BLOCK),
-        ),
-        // Block remote playback scripts
-        ContentBlocker(
-          trigger: ContentBlockerTrigger(
-            urlFilter: '.*remote_playback.*',
-          ),
-          action: ContentBlockerAction(type: ContentBlockerActionType.BLOCK),
-        ),
-        // Block Google Drive download endpoints
-        ContentBlocker(
-          trigger: ContentBlockerTrigger(
-            urlFilter: '.*drive\\.google\\.com/uc\\?.*export=download.*',
-          ),
-          action: ContentBlockerAction(type: ContentBlockerActionType.BLOCK),
-        ),
-      ];
+    // Block Google Cast SDK (creates the Cast button in YouTube)
+    ContentBlocker(
+      trigger: ContentBlockerTrigger(urlFilter: '.*cast\\.js.*'),
+      action: ContentBlockerAction(type: ContentBlockerActionType.BLOCK),
+    ),
+    ContentBlocker(
+      trigger: ContentBlockerTrigger(urlFilter: '.*cast_sender.*'),
+      action: ContentBlockerAction(type: ContentBlockerActionType.BLOCK),
+    ),
+    ContentBlocker(
+      trigger: ContentBlockerTrigger(urlFilter: '.*cast_framework.*'),
+      action: ContentBlockerAction(type: ContentBlockerActionType.BLOCK),
+    ),
+    ContentBlocker(
+      trigger: ContentBlockerTrigger(
+        urlFilter: '.*www\\.gstatic\\.com/cv/js/sender.*',
+      ),
+      action: ContentBlockerAction(type: ContentBlockerActionType.BLOCK),
+    ),
+    ContentBlocker(
+      trigger: ContentBlockerTrigger(
+        urlFilter: '.*www\\.gstatic\\.com/eureka.*',
+      ),
+      action: ContentBlockerAction(type: ContentBlockerActionType.BLOCK),
+    ),
+    // Block AirPlay discovery scripts
+    ContentBlocker(
+      trigger: ContentBlockerTrigger(urlFilter: '.*airplay.*'),
+      action: ContentBlockerAction(type: ContentBlockerActionType.BLOCK),
+    ),
+    // Block remote playback scripts
+    ContentBlocker(
+      trigger: ContentBlockerTrigger(urlFilter: '.*remote_playback.*'),
+      action: ContentBlockerAction(type: ContentBlockerActionType.BLOCK),
+    ),
+    // Block Google Drive download endpoints
+    ContentBlocker(
+      trigger: ContentBlockerTrigger(
+        urlFilter: '.*drive\\.google\\.com/uc\\?.*export=download.*',
+      ),
+      action: ContentBlockerAction(type: ContentBlockerActionType.BLOCK),
+    ),
+  ];
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
+    _noScreenMirrorPlugin.startListening();
+    _mirrorSubscription = _noScreenMirrorPlugin.mirrorStream.listen((snapshot) {
+      if (mounted) {
+        setState(() {
+          isMirroring = snapshot.isScreenMirrored;
+        });
+      }
+    });
+
     // Trigger your Cubit / Bloc call
     context.read<WatchCourseCubit>().watchCourse(
       params: WatchCourseParams(
@@ -202,10 +217,102 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         lectureId: widget.lectureId,
       ),
     );
+
+    _initScreenProtector();
+  }
+
+  Future<bool> _isAndroidScreenRecording() async {
+    if (Platform.isAndroid) {
+      try {
+        return await _channel.invokeMethod('isScreenRecording');
+      } catch (e) {
+        return false;
+      }
+    }
+    return false;
+  }
+
+  Future<void> _initScreenProtector() async {
+    bool isRecording = await ScreenProtector.isRecording();
+
+    if (Platform.isAndroid) {
+      isRecording = await _isAndroidScreenRecording();
+      _androidRecordTimer = Timer.periodic(const Duration(seconds: 2), (
+        timer,
+      ) async {
+        final isRecordingNow = await _isAndroidScreenRecording();
+        if (isRecordingNow && !_isCurrentlyMuted) {
+          _isCurrentlyMuted = true;
+          _muteVideo();
+        } else if (!isRecordingNow && _isCurrentlyMuted) {
+          _isCurrentlyMuted = false;
+          _unmuteVideo();
+        }
+      });
+    }
+
+    if (isRecording) {
+      _isCurrentlyMuted = true;
+      _muteVideo();
+    }
+    ScreenProtector.addListener(null, (isRecording) {
+      if (isRecording && !_isCurrentlyMuted) {
+        _isCurrentlyMuted = true;
+        _muteVideo();
+      } else if (!isRecording && _isCurrentlyMuted) {
+        _isCurrentlyMuted = false;
+        _unmuteVideo();
+      }
+    });
+  }
+
+  void _muteVideo() async {
+    await webView?.evaluateJavascript(
+      source: '''
+      window.postMessage('MUTE_VIDEO', '*');
+      for (var i = 0; i < window.frames.length; i++) {
+        window.frames[i].postMessage('MUTE_VIDEO', '*');
+      }
+    ''',
+    );
+  }
+
+  void _unmuteVideo() async {
+    await webView?.evaluateJavascript(
+      source: '''
+      window.postMessage('UNMUTE_VIDEO', '*');
+      for (var i = 0; i < window.frames.length; i++) {
+        window.frames[i].postMessage('UNMUTE_VIDEO', '*');
+      }
+    ''',
+    );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      _isCurrentlyMuted = true;
+      _muteVideo();
+    } else if (state == AppLifecycleState.resumed) {
+      bool isRecording = await ScreenProtector.isRecording();
+      if (Platform.isAndroid) {
+        isRecording = await _isAndroidScreenRecording();
+      }
+      if (!isRecording) {
+        _isCurrentlyMuted = false;
+        _unmuteVideo();
+      }
+    }
   }
 
   @override
   void dispose() {
+    _androidRecordTimer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    ScreenProtector.removeListener();
+    _mirrorSubscription?.cancel();
+    _noScreenMirrorPlugin.stopListening();
     webView = null;
     super.dispose();
   }
@@ -221,6 +328,30 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (isMirroring) {
+      return Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.security, color: Colors.red, size: 60),
+              const SizedBox(height: 20),
+              const Text(
+                "مشاركة أو تسجيل الشاشة غير مسموحة لأسباب أمنية",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.black.withOpacity(0.2),
       appBar: AppBar(
@@ -340,7 +471,34 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                           source: _protectionJs,
                           injectionTime:
                               UserScriptInjectionTime.AT_DOCUMENT_END,
-                          forMainFrameOnly: false, // ← KEY: injects into iframes too
+                          forMainFrameOnly:
+                              false, // ← KEY: injects into iframes too
+                        ),
+                        UserScript(
+                          source: '''
+                            window.addEventListener('message', function(event) {
+                              if (event.data === 'MUTE_VIDEO') {
+                                document.querySelectorAll("video").forEach(v => {
+                                    v.muted = true;
+                                    v.volume = 0;
+                                });
+                                // YouTube specific
+                                var ytPlayer = document.getElementById('movie_player') || document.querySelector('.html5-video-player');
+                                if (ytPlayer && ytPlayer.mute) ytPlayer.mute();
+                              } else if (event.data === 'UNMUTE_VIDEO') {
+                                document.querySelectorAll("video").forEach(v => {
+                                    v.muted = false;
+                                    v.volume = 1;
+                                });
+                                // YouTube specific
+                                var ytPlayer = document.getElementById('movie_player') || document.querySelector('.html5-video-player');
+                                if (ytPlayer && ytPlayer.unMute) ytPlayer.unMute();
+                              }
+                            });
+                          ''',
+                          injectionTime:
+                              UserScriptInjectionTime.AT_DOCUMENT_START,
+                          forMainFrameOnly: false,
                         ),
                       ]),
                       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -376,6 +534,12 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                         await controller.evaluateJavascript(
                           source: _protectionJs,
                         );
+
+                        // Check screen recording status on load
+                        final isRecording = await ScreenProtector.isRecording();
+                        if (isRecording) {
+                          _muteVideo();
+                        }
                       },
                       onLoadError: (controller, url, code, message) {
                         setState(() => loading = false);
