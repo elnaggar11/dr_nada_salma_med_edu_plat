@@ -48,7 +48,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   static const String _protectionJs = '''
     (function() {
-      // === APPROACH 1: CSS injection (fallback — may break with DOM changes) ===
+      // === APPROACH 1: CSS injection ===
       var style = document.createElement('style');
       style.innerHTML = `
         /* --- OneDrive top bar --- */
@@ -56,24 +56,51 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
         [class*="OneUp-details"], [class*="CommandBar"], [class*="commandBar"],
         [class*="od-TopBar"], [class*="od-ItemHeader"], [class*="od-OverflowMenu"],
         [class*="od-Dialog-header"], [class*="ms-CommandBar"], [class*="Files-CommandBar"],
-        /* --- Google Drive top bar --- */
+        /* --- Google Drive top bar & toolbar (desktop + mobile) --- */
         [class*="ndfHFb-c4YZDc-Wrql6b"], [class*="ndfHFb-c4YZDc-GSQQnc"],
         [class*="ndfHFb-c4YZDc-j7LFlb"], [class*="ndfHFb-c4YZDc-to915"],
-        /* --- YouTube AirPlay / Cast / Remote --- */
+        [class*="ndfHFb-c4YZDc-cYSp0e-DARUcf"], [class*="ndfHFb-c4YZDc-cYSp0e"],
+        [class*="ndfHFb-c4YZDc-nJjxad"], [class*="ndfHFb-c4YZDc-vyDMJf"],
+        /* --- Google Drive top bar container (hides entire top section) --- */
+        [class*="ndfHFb-c4YZDc-Wrql6b-hOcTPc"], [class*="ndfHFb-c4YZDc-q77wGc"],
+        [class*="ndfHFb-c4YZDc-GCYh9b"], [class*="ndfHFb-c4YZDc-i5oIFb"],
+        /* --- Google Drive download banner / notification bar --- */
+        [class*="ndfHFb-c4YZDc-RJLb9c"], [class*="ndfHFb-c4YZDc-LgbsSe"],
+        [class*="ndfHFb-c4YZDc-TSZdd"], [class*="ndfHFb-c4YZDc-aTv5jf"],
+        [class*="drive-viewer-toolstrip"], [class*="drive-viewer-toolbar"],
+        /* --- Google Drive share/download by attribute --- */
+        [data-tooltip="Share"], [data-tooltip="مشاركة"],
+        [data-tooltip="Download"], [data-tooltip="تنزيل"],
+        [data-tooltip="Open in new window"], [data-tooltip="فتح في نافذة جديدة"],
+        [data-tooltip="More actions"], [data-tooltip="المزيد من الإجراءات"],
+        [data-tooltip="Print"], [data-tooltip="طباعة"],
+        [aria-label="Share"], [aria-label="مشاركة"],
+        [aria-label="Download"], [aria-label="تنزيل"],
+        /* --- Google Drive popover/menu items --- */
+        [class*="goog-menuitem"][aria-label*="Download"],
+        [class*="goog-menuitem"][aria-label*="Share"],
+        [class*="goog-menuitem"][aria-label*="تنزيل"],
+        [class*="goog-menuitem"][aria-label*="مشاركة"],
+        /* --- YouTube AirPlay / Cast / Remote / Share --- */
         .ytp-airplay-button, .ytp-remote-button, .ytp-cast-button,
-        .ytp-remote-playback-button,
-        /* --- Generic button selectors (works even if class names change) --- */
+        .ytp-remote-playback-button, .ytp-share-button,
+        .ytp-share-button-visible, .ytp-button[data-tooltip-target-id="ytp-share-button"],
+        /* --- Generic button selectors (English + Arabic) --- */
         button[aria-label="Download"], button[aria-label="Close"],
         button[aria-label="Info"], button[aria-label="Details"],
         button[aria-label="View details"], button[aria-label="Share"],
         button[aria-label="More actions"], button[aria-label="Open in new window"],
+        button[aria-label="Print"],
         button[aria-label="إغلاق"], button[aria-label="معلومات"],
         button[aria-label="التفاصيل"], button[aria-label="عرض التفاصيل"],
         button[aria-label="مشاركة"], button[aria-label="المزيد من الإجراءات"],
         button[aria-label="تنزيل"], button[aria-label="فتح في نافذة جديدة"],
+        button[aria-label="طباعة"],
         button[aria-label="Play on TV"], button[aria-label="التشغيل على التلفزيون"],
         button[aria-label="AirPlay"], button[aria-label="Cast"],
         button[title="Play on TV"], button[title="Cast"], button[title="AirPlay"],
+        button[title="Share"], button[title="مشاركة"],
+        button[title="Download"], button[title="تنزيل"],
         /* --- automationid-based (OneDrive) --- */
         [data-automationid="closeButton"], [data-automationid="moreActionsButton"],
         [data-automationid="detailsPaneButton"], [data-automationid="shareButton"],
@@ -91,8 +118,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
       `;
       document.head.appendChild(style);
 
-      // === APPROACH 2: Attribute-based protection (resilient to CSS class changes) ===
-      // This targets <video> elements directly by tag name — never breaks with UI updates.
+      // === APPROACH 2: Protect <video> elements directly ===
       function protectVideoElements() {
         var videos = document.getElementsByTagName('video');
         for (var i = 0; i < videos.length; i++) {
@@ -104,19 +130,30 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
         }
       }
 
-      // === APPROACH 3: DOM removal with MutationObserver (catches dynamically added buttons) ===
-      // Instead of relying only on CSS class names, also match by button position/structure.
+      // === APPROACH 3: DOM removal with MutationObserver ===
       function removeUnwantedButtons() {
-        // Target by known selectors
         var selectors = [
+          // YouTube
           '.ytp-airplay-button', '.ytp-remote-button',
           '.ytp-cast-button', '.ytp-remote-playback-button',
+          '.ytp-share-button', '.ytp-share-button-visible',
           'button[aria-label="Play on TV"]', 'button[aria-label="التشغيل على التلفزيون"]',
           'button[aria-label="AirPlay"]', 'button[aria-label="Cast"]',
           'button[data-tooltip-target-id="ytp-autonav-toggle-button"]',
-          // Google Drive buttons
+          // Google Drive share
+          'button[aria-label="Share"]', 'button[aria-label="مشاركة"]',
+          '[data-tooltip="Share"]', '[data-tooltip="مشاركة"]',
+          'button[title="Share"]', 'button[title="مشاركة"]',
+          '[class*="ndfHFb-c4YZDc-cYSp0e-DARUcf"]', '[class*="ndfHFb-c4YZDc-cYSp0e"]',
+          // Google Drive download
           'button[aria-label="Download"]', 'button[aria-label="تنزيل"]',
+          '[data-tooltip="Download"]', '[data-tooltip="تنزيل"]',
+          'button[title="Download"]', 'button[title="تنزيل"]',
+          // Google Drive more actions / open in new window / print
+          'button[aria-label="More actions"]', 'button[aria-label="المزيد من الإجراءات"]',
+          '[data-tooltip="More actions"]', '[data-tooltip="المزيد من الإجراءات"]',
           'button[aria-label="Open in new window"]', 'button[aria-label="فتح في نافذة جديدة"]',
+          'button[aria-label="Print"]', 'button[aria-label="طباعة"]',
           'a[download]'
         ];
         selectors.forEach(function(sel) {
@@ -124,8 +161,6 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
             document.querySelectorAll(sel).forEach(function(el) { el.remove(); });
           } catch(e) {}
         });
-
-        // Also protect any new video elements added dynamically
         protectVideoElements();
       }
 
@@ -133,11 +168,31 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
       protectVideoElements();
       removeUnwantedButtons();
 
+      // Direct share & download button removal
+      document.querySelectorAll('button[aria-label="Share"], button[aria-label="مشاركة"], button[aria-label="Download"], button[aria-label="تنزيل"]').forEach(e => e.remove());
+
       // Watch for any DOM changes and re-apply protections
       if (document.body) {
-        var observer = new MutationObserver(function() { removeUnwantedButtons(); });
+        var observer = new MutationObserver(function() {
+          removeUnwantedButtons();
+          document.querySelectorAll('button[aria-label="Share"], button[aria-label="مشاركة"], button[aria-label="Download"], button[aria-label="تنزيل"]').forEach(e => e.remove());
+        });
         observer.observe(document.body, { childList: true, subtree: true });
       }
+
+      // Persistent interval fallback — catches late-loaded buttons
+      setInterval(function() {
+        document.querySelectorAll('button[aria-label="Share"], button[aria-label="مشاركة"], button[aria-label="Download"], button[aria-label="تنزيل"], [data-tooltip="Share"], [data-tooltip="Download"], .ytp-share-button').forEach(e => e.remove());
+
+        // Remove any element that contains download/share text (catches banners)
+        document.querySelectorAll('a, button, div').forEach(function(el) {
+          var text = el.textContent || '';
+          if ((text.includes('تنزيل باستخدام') || text.includes('Download with') || text.includes('فتح باستخدام')) && el.closest && !el.closest('video')) {
+            var parent = el.closest('[class*="ndfHFb"]') || el;
+            parent.remove();
+          }
+        });
+      }, 500);
 
       // Disable right-click / context menu
       document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
@@ -413,6 +468,11 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
           bool isOneDrive =
               videoUrl.toLowerCase().contains('1drv.ms') ||
               videoUrl.toLowerCase().contains('onedrive');
+
+          bool isGoogleDrive =
+              videoUrl.toLowerCase().contains('drive.google.com') ||
+              !widget.lectureVideo.startsWith('http');
+
           String? htmlData;
 
           if (isOneDrive) {
@@ -441,6 +501,38 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
 </body>
 </html>
             ''';
+          } else if (isGoogleDrive) {
+            // Embed Google Drive preview in an iframe — shows ONLY the video player
+            // without the full Drive UI (toolbar, menu bar, share/download buttons)
+            String drivePreviewUrl = widget.lectureVideo.startsWith('http')
+                ? widget.lectureVideo
+                : 'https://drive.google.com/file/d/${widget.lectureVideo}/preview';
+
+            htmlData =
+                '''
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background-color: black; overflow: hidden; }
+    iframe { width: 100%; height: 100%; border: none; }
+  </style>
+</head>
+<body>
+  <iframe
+    src="$drivePreviewUrl"
+    allow="autoplay; encrypted-media"
+    allowfullscreen
+  ></iframe>
+  <script>
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    document.addEventListener('dragstart', function(e) { e.preventDefault(); });
+  </script>
+</body>
+</html>
+            ''';
           }
 
           return Stack(
@@ -454,13 +546,17 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
                   child: AspectRatio(
                     aspectRatio: 16 / 9,
                     child: InAppWebView(
-                      initialUrlRequest: URLRequest(
-                        url: WebUri(
-                          widget.lectureVideo.startsWith('http')
-                              ? widget.lectureVideo
-                              : 'https://drive.google.com/file/d/${widget.lectureVideo}/preview',
-                        ),
-                      ),
+                      initialData: htmlData != null
+                          ? InAppWebViewInitialData(
+                              data: htmlData,
+                              mimeType: 'text/html',
+                              encoding: 'utf-8',
+                              baseUrl: WebUri('https://drive.google.com'),
+                            )
+                          : null,
+                      initialUrlRequest: htmlData == null
+                          ? URLRequest(url: WebUri(videoUrl))
+                          : null,
                       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
                       // FIX 1: Inject JS into ALL frames (including iframes)
                       // forMainFrameOnly: false bypasses cross-origin
@@ -572,7 +668,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
                 top: 0,
                 left: 0,
                 right: 0,
-                child: Container(height: 48, color: Colors.black),
+                child: Container(height: 48, color: Color(0xFF1E1E1E)),
               ),
             ],
           );
