@@ -48,6 +48,7 @@ class LoginCubit extends Cubit<LoginState> {
             error = true;
             success = false;
             buttonColor = loading! ? primary : orangeBold;
+
             msgKey.currentState!.showSnackBar(
               SnackBar(
                 behavior: SnackBarBehavior.floating,

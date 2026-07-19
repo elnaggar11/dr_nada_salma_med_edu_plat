@@ -91,6 +91,24 @@ class TeacherVideoPlayer extends StatelessWidget {
   }
 
   void _playInApp(BuildContext context, String url) {
+    bool isInvalidUrl = url.trim().isEmpty || 
+                        url.trim().toLowerCase() == "drnadasalma.com" || 
+                        url.trim().toLowerCase() == "https://drnadasalma.com";
+
+    if (isInvalidUrl) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          behavior: SnackBarBehavior.floating,
+          content: Text(
+            "هذا الفيديو غير متاح",
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     var validUrl = url;
     if (!validUrl.startsWith('http://') && !validUrl.startsWith('https://')) {
       validUrl = 'https://$validUrl';
@@ -127,6 +145,7 @@ class _TeacherVideoPlayerScreenState extends State<_TeacherVideoPlayerScreen>
   final _noScreenMirrorPlugin = NoScreenMirror.instance;
   StreamSubscription? _mirrorSubscription;
   bool isMirroring = false;
+  bool hasError = false;
 
   @override
   void initState() {
@@ -274,11 +293,29 @@ class _TeacherVideoPlayerScreenState extends State<_TeacherVideoPlayerScreen>
         elevation: 0,
       ),
       body: Center(
-        child: AspectRatio(
+        child: hasError
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, color: Colors.white, size: 50),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "هذا الفيديو غير متاح حالياً",
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ],
+              )
+            : AspectRatio(
           aspectRatio: 16 / 9,
           child: InAppWebView(
             initialUrlRequest: URLRequest(url: WebUri(widget.validUrl)),
             onWebViewCreated: (controller) => webView = controller,
+            onLoadError: (controller, url, code, message) {
+              setState(() => hasError = true);
+            },
+            onLoadHttpError: (controller, url, statusCode, description) {
+              setState(() => hasError = true);
+            },
             onLoadStop: (controller, url) async {
               // Inject CSS to hide Google Drive and OneDrive headers, buttons, and popouts
               await controller.evaluateJavascript(

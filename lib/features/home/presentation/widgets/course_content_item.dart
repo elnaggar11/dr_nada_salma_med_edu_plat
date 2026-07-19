@@ -115,16 +115,38 @@ class CourseContentItem extends StatelessWidget {
                   }
 
                   if (lecturesAreOpen) {
+                    String videoUrl = e.fullVideoUrl ?? e.video ?? "";
+                    
+                    bool isInvalidUrl = videoUrl.isEmpty || 
+                                        videoUrl.toLowerCase() == "drnadasalma.com" || 
+                                        videoUrl.toLowerCase() == "https://drnadasalma.com";
+
+                    if (isInvalidUrl) {
+                      msgKey.currentState?.showSnackBar(
+                        SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(40)),
+                          ),
+                          content: Text(
+                            "هذا الفيديو غير متاح",
+                            textScaler: const TextScaler.linear(1),
+                            style: TextStyles.textStyleNormal13.copyWith(
+                              color: white,
+                            ),
+                          ),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
+
                     showDialog(
                       context: context,
                       builder: (context) => BlocProvider(
                         create: (context) => sl<WatchCourseCubit>(),
                         child: VideoPlayerWidget(
-                          lectureVideo:
-                        
-                              e.fullVideoUrl ??
-                              e.video ??
-                              "",
+                          lectureVideo: videoUrl,
                           courseId: courseId,
                           lectureId: e.id.toString(),
                         ),

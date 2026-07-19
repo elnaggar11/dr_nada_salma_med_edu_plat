@@ -159,11 +159,17 @@ class ApiBaseHelper {
           message: _extractErrorMessage(response.data),
         );
       case 403:
-        throw ForbiddenException(message: _extractErrorMessage(response.data));
+        throw ForbiddenException(
+          message: _extractErrorMessage(response.data),
+          key: _extractKey(response.data),
+        );
       case 404:
         throw NotFoundException(message: _extractErrorMessage(response.data));
       case 409:
-        throw ForbiddenException(message: _extractErrorMessage(response.data));
+        throw ForbiddenException(
+          message: _extractErrorMessage(response.data),
+          key: _extractKey(response.data),
+        );
       case 500:
         throw ServerException(
           message:
@@ -196,6 +202,13 @@ class ApiBaseHelper {
     }
 
     return "Something went wrong";
+  }
+
+  String? _extractKey(dynamic data) {
+    if (data is Map) {
+      return data["key"]?.toString();
+    }
+    return null;
   }
 }
 

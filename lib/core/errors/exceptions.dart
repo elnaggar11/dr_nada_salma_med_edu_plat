@@ -18,8 +18,9 @@ class NoCachedCartUserException implements Exception {}
 
 class ForbiddenException implements Exception {
   final String message;
+  final String? key;
 
-  ForbiddenException({required this.message});
+  ForbiddenException({required this.message, this.key});
 }
 
 class CacheException implements Exception {}

@@ -32,6 +32,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
     with WidgetsBindingObserver {
   InAppWebViewController? webView;
   bool loading = true;
+  bool hasError = false;
   static const MethodChannel _channel = MethodChannel(
     'com.drnadasalma/screen_record',
   );
@@ -638,8 +639,18 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
                         }
                       },
                       onLoadError: (controller, url, code, message) {
-                        setState(() => loading = false);
+                        setState(() {
+                          loading = false;
+                          hasError = true;
+                        });
                         debugPrint('WebView load error ($code): $message');
+                      },
+                      onLoadHttpError: (controller, url, statusCode, description) {
+                        setState(() {
+                          loading = false;
+                          hasError = true;
+                        });
+                        debugPrint('WebView load http error ($statusCode): $description');
                       },
                       onConsoleMessage: (controller, consoleMessage) {
                         if (!_shouldIgnoreConsoleMessage(
@@ -654,6 +665,23 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
                   ),
                 ),
               ),
+
+              if (hasError)
+                Positioned.fill(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.error_outline, color: Colors.white, size: 50),
+                        const SizedBox(height: 10),
+                        const Text(
+                          "هذا الفيديو غير متاح حالياً",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
 
               // Loading indicator
               if (loading)

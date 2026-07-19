@@ -19,8 +19,9 @@ class CacheFailure extends Failure {
 
 class ServerFailure extends Failure {
   final String message;
+  final String? key;
 
-  ServerFailure({required this.message});
+  ServerFailure({required this.message, this.key});
 }
 
 class ContentServerFailure extends Failure {

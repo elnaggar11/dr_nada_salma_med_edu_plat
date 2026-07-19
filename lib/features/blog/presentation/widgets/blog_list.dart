@@ -21,7 +21,7 @@ class BlogList extends StatelessWidget {
       shrinkWrap: true,
       scrollDirection: Axis.vertical,
       addAutomaticKeepAlives: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) => BlogItem(
         img: blogList![index].image,
         width: context.width / 4,

@@ -1,3 +1,4 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/constants/screens.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/courses/presentation/screens/teachers_list_screen.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/auth/domain/entities/academic_info/academic_info_params.dart';
@@ -461,9 +462,7 @@ class AppRoutes {
           );
         } else {
           return MaterialPageRoute(
-            builder: (_) => TeachersListScreen(
-              categoryName: args as String,
-            ),
+            builder: (_) => TeachersListScreen(categoryName: args as String),
             settings: settings,
           );
         }

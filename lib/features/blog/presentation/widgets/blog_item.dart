@@ -6,6 +6,7 @@ import 'package:dr_nada_salma_med_edu_plat/core/widgets/network_image_handler.da
 import 'package:dr_nada_salma_med_edu_plat/features/blog/domain/entities/blog_details/blog_details_params.dart';
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class BlogItem extends StatelessWidget {
   final String img;
@@ -66,13 +67,8 @@ class BlogItem extends StatelessWidget {
                     textScaler: TextScaler.linear(1),
                   ),
                   SizedBox(height: context.height / 80),
-                  Text(
-                    parse(description).documentElement!.text,
-                    style: TextStyles.textStyleBold12.copyWith(
-                      fontWeight: FontWeight.w800,
-                      color: primary,
-                    ),
-                    textScaler: TextScaler.linear(1),
+                  HtmlWidget(
+                    description,
                   ),
                   SizedBox(height: context.height / 60),
                   Text(

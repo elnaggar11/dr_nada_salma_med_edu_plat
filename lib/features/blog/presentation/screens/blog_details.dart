@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:html/parser.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class BlogDetailsScreen extends StatefulWidget {
   final BlogDetailsParams blogDetailsParams;
@@ -138,19 +139,12 @@ class _BlogDetailsScreenState extends State<BlogDetailsScreen> {
                           left: context.width / 30,
                           right: context.width / 30,
                         ),
-                        child: Text(
-                          parse(
-                            context
-                                .read<BlogDetailsCubit>()
-                                .blogBySlugResponse!
-                                .data!
-                                .description,
-                          ).documentElement!.text,
-                          style: TextStyles.textStyleNormal12.copyWith(
-                            color: primary,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          textScaler: TextScaler.linear(1),
+                        child: HtmlWidget(
+                          context
+                              .read<BlogDetailsCubit>()
+                              .blogBySlugResponse!
+                              .data!
+                              .description,
                         ),
                       );
               },
