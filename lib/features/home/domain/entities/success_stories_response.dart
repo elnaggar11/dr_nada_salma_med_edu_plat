@@ -45,7 +45,7 @@ class Data {
   });
 
   Data.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = (json['id'] as num?)?.toInt();
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     courseName = json['course_name'];
     content = json['content'];

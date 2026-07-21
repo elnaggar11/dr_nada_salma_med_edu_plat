@@ -82,7 +82,7 @@ class Data {
   });
 
   Data.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = (json['id'] as num?)?.toInt();
     title = json['title'];
     slug = json['slug'];
     totalHours = json['total_hours'];
@@ -175,8 +175,8 @@ class Features {
   Features({this.id, this.courseId, this.feature});
 
   Features.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    courseId = json['course_id'];
+    id = (json['id'] as num?)?.toInt();
+    courseId = (json['course_id'] as num?)?.toInt();
     feature = json['feature']?.toString();
   }
 
@@ -207,10 +207,10 @@ class Contents {
   });
 
   Contents.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    courseId = json['course_id'];
+    id = (json['id'] as num?)?.toInt();
+    courseId = (json['course_id'] as num?)?.toInt();
     title = json['title']?.toString();
-    totalNumLecture = json['total_num_lecture'];
+    totalNumLecture = (json['total_num_lecture'] as num?)?.toInt();
     totalTime = json['total_time']?.toString();
     if (json['lectures'] != null) {
       lectures = <Lectures>[];
@@ -246,7 +246,7 @@ class Lectures {
   Lectures({this.id, this.title, this.video, this.fullVideoUrl, this.timeMinutes, this.file, this.pdf});
 
   Lectures.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = (json['id'] as num?)?.toInt();
     title = json['title']?.toString();
     video = json['video']?.toString();
     fullVideoUrl = json['full_video_url']?.toString();
@@ -286,7 +286,7 @@ class Reviews {
   });
 
   Reviews.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = (json['id'] as num?)?.toInt();
     user = json['user'] != null ? User.fromJson(json['user']) : null;
     courseName = json['course_name'];
     content = json['content'];
@@ -316,7 +316,7 @@ class User {
   User({this.id, this.fullName, this.image});
 
   User.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = (json['id'] as num?)?.toInt();
     fullName = json['full_name'];
     image = json['image'];
   }

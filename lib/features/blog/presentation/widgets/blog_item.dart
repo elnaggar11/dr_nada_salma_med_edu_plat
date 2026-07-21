@@ -5,7 +5,6 @@ import 'package:dr_nada_salma_med_edu_plat/core/constants/styles.dart';
 import 'package:dr_nada_salma_med_edu_plat/core/widgets/network_image_handler.dart';
 import 'package:dr_nada_salma_med_edu_plat/features/blog/domain/entities/blog_details/blog_details_params.dart';
 import 'package:flutter/material.dart';
-import 'package:html/parser.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class BlogItem extends StatelessWidget {
@@ -67,9 +66,7 @@ class BlogItem extends StatelessWidget {
                     textScaler: TextScaler.linear(1),
                   ),
                   SizedBox(height: context.height / 80),
-                  HtmlWidget(
-                    description,
-                  ),
+                  HtmlWidget(description),
                   SizedBox(height: context.height / 60),
                   Text(
                     "“ $metaDescription",

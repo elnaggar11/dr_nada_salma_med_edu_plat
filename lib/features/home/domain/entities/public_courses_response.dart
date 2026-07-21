@@ -93,7 +93,7 @@ class Data {
   });
 
   Data.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = (json['id'] as num?)?.toInt();
     title = json['title'];
     slug = json['slug'];
     totalHours = json['total_hours'];
@@ -119,7 +119,7 @@ class Data {
     buttonActions = json['button_actions'] != null
         ? ButtonActions.fromJson(json['button_actions'])
         : null;
-    progress = json['progress'];
+    progress = (json['progress'] as num?)?.toInt();
     courseStatus = json['course_status'];
     isEnded = json['is_ended'];
   }
@@ -202,10 +202,10 @@ class Pagination {
   Pagination({this.currentPage, this.lastPage, this.perPage, this.total});
 
   Pagination.fromJson(Map<String, dynamic> json) {
-    currentPage = json['currentPage'];
-    lastPage = json['lastPage'];
-    perPage = json['perPage'];
-    total = json['total'];
+    currentPage = (json['currentPage'] as num?)?.toInt() ?? (json['current_page'] as num?)?.toInt();
+    lastPage = (json['lastPage'] as num?)?.toInt() ?? (json['last_page'] as num?)?.toInt();
+    perPage = (json['perPage'] as num?)?.toInt() ?? (json['per_page'] as num?)?.toInt();
+    total = (json['total'] as num?)?.toInt();
   }
 
   Map<String, dynamic> toJson() {

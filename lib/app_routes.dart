@@ -80,7 +80,6 @@ import 'package:dr_nada_salma_med_edu_plat/features/appointments/presentation/cu
 import 'package:dr_nada_salma_med_edu_plat/features/appointments/presentation/screens/appointments_view.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppRoutes {
   Route? onGenerateRoutes(RouteSettings settings) {
