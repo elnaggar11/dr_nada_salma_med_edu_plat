@@ -466,20 +466,40 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
               ? widget.lectureVideo
               : 'https://drive.google.com/file/d/${widget.lectureVideo}/preview';
 
+          if (videoUrl.contains('drive.google.com') &&
+              videoUrl.contains('/view')) {
+            videoUrl = '${videoUrl.split('/view').first}/preview';
+          }
+
           bool isOneDrive =
               videoUrl.toLowerCase().contains('1drv.ms') ||
               videoUrl.toLowerCase().contains('onedrive');
 
           bool isGoogleDrive =
               videoUrl.toLowerCase().contains('drive.google.com') ||
-              !widget.lectureVideo.startsWith('http');
+              (!widget.lectureVideo.startsWith('http') &&
+                  widget.lectureVideo.length > 5 &&
+                  !widget.lectureVideo.contains('/'));
+
+          bool isDirectVideo =
+              isOneDrive ||
+              videoUrl.toLowerCase().contains('.mp4') ||
+              videoUrl.toLowerCase().contains('.m3u8') ||
+              videoUrl.toLowerCase().contains('.webm') ||
+              videoUrl.toLowerCase().contains('.mov') ||
+              videoUrl.toLowerCase().contains('s3.amazonaws.com') ||
+              videoUrl.toLowerCase().contains('amazonaws.com') ||
+              (!isGoogleDrive && !isOneDrive && videoUrl.startsWith('http'));
 
           String? htmlData;
 
-          if (isOneDrive) {
-            String downloadUrl = videoUrl.contains('?')
-                ? '${videoUrl.split('?').first}?download=1'
-                : '$videoUrl?download=1';
+          if (isDirectVideo) {
+            String mediaSourceUrl = videoUrl;
+            if (isOneDrive) {
+              mediaSourceUrl = videoUrl.contains('?')
+                  ? '${videoUrl.split('?').first}?download=1'
+                  : '$videoUrl?download=1';
+            }
 
             htmlData =
                 '''
@@ -488,27 +508,24 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <style>
-    body { margin: 0; padding: 0; background-color: black; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
-    video { width: 100%; max-height: 100vh; outline: none; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; background-color: black; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+    video { width: 100%; height: 100%; max-height: 100vh; object-fit: contain; outline: none; }
   </style>
 </head>
 <body>
-  <video controls playsinline webkit-playsinline autoplay controlsList="nodownload noremoteplayback" disablePictureInPicture disableRemotePlayback x-webkit-airplay="deny">
-    <source src="$downloadUrl" type="video/mp4">
+  <video src="$mediaSourceUrl" controls playsinline webkit-playsinline autoplay controlsList="nodownload noremoteplayback" disablePictureInPicture disableRemotePlayback x-webkit-airplay="deny">
+    <source src="$mediaSourceUrl">
+    Your browser does not support video playback.
   </video>
   <script>
-    document.addEventListener('contextmenu', event => event.preventDefault());
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+    document.addEventListener('dragstart', function(e) { e.preventDefault(); });
   </script>
 </body>
 </html>
-            ''';
+''';
           } else if (isGoogleDrive) {
-            // Embed Google Drive preview in an iframe — shows ONLY the video player
-            // without the full Drive UI (toolbar, menu bar, share/download buttons)
-            String drivePreviewUrl = widget.lectureVideo.startsWith('http')
-                ? widget.lectureVideo
-                : 'https://drive.google.com/file/d/${widget.lectureVideo}/preview';
-
             htmlData =
                 '''
 <!DOCTYPE html>
@@ -523,7 +540,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
 </head>
 <body>
   <iframe
-    src="$drivePreviewUrl"
+    src="$videoUrl"
     allow="autoplay; encrypted-media"
     allowfullscreen
   ></iframe>
@@ -533,7 +550,19 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
   </script>
 </body>
 </html>
-            ''';
+''';
+          }
+
+          WebUri baseWebUri;
+          try {
+            final parsed = Uri.parse(videoUrl);
+            if (parsed.hasScheme && parsed.host.isNotEmpty) {
+              baseWebUri = WebUri('${parsed.scheme}://${parsed.host}');
+            } else {
+              baseWebUri = WebUri('https://drive.google.com');
+            }
+          } catch (_) {
+            baseWebUri = WebUri('https://drive.google.com');
           }
 
           return Stack(
@@ -552,7 +581,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
                               data: htmlData,
                               mimeType: 'text/html',
                               encoding: 'utf-8',
-                              baseUrl: WebUri('https://drive.google.com'),
+                              baseUrl: baseWebUri,
                             )
                           : null,
                       initialUrlRequest: htmlData == null
@@ -650,7 +679,9 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
                           loading = false;
                           hasError = true;
                         });
-                        debugPrint('WebView load http error ($statusCode): $description');
+                        debugPrint(
+                          'WebView load http error ($statusCode): $description',
+                        );
                       },
                       onConsoleMessage: (controller, consoleMessage) {
                         if (!_shouldIgnoreConsoleMessage(
@@ -672,7 +703,11 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.error_outline, color: Colors.white, size: 50),
+                        const Icon(
+                          Icons.error_outline,
+                          color: Colors.white,
+                          size: 50,
+                        ),
                         const SizedBox(height: 10),
                         const Text(
                           "هذا الفيديو غير متاح حالياً",
@@ -684,19 +719,19 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget>
                 ),
 
               // Loading indicator
-              if (loading)
-                Positioned.fill(
-                  child: Center(
-                    child: const CircularProgressIndicator(color: Colors.red),
-                  ),
-                ),
+              // if (loading)
+              //   Positioned.fill(
+              //     child: Center(
+              //       child: const CircularProgressIndicator(color: Colors.red),
+              //     ),
+              //   ),
 
               // Black overlay to cover OneDrive/Google Drive top bar buttons
               Positioned(
                 top: 0,
                 left: 0,
                 right: 0,
-                child: Container(height: 48, color: Color(0xFF1E1E1E)),
+                child: Container(height: 75, color: Colors.black),
               ),
             ],
           );

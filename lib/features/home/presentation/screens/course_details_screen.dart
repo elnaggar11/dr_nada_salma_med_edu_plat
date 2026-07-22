@@ -151,8 +151,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                   _openWhatsAppCourseBooking(course);
                 }
               } else if (state is CourseBookingErrorState) {
-                if (state.message.toLowerCase().contains("pending") || state.message.toLowerCase().contains("already requested")) {
-                  final course = context.read<CoursesDetailsCubit>().coursesDetailsResponse?.data;
+                if (state.message.toLowerCase().contains("pending") ||
+                    state.message.toLowerCase().contains("already requested")) {
+                  final course = context
+                      .read<CoursesDetailsCubit>()
+                      .coursesDetailsResponse
+                      ?.data;
                   if (course != null) {
                     _openWhatsAppCourseBooking(course);
                   }
@@ -571,7 +575,8 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                             SizedBox(width: context.width / 30),
                             InkWell(
                               onTap: () {
-                                final isBooked = context
+                                final isBooked =
+                                    context
                                         .read<CoursesDetailsCubit>()
                                         .coursesDetailsResponse
                                         ?.data
@@ -599,22 +604,40 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                   return;
                                 }
 
-                                final hasPdf =
-                                    context
-                                        .read<CoursesDetailsCubit>()
-                                        .coursesDetailsResponse
-                                        ?.data
-                                        ?.hasPdf ==
-                                    true;
-                                final pdfUrl = context
+                                final courseData = context
                                     .read<CoursesDetailsCubit>()
                                     .coursesDetailsResponse
-                                    ?.data
-                                    ?.pdf;
+                                    ?.data;
 
-                                if (!hasPdf ||
-                                    pdfUrl == null ||
-                                    pdfUrl.isEmpty) {
+                                String? pdfUrl = courseData?.pdf;
+
+                                if ((pdfUrl == null ||
+                                        pdfUrl.isEmpty ||
+                                        pdfUrl == "null") &&
+                                    courseData?.contents != null) {
+                                  for (final content in courseData!.contents!) {
+                                    if (content.lectures != null) {
+                                      for (final lecture in content.lectures!) {
+                                        if (lecture.pdf != null &&
+                                            lecture.pdf!.isNotEmpty &&
+                                            lecture.pdf != "null" &&
+                                            lecture.pdf != "false") {
+                                          pdfUrl = lecture.pdf;
+                                          break;
+                                        }
+                                      }
+                                    }
+                                    if (pdfUrl != null &&
+                                        pdfUrl.isNotEmpty &&
+                                        pdfUrl != "null") {
+                                      break;
+                                    }
+                                  }
+                                }
+
+                                if (pdfUrl == null ||
+                                    pdfUrl.isEmpty ||
+                                    pdfUrl == "null") {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
@@ -632,7 +655,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => PdfViewerScreen(
-                                      pdfUrl: pdfUrl,
+                                      pdfUrl: pdfUrl!,
                                       title: tr("course_content"),
                                     ),
                                   ),
@@ -737,12 +760,11 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                                   .data!
                                   .isBooked ==
                               true,
-                          courseLectureStartsAt:
-                              context
-                                  .read<CoursesDetailsCubit>()
-                                  .coursesDetailsResponse!
-                                  .data!
-                                  .courseLectureStartsAt,
+                          courseLectureStartsAt: context
+                              .read<CoursesDetailsCubit>()
+                              .coursesDetailsResponse!
+                              .data!
+                              .courseLectureStartsAt,
                         ),
                       ),
                     ),
@@ -1082,7 +1104,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                   courseData.isEnded == true ||
                   courseData.courseStatus == 'ended';
               final canEnroll =
-                  (courseData.buttonActions?.enrollNow == true || courseData.courseStatus == 'pending') && !isEnded;
+                  (courseData.buttonActions?.enrollNow == true ||
+                      courseData.courseStatus == 'pending') &&
+                  !isEnded;
 
               if (!canEnroll) {
                 return const SizedBox.shrink();

@@ -15,7 +15,7 @@ const successStoriesApi = "/success-stories";
 const heroesApi = "/pages/hero";
 const coursesApi = "/courses/all-courses";
 const privateLessonsApi = "/courses/courses-private";
-const coursesDetailsApi = "/courses/";
+const coursesDetailsApi = "/original/courses/";
 const watchCourseApi = "/lectures/watch";
 
 abstract class HomeRemoteDataSource {

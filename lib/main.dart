@@ -65,6 +65,7 @@ void main() async {
 
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
+
     badge: true,
     sound: true,
   );
@@ -76,7 +77,7 @@ void main() async {
         supportedLocales: const [Locale('ar'), Locale('en')],
         path: "assets/translate",
         // startLocale: Locale("ar"),
-        startLocale: Locale("en"),
+        startLocale: Locale("ar"),
         saveLocale: true,
         useOnlyLangCode: true,
         child: MyApp(appRoutes: AppRoutes()),

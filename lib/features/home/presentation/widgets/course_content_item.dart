@@ -115,11 +115,38 @@ class CourseContentItem extends StatelessWidget {
                   }
 
                   if (lecturesAreOpen) {
-                    String videoUrl = e.fullVideoUrl ?? e.video ?? "";
+                    String videoUrl = (e.video != null &&
+                            e.video!.isNotEmpty &&
+                            e.video != "null" &&
+                            e.video != "false")
+                        ? e.video!
+                        : (e.fullVideoUrl ?? "");
                     
                     bool isInvalidUrl = videoUrl.isEmpty || 
+                                        videoUrl == "false" ||
+                                        videoUrl == "null" ||
                                         videoUrl.toLowerCase() == "drnadasalma.com" || 
                                         videoUrl.toLowerCase() == "https://drnadasalma.com";
+
+                    if (e.canWatch == false) {
+                      msgKey.currentState?.showSnackBar(
+                        SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(40)),
+                          ),
+                          content: Text(
+                            "غير مسموح بمشاهدة الفيديو",
+                            textScaler: const TextScaler.linear(1),
+                            style: TextStyles.textStyleNormal13.copyWith(
+                              color: white,
+                            ),
+                          ),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                      return;
+                    }
 
                     if (isInvalidUrl) {
                       msgKey.currentState?.showSnackBar(

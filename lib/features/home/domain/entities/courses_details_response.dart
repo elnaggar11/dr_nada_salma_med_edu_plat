@@ -242,14 +242,41 @@ class Lectures {
   String? timeMinutes;
   String? file;
   String? pdf;
+  bool? canWatch;
 
-  Lectures({this.id, this.title, this.video, this.fullVideoUrl, this.timeMinutes, this.file, this.pdf});
+  Lectures({
+    this.id,
+    this.title,
+    this.video,
+    this.fullVideoUrl,
+    this.timeMinutes,
+    this.file,
+    this.pdf,
+    this.canWatch,
+  });
 
   Lectures.fromJson(Map<String, dynamic> json) {
     id = (json['id'] as num?)?.toInt();
     title = json['title']?.toString();
-    video = json['video']?.toString();
-    fullVideoUrl = json['full_video_url']?.toString();
+
+    final rawVideo = json['video'];
+    if (rawVideo == null || rawVideo == false || rawVideo == 'false' || rawVideo.toString().isEmpty) {
+      video = null;
+    } else {
+      video = rawVideo.toString();
+    }
+
+    final rawFullUrl = json['full_video_url'];
+    if (rawFullUrl == null || rawFullUrl == false || rawFullUrl == 'false' || rawFullUrl.toString().isEmpty) {
+      fullVideoUrl = null;
+    } else {
+      fullVideoUrl = rawFullUrl.toString();
+    }
+
+    if (json.containsKey('can_watch')) {
+      canWatch = json['can_watch'] == true || json['can_watch'] == 'true' || json['can_watch'] == 1;
+    }
+
     timeMinutes = json['time_minutes']?.toString();
     file = json['file']?.toString();
     pdf = json['pdf']?.toString();
@@ -264,6 +291,9 @@ class Lectures {
     data['time_minutes'] = timeMinutes;
     data['file'] = file;
     data['pdf'] = pdf;
+    if (canWatch != null) {
+      data['can_watch'] = canWatch;
+    }
     return data;
   }
 }
